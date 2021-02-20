@@ -1,7 +1,7 @@
 import 'package:firulapp/routes.dart';
-//import 'package:firulapp/src/home/home.dart';
 import 'package:firulapp/src/sign_in/sign_in_screen.dart';
 import 'package:firulapp/src/theme.dart';
+import 'package:firulapp/src/home/home.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
