@@ -1,21 +1,19 @@
+import 'package:firulapp/src/constants.dart';
 import 'package:flutter/material.dart';
 
-class homeButtons extends StatelessWidget {
-  //const homeButtons({Key key}) : super(key: key);
-  Color button_color = Color(0xFFFED9B7);
+class HomeButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Column(
         children: [
-          //Padding(padding: EdgeInsets.all(16.0)),
           Text(
             'Firulapp',
             style: TextStyle(
-                fontSize: 30.1,
-                fontStyle: FontStyle.italic,
-                color: Color(0XFF00AFB9)),
+              fontSize: 30.1,
+              color: kSecondaryColor,
+            ),
           ),
           Padding(padding: EdgeInsets.all(16.0)),
           RawMaterialButton(

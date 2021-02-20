@@ -1,4 +1,6 @@
+import 'package:firulapp/src/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeDrawer extends StatefulWidget {
   HomeDrawer({Key key}) : super(key: key);
@@ -21,7 +23,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
             accountEmail: Text('matiasfare59@gmail.com'),
             currentAccountPicture: Image.network(
                 'https://www.sodep.com.py/images/matias-fare.png'),
-            decoration: BoxDecoration(color: Colors.blueAccent),
+            decoration: BoxDecoration(color: kSecondaryColor),
+            //Lista de Otros Usuarios
+            otherAccountsPictures: <Widget>[
+              Image.network(
+                'https://pbs.twimg.com/profile_images/983164640833261568/i2Px1IsE.jpg',
+              ),
+              Image.network(
+                  'https://www.sodep.com.py/images/jazmin-villagra.png')
+            ],
           ),
           ListTile(
             leading: Icon(Icons.account_circle),
