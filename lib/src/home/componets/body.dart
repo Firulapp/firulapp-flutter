@@ -7,7 +7,7 @@ class Body extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Center(
-          child: homeButtons(),
+          child: HomeButtons(),
         ),
       ),
     );

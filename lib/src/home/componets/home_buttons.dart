@@ -19,7 +19,7 @@ class HomeButtons extends StatelessWidget {
           RawMaterialButton(
             onPressed: () {},
             elevation: 2.0,
-            fillColor: button_color,
+            fillColor: kPrimaryColor,
             child: Icon(
               Icons.pets_rounded,
               size: 80.0,
@@ -32,7 +32,7 @@ class HomeButtons extends StatelessWidget {
           RawMaterialButton(
             onPressed: () {},
             elevation: 2.0,
-            fillColor: button_color,
+            fillColor: kPrimaryColor,
             child: Icon(
               Icons.store,
               size: 80.0,
@@ -45,7 +45,7 @@ class HomeButtons extends StatelessWidget {
           RawMaterialButton(
             onPressed: () {},
             elevation: 2.0,
-            fillColor: button_color,
+            fillColor: kPrimaryColor,
             child: Icon(
               Icons.favorite,
               size: 80.0,

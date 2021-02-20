@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'componets/body.dart';
 import 'componets/home_drawer.dart';
-// import 'componets/body.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = "/home";
