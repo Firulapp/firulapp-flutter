@@ -1,8 +1,8 @@
-import 'package:firulapp/components/custom_surfix_icon.dart';
-import 'package:firulapp/components/default_button.dart';
-import 'package:firulapp/src/home/home.dart';
-import 'package:firulapp/src/mixins/validator_mixins.dart';
-import 'package:firulapp/src/size_config.dart';
+import '../../home/home.dart';
+import '../../../components/default_button.dart';
+import '../../../components/custom_surfix_icon.dart';
+import '../../../size_config.dart';
+import '../../mixins/validator_mixins.dart';
 import 'package:flutter/material.dart';
 
 class SingFrom extends StatefulWidget {

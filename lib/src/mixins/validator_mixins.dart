@@ -1,4 +1,4 @@
-import 'package:firulapp/src/constants.dart';
+import '../constants.dart';
 
 class ValidatorMixins {
   String validateEmail(String value) {

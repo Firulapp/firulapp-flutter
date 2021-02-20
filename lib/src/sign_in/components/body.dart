@@ -1,5 +1,5 @@
-import 'package:firulapp/src/size_config.dart';
-import 'package:firulapp/src/sign_in/components/sign_form.dart';
+import '../../../size_config.dart';
+import 'sign_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

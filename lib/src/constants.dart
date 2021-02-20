@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firulapp/src/size_config.dart';
+import '../size_config.dart';
 
 const kPrimaryColor = Color(0xFFFDBE83);
 const kPrimaryLightColor = Color(0xFFFFECDF);
@@ -27,7 +27,7 @@ const defaultDuration = Duration(milliseconds: 250);
 final RegExp emailValidatorRegExp =
     RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 const String kEmailNullError = "Por favor, ingrese su Email";
-const String kInvalidEmailError = "Por favor, ngrese un Email valido";
+const String kInvalidEmailError = "Por favor, ingrese un Email valido";
 const String kPassNullError = "Por favor, ingrese su contraseña";
 const String kShortPassError = "Contraseña muy corta";
 const String kMatchPassError = "Las contraseñas no coinciden";

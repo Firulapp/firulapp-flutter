@@ -1,4 +1,4 @@
-import 'package:firulapp/src/constants.dart';
+import '../../constants.dart';
 import 'package:flutter/material.dart';
 
 class HomeButtons extends StatelessWidget {

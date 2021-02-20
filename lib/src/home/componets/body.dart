@@ -1,7 +1,5 @@
-import 'package:firulapp/src/home/componets/home_buttons.dart';
 import 'package:flutter/material.dart';
-import '../../../size_config.dart';
-import 'menu.dart';
+import 'home_buttons.dart';
 
 class Body extends StatelessWidget {
   @override
@@ -15,4 +13,3 @@ class Body extends StatelessWidget {
     );
   }
 }
-

@@ -1,6 +1,6 @@
-import 'package:firulapp/src/sign_in/sign_in_screen.dart';
+import './src/sign_in/sign_in_screen.dart';
 import 'package:flutter/widgets.dart';
-import 'package:firulapp/src/home/home.dart';
+import './src/home/home.dart';
 
 // We use name route
 // All our routes will be available here

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firulapp/src/size_config.dart';
+import '../../../size_config.dart';
 
 class HomeMenu extends StatefulWidget {
   HomeMenu({Key key}) : super(key: key);
