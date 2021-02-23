@@ -1,3 +1,5 @@
+import 'package:firulapp/src/profile/profile_screen.dart';
+
 import '../../constants.dart';
 import 'package:flutter/material.dart';
 
@@ -20,8 +22,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           UserAccountsDrawerHeader(
             accountName: Text('Matias Fare'),
             accountEmail: Text('matiasfare59@gmail.com'),
-            currentAccountPicture: Image.network(
-                'https://www.sodep.com.py/images/matias-fare.png'),
+            currentAccountPicture: AssetImage("assets/images/Profile Image.png"),
             decoration: BoxDecoration(color: kSecondaryColor),
             //Lista de Otros Usuarios
             otherAccountsPictures: <Widget>[
@@ -37,7 +38,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
             title: Text('Ver Perfil'),
             onTap: () {
               // This line code will close drawer programatically....
-              Navigator.pop(context);
+              //Navigator.pop(context);
+              Navigator.pushNamed(context, ProfileScreen.routeName);
             },
           ),
           Divider(
