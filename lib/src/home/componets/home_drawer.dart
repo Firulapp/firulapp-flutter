@@ -1,5 +1,6 @@
 import 'package:firulapp/src/profile/profile_screen.dart';
-
+import 'package:firulapp/provider/super_user_data.dart';
+import 'package:provider/provider.dart';
 import '../../constants.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,8 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<SuperUserData>(context);
+
     return Drawer(
       elevation: 10.0,
       child: ListView(
@@ -20,9 +23,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text('Matias Fare'),
-            accountEmail: Text('matiasfare59@gmail.com'),
-            currentAccountPicture: AssetImage("assets/images/Profile Image.png"),
+            accountName: Text(userData.userName),
+            accountEmail: Text(userData.userMail),
+            currentAccountPicture: CircleAvatar(
+                backgroundImage: AssetImage(
+              "assets/images/Profile Image.png",
+            )),
             decoration: BoxDecoration(color: kSecondaryColor),
             //Lista de Otros Usuarios
             otherAccountsPictures: <Widget>[
@@ -38,7 +44,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             title: Text('Ver Perfil'),
             onTap: () {
               // This line code will close drawer programatically....
-              //Navigator.pop(context);
+              Navigator.pop(context);
               Navigator.pushNamed(context, ProfileScreen.routeName);
             },
           ),

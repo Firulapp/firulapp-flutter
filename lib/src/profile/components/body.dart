@@ -1,3 +1,4 @@
+import 'package:firulapp/src/profile_detail/profile_details.dart';
 import 'package:flutter/material.dart';
 
 import 'profile_menu.dart';
@@ -15,7 +16,7 @@ class Body extends StatelessWidget {
           ProfileMenu(
             text: "Mi Cuenta",
             icon: "assets/icons/User Icon.svg",
-            press: () => {},
+            press: () => {Navigator.pushNamed(context, ProfilePage.routeName)},
           ),
           ProfileMenu(
             text: "Notificaciones",
