@@ -1,3 +1,5 @@
+import '../../pets/pets_scream.dart';
+
 import '../../constants.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +19,8 @@ class HomeButtons extends StatelessWidget {
           ),
           Padding(padding: EdgeInsets.all(16.0)),
           RawMaterialButton(
-            onPressed: () {},
+            onPressed: () =>
+                {Navigator.pushNamed(context, PetsScreen.routeName)},
             elevation: 2.0,
             fillColor: kPrimaryColor,
             child: Icon(

@@ -3,6 +3,7 @@ import 'src/sign_in/sign_in_screen.dart';
 import 'src/home/home.dart';
 import 'src/profile/profile_screen.dart';
 import 'src/profile_detail/profile_details.dart';
+import 'src/pets/pets_scream.dart';
 
 // We use name route
 // All our routes will be available here
@@ -12,4 +13,5 @@ final Map<String, WidgetBuilder> routes = {
   SignInScreen.routeName: (context) => SignInScreen(),
   ProfileScreen.routeName: (context) => ProfileScreen(),
   ProfilePage.routeName: (context) => ProfilePage(),
+  PetsScreen.routeName: (context) => PetsScreen(),
 };
