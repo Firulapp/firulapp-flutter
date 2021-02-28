@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 import '../constants.dart';
 
 class ValidatorMixins {
@@ -11,10 +13,9 @@ class ValidatorMixins {
   }
 
   String validatePassword(String value) {
-    if (value.isEmpty) {
+    if (value.isEmpty || value.trim().length == 0) {
       return kPassNullError;
     } else if (value.length < 8) {
-      print(value.length);
       return kShortPassError;
     }
     return null;
