@@ -12,7 +12,14 @@ class SignInScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Sign In"),
       ),
-      body: Body(),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          child: Body(),
+        ),
+      ),
     );
   }
 }
