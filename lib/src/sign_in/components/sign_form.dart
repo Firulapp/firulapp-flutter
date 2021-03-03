@@ -56,8 +56,8 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
     );
   }
 
-  TextFormField passwordFormField() {
-    return TextFormField(
+  Widget passwordFormField() {
+    return InputText(
       obscureText: true,
       decoration: InputDecoration(
         labelText: 'Contraseña',
