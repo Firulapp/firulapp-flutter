@@ -1,5 +1,6 @@
 import 'package:firulapp/src/profile/profile_screen.dart';
 import 'package:firulapp/provider/super_user_data.dart';
+import 'package:firulapp/utils/auth.dart';
 import 'package:provider/provider.dart';
 import '../../constants.dart';
 import 'package:flutter/material.dart';
@@ -54,9 +55,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Cerrar Sesion'),
-            onTap: () {
-              Navigator.pop(context);
-            },
+            onTap: () => Auth.instance.logOut(context),
           ),
           Divider(
             height: 2.0,
