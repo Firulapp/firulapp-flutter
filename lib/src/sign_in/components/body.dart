@@ -1,3 +1,5 @@
+import '../../../components/no_account_text.dart';
+
 import '../../../size_config.dart';
 import 'sign_form.dart';
 import 'package:flutter/material.dart';
@@ -33,26 +35,8 @@ class Body extends StatelessWidget {
                 ),
                 SizedBox(height: 0.08),
                 SingFrom(),
-                SizedBox(height: 0.08),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     SocalCard(
-                //       icon: "assets/icons/google-icon.svg",
-                //       press: () {},
-                //     ),
-                //     SocalCard(
-                //       icon: "assets/icons/facebook-2.svg",
-                //       press: () {},
-                //     ),
-                //     SocalCard(
-                //       icon: "assets/icons/twitter.svg",
-                //       press: () {},
-                //     ),
-                //   ],
-                // ),
                 SizedBox(height: 20),
-                // NoAccountText(),
+                NoAccountText(),
               ],
             ),
           ),

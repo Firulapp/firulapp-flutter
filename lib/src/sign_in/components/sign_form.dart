@@ -1,9 +1,10 @@
-import '../../home/home.dart';
+import 'package:firulapp/services/my_service.dart';
 import '../../../components/default_button.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../size_config.dart';
 import '../../mixins/validator_mixins.dart';
 import 'package:flutter/material.dart';
+import 'package:firulapp/components/input_text.dart';
 
 class SingFrom extends StatefulWidget {
   SingFrom({Key key}) : super(key: key);
@@ -14,6 +15,22 @@ class SingFrom extends StatefulWidget {
 
 class _SingFromState extends State<SingFrom> with ValidatorMixins {
   final _formKey = GlobalKey<FormState>();
+  String _email;
+  String _password;
+
+  _submit() {
+    final isOK = _formKey.currentState.validate();
+    _formKey.currentState.save();
+    if (isOK) {
+      MyServices myServices = MyServices();
+      myServices.login(
+        context,
+        email: _email,
+        password: _password,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -28,50 +45,36 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
           //SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Iniciar Sesión",
-            press: () {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                // if all are valid then go to success screen
-                Navigator.pushNamed(context, HomeScreen.routeName);
-              }
-            },
+            press: _submit,
           ),
         ],
       ),
     );
   }
 
-  TextFormField emailFormField() {
-    return TextFormField(
+  Widget emailFormField() {
+    return InputText(
       keyboardType: TextInputType.emailAddress,
-      decoration: InputDecoration(
-        labelText: 'Correo',
-        hintText: 'ejemplo@gmail.com',
-        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
-      ),
-      validator: validateEmail,
+      label: 'Correo',
+      suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
+      onSaved: (newValue) => _email = newValue,
       onChanged: (value) {
-        //print(value);
+        _email = value;
       },
+      validator: validateEmail,
     );
   }
 
   Widget passwordFormField() {
     return InputText(
       obscureText: true,
-      decoration: InputDecoration(
-        labelText: 'Contraseña',
-        hintText: 'Contraseña',
-        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-      ),
-      validator: validatePassword,
+      label: 'Contraseña',
+      suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
+      onSaved: (newValue) => _password = newValue,
       onChanged: (value) {
-        //print(value);
+        _password = value;
       },
+      validator: validatePassword,
     );
-  }
-
-  TextFormField conformPassFormField() {
-    return TextFormField();
   }
 }
