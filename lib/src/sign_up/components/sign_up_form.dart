@@ -1,6 +1,6 @@
 import 'package:firulapp/components/custom_surfix_icon.dart';
 import 'package:firulapp/components/input_text.dart';
-import 'package:firulapp/src/home/home.dart';
+import 'package:firulapp/services/my_service.dart';
 import 'package:firulapp/src/mixins/validator_mixins.dart';
 import 'package:flutter/material.dart';
 import '../../../components/default_button.dart';
@@ -18,12 +18,17 @@ class _SignUpFormState extends State<SignUpForm> with ValidatorMixins {
   String _password;
   String _conformPassword;
 
-  _submit() {
+  _submit() async {
     final isOK = _formKey.currentState.validate();
     if (isOK) {
-      _formKey.currentState.save();
-      // if all are valid then go to success screen
-      Navigator.pushNamed(context, HomeScreen.routeName);
+      //_formKey.currentState.save();
+      MyServices myServices = MyServices();
+      await myServices.register(
+        context,
+        username: _email,
+        email: _email,
+        password: _password,
+      );
     }
   }
 

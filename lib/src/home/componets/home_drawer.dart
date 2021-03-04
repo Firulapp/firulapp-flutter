@@ -16,6 +16,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<SuperUserData>(context);
+    final name = userData.name;
+    final surname = userData.surname;
 
     return Drawer(
       elevation: 10.0,
@@ -24,8 +26,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text(userData.userName),
-            accountEmail: Text(userData.userMail),
+            accountName: Text("$name $surname"),
+            accountEmail: Text(userData.mail),
             currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage(
               "assets/images/Profile Image.png",

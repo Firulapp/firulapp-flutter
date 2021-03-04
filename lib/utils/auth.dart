@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:firulapp/src/sign_in/sign_in_screen.dart';
-import 'package:firulapp/src/sign_up/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:meta/meta.dart' show required;

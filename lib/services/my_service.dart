@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class MyServices {
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://6625d8c30326.ngrok.io'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://2eaf2c9cc35b.ngrok.io'));
 
   Future<void> register(
     BuildContext context, {
@@ -18,7 +18,7 @@ class MyServices {
     try {
       progressDilog.show(); // muestra barra de carga
       final Response response = await this._dio.post(
-        '/api/v1/register',
+        '/api/user/register',
         //Dio utiliza por defecto el conten-tipe Json
         // options: Options(
         //     // headers: {
@@ -26,9 +26,21 @@ class MyServices {
         //     // },
         //     ),
         data: {
+          "id": null,
+          "userId": null,
+          "document": "5719493",
+          "documentType": "CI",
+          "name": username,
+          "surname": username,
+          "city": "Asunción",
+          "profilePicture": null,
+          "birthDate": "1998-06-27T00:00:00.000Z",
+          "notifications": true,
           "username": username,
           "email": email,
-          "password": password,
+          "encryptedPassword": password,
+          "confirmPassword": password,
+          "userType": "APP"
         },
       );
       print(response);
@@ -42,14 +54,12 @@ class MyServices {
       progressDilog.dismiss();
       print(error);
       if (error is DioError) {
-        print(error.response.statusCode);
-        print(error.response.data);
+        final errorCode = error.response.statusCode.toString();
+        final message = error.message;
         Dialogs.info(
           context,
-          title: "ERROR",
-          content: error.response.statusCode == 409
-              ? 'Email Duplicado '
-              : error.message,
+          title: errorCode,
+          content: message,
         );
       } else {
         print(error);
@@ -75,6 +85,8 @@ class MyServices {
           "loguedIn": true
         },
       );
+      print(response);
+      print(DateTime.now());
       // GUARDA LAS CREDENCIALES EN STORAGE DEL DISPOSITIVO
       await Auth.instance.setSession(email, password);
       progressDilog.dismiss();
@@ -88,14 +100,8 @@ class MyServices {
       progressDilog.dismiss();
       print(error);
       if (error is DioError) {
-        String message = error.message;
-        if (error.response.statusCode == 404) {
-          message = "No existe el Usuario";
-        } else if (error.response.statusCode == 403) {
-          message = "Contraseña Invalida";
-        }
-        print(error.response.statusCode);
-        print(error.response);
+        String message = error.response.data['message'];
+        print(error.response.data);
         Dialogs.info(
           context,
           title: 'ERROR',
