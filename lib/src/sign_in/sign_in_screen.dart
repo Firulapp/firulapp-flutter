@@ -6,8 +6,6 @@ class SignInScreen extends StatelessWidget {
   static String routeName = "/sign_in";
   @override
   Widget build(BuildContext context) {
-    // You have to call it on your starting screen
-    SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Sign In"),

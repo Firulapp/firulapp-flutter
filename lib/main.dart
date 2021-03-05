@@ -1,4 +1,3 @@
-import 'package:firulapp/src/home/home.dart';
 import 'package:firulapp/src/splash/splash_scren.dart';
 import 'package:provider/provider.dart';
 import './routes.dart';

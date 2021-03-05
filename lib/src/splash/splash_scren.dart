@@ -4,6 +4,8 @@ import 'package:firulapp/src/sign_in/sign_in_screen.dart';
 import 'package:firulapp/utils/auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../size_config.dart';
+
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key key}) : super(key: key);
   static String routeName = "/splash";
@@ -29,6 +31,8 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
+    // You have to call it on your starting screen
+    SizeConfig().init(context);
     return Scaffold(
       body: Center(
         child: CircularProgressIndicator(),

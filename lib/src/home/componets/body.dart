@@ -5,10 +5,8 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Center(
-          child: HomeButtons(),
-        ),
+      child: Center(
+        child: HomeButtons(),
       ),
     );
   }

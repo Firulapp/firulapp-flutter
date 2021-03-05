@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class MyServices {
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://2eaf2c9cc35b.ngrok.io'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://2c767eb83c6f.ngrok.io'));
 
   Future<void> register(
     BuildContext context, {
@@ -83,6 +83,54 @@ class MyServices {
           "encryptedPassword": password,
           "enabled": true,
           "loguedIn": true
+        },
+      );
+      print(response);
+      print(DateTime.now());
+      // GUARDA LAS CREDENCIALES EN STORAGE DEL DISPOSITIVO
+      await Auth.instance.setSession(email, password);
+      progressDilog.dismiss();
+      // redirecciona al home eliminando paginas previas
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        HomeScreen.routeName,
+        (_) => false,
+      );
+    } catch (error) {
+      progressDilog.dismiss();
+      print(error);
+      if (error is DioError) {
+        String message = error.response.data['message'];
+        print(error.response.data);
+        Dialogs.info(
+          context,
+          title: 'ERROR',
+          content: message,
+        );
+      } else {
+        print(error);
+      }
+    }
+  }
+
+  Future<void> logOut(
+    BuildContext context, {
+    @required String email,
+    @required String password,
+  }) async {
+    final ProgressDilog progressDilog = ProgressDilog(context);
+    try {
+      progressDilog.show(); // muestra barra de carga
+      final Response response = await this._dio.post(
+        '/api/logout',
+        data: {
+          "id": 1,
+          "userId": 1,
+          "deviceId": 1,
+          "startDate": "2021-02-26T17:59:36.449779",
+          "endDate": "2021-02-26T17:59:36.449779",
+          "modifiedAt": null,
+          "modifiedBy": null
         },
       );
       print(response);

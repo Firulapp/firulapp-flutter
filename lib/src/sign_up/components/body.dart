@@ -6,29 +6,29 @@ import 'sign_up_form.dart';
 class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final SizeConfig sizeConfig = SizeConfig();
     return SafeArea(
       child: SizedBox(
         width: double.infinity,
         child: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+          padding: EdgeInsets.symmetric(horizontal: sizeConfig.wp(4.5)),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: SizeConfig.screenHeight * 0.04), // 4%
+                SizedBox(height: sizeConfig.hp(4)), // 4%
                 Text("Registrar Cuenta", style: headingStyle),
-                Text(
-                  "Complete sus datos",
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: SizeConfig.screenHeight * 0.08),
+                Text("Complete sus datos",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: sizeConfig.wp(4),
+                    )),
+                SizedBox(height: sizeConfig.hp(6)),
                 SignUpForm(),
-                SizedBox(height: SizeConfig.screenHeight * 0.08),
-                SizedBox(height: getProportionateScreenHeight(20)),
+                SizedBox(height: sizeConfig.hp(5)),
                 Text(
-                  'Al continuar, confirma que está de acuerdo \ncon nuestro Término y condición',
+                  'Al continuar, confirma que está de acuerdo \ncon nuestros Términos y condiciónes',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.caption,
+                  style: TextStyle(fontSize: sizeConfig.hp(1.7)),
                 )
               ],
             ),
