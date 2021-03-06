@@ -1,7 +1,7 @@
-import 'package:firulapp/src/profile_detail/profile_details.dart';
-import 'package:firulapp/components/dialogs.dart';
 import 'package:flutter/material.dart';
 
+import '../../profile_detail/profile_details.dart';
+import '../../../components/dialogs.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 

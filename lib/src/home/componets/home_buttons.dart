@@ -1,7 +1,8 @@
-import 'package:firulapp/size_config.dart';
+import 'package:flutter/material.dart';
+
+import '../../../size_config.dart';
 import '../../pets/pets_scream.dart';
 import '../../constants.dart';
-import 'package:flutter/material.dart';
 
 class HomeButtons extends StatelessWidget {
   @override

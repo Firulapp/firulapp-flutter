@@ -1,9 +1,10 @@
-import 'package:firulapp/src/splash/splash_scren.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+
+import './src/splash/splash_scren.dart';
 import './routes.dart';
 import './src/theme.dart';
-import 'package:flutter/material.dart';
-import 'provider/super_user_data.dart';
+import './provider/super_user_data.dart';
 
 void main() => runApp(MyApp());
 

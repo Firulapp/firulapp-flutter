@@ -1,10 +1,11 @@
-import 'package:firulapp/services/my_service.dart';
+import 'package:flutter/material.dart';
+
+import '../../../services/my_service.dart';
 import '../../../components/default_button.dart';
+import '../../../components/input_text.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../size_config.dart';
 import '../../mixins/validator_mixins.dart';
-import 'package:flutter/material.dart';
-import 'package:firulapp/components/input_text.dart';
 
 class SingFrom extends StatefulWidget {
   SingFrom({Key key}) : super(key: key);

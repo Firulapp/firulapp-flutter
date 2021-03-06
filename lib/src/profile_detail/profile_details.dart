@@ -1,11 +1,10 @@
-import 'package:firulapp/src/constants.dart';
-import 'package:firulapp/src/profile_detail/components/photo-perfil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:firulapp/provider/super_user_data.dart';
 
-import '../../size_config.dart';
+import '../constants.dart';
+import '../profile_detail/components/photo-perfil.dart';
+import '../../provider/super_user_data.dart';
 
 class ProfilePage extends StatefulWidget {
   static String routeName = "/profile-details";

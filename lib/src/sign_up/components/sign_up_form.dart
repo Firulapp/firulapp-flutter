@@ -1,10 +1,11 @@
-import 'package:firulapp/components/custom_surfix_icon.dart';
-import 'package:firulapp/components/input_text.dart';
-import 'package:firulapp/services/my_service.dart';
-import 'package:firulapp/src/mixins/validator_mixins.dart';
 import 'package:flutter/material.dart';
-import '../../../components/default_button.dart';
+
 import '../../constants.dart';
+import '../../mixins/validator_mixins.dart';
+import '../../../components/custom_surfix_icon.dart';
+import '../../../components/default_button.dart';
+import '../../../components/input_text.dart';
+import '../../../services/my_service.dart';
 import '../../../size_config.dart';
 
 class SignUpForm extends StatefulWidget {

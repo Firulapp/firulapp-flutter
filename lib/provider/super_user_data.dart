@@ -9,7 +9,7 @@ class SuperUserData with ChangeNotifier {
   String _documentType = 'CI';
   String _city = 'Asunción';
   DateTime _birthDate = DateTime.now();
-  FileImage _profilePicture = null;
+  FileImage _profilePicture;
   String _userType = 'APP';
 
   // Getters datos del usuario

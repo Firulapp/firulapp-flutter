@@ -1,9 +1,10 @@
-import 'package:firulapp/src/profile/profile_screen.dart';
-import 'package:firulapp/provider/super_user_data.dart';
-import 'package:firulapp/utils/auth.dart';
 import 'package:provider/provider.dart';
-import '../../constants.dart';
 import 'package:flutter/material.dart';
+
+import '../../constants.dart';
+import '../../profile/profile_screen.dart';
+import '../../../provider/super_user_data.dart';
+import '../../../utils/auth.dart';
 
 class HomeDrawer extends StatefulWidget {
   HomeDrawer({Key key}) : super(key: key);

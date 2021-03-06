@@ -1,12 +1,13 @@
-import 'package:dio/dio.dart';
-import 'package:firulapp/components/dialogs.dart';
-import 'package:firulapp/src/home/home.dart';
-import 'package:firulapp/utils/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:dio/dio.dart';
+
+import '../components/dialogs.dart';
+import '../src/home/home.dart';
+import '../utils/auth.dart';
 
 class MyServices {
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://2c767eb83c6f.ngrok.io'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://7f5ab90c4daa.ngrok.io'));
 
   Future<void> register(
     BuildContext context, {

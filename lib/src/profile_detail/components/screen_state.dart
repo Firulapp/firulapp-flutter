@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+
 import '../profile_details.dart';
 
 class MapScreenState extends State<ProfilePage>
