@@ -1,4 +1,5 @@
 import 'package:firulapp/src/profile_detail/profile_details.dart';
+import 'package:firulapp/components/dialogs.dart';
 import 'package:flutter/material.dart';
 
 import 'profile_menu.dart';
@@ -37,6 +38,17 @@ class Body extends StatelessWidget {
             text: "Cerrar sesión",
             icon: "assets/icons/Log out.svg",
             press: () {},
+          ),
+          ProfileMenu(
+            text: "Desactivar cuenta",
+            icon: "assets/icons/Log out.svg",
+            press: () {
+              Dialogs.info(
+                context,
+                title: 'Desactivar Perfil',
+                content: 'Estas seguro que quiere desactivar la cuenta?',
+              );
+            },
           ),
         ],
       ),
