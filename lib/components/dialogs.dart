@@ -19,10 +19,10 @@ class Dialogs {
   }
 }
 
-class ProgressDilog {
+class ProgressDialog {
   final BuildContext context;
 
-  ProgressDilog(this.context);
+  ProgressDialog(this.context);
 
   void show() {
     showCupertinoDialog(

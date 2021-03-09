@@ -20,9 +20,9 @@ class MyServices extends ChangeNotifier {
     @required String email,
     @required String password,
   }) async {
-    final ProgressDilog progressDilog = ProgressDilog(context);
+    final ProgressDialog progressDialog = ProgressDialog(context);
     try {
-      progressDilog.show();
+      progressDialog.show();
       await this._dio.post(
         '/api/user/register',
         data: {
@@ -45,12 +45,12 @@ class MyServices extends ChangeNotifier {
       );
       //guarda datos en el dispositivo
       await setSession(email, password);
-      progressDilog.dismiss();
+      progressDialog.dismiss();
       // redirecciona al home eliminando paginas previas
       Navigator.pushNamedAndRemoveUntil(
           context, HomeScreen.routeName, (_) => false);
     } catch (error) {
-      progressDilog.dismiss();
+      progressDialog.dismiss();
       print(error);
       if (error is DioError) {
         final errorCode = error.response.statusCode.toString();
@@ -71,9 +71,9 @@ class MyServices extends ChangeNotifier {
     @required String email,
     @required String password,
   }) async {
-    final ProgressDilog progressDilog = ProgressDilog(context);
+    final ProgressDialog progressDialog = ProgressDialog(context);
     try {
-      progressDilog.show(); // muestra barra de carga
+      progressDialog.show(); // muestra barra de carga
       await this._dio.post(
         '/api/user/login',
         data: {
@@ -86,7 +86,7 @@ class MyServices extends ChangeNotifier {
       );
       // GUARDA LAS CREDENCIALES EN STORAGE DEL DISPOSITIVO
       await setSession(email, password);
-      progressDilog.dismiss();
+      progressDialog.dismiss();
       // redirecciona al home eliminando paginas previas
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -94,7 +94,7 @@ class MyServices extends ChangeNotifier {
         (_) => false,
       );
     } catch (error) {
-      progressDilog.dismiss();
+      progressDialog.dismiss();
       print(error);
       if (error is DioError) {
         String message = error.response.data['message'];
@@ -111,20 +111,18 @@ class MyServices extends ChangeNotifier {
   }
 
   Future<void> logOut(BuildContext context) async {
-    final ProgressDilog progressDilog = ProgressDilog(context);
+    final ProgressDialog progressDialog = ProgressDialog(context);
     try {
-      progressDilog.show(); // muestra barra de carga
+      progressDialog.show(); // muestra barra de carga
       await this._dio.post(
-        '/api/logout',
+        '/api/user/logout',
         data: {"id": 1, "userId": 1, "deviceId": 1},
       );
       //Elimina los datos del dispositivo y redirecciona a la pagina del login
       await this._storage.deleteAll();
       Navigator.pushNamedAndRemoveUntil(
           context, SignInScreen.routeName, (_) => false);
-      progressDilog.dismiss();
     } catch (error) {
-      progressDilog.dismiss();
       print(error);
       if (error is DioError) {
         String message = error.response.data['message'];
@@ -143,7 +141,6 @@ class MyServices extends ChangeNotifier {
   Future<void> setSession(String userEmail, String userPassword) async {
     await this._storage.write(key: emailKey, value: userEmail);
     await this._storage.write(key: passwordKey, value: userPassword);
-    print("SE GUARDARON LAS CREDENCIALES");
   }
 
   Future getSession() async {

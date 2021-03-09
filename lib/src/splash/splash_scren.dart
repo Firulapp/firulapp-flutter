@@ -24,7 +24,6 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
     final session =
         await Provider.of<MyServices>(context, listen: false).getSession();
     if (session != null) {
-      print("login before");
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     } else {
       Navigator.pushReplacementNamed(context, SignInScreen.routeName);
