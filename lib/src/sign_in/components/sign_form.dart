@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../services/my_service.dart';
+import '../../../provider/session.dart';
 import '../../../components/default_button.dart';
 import '../../../components/input_text.dart';
 import '../../../components/custom_surfix_icon.dart';
@@ -23,7 +23,7 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
     final isOK = _formKey.currentState.validate();
     _formKey.currentState.save();
     if (isOK) {
-      MyServices myServices = MyServices();
+      Session myServices = Session();
       myServices.login(
         context,
         email: _email,

@@ -5,7 +5,7 @@ import '../../mixins/validator_mixins.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';
 import '../../../components/input_text.dart';
-import '../../../services/my_service.dart';
+import '../../../provider/session.dart';
 import '../../../size_config.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -23,7 +23,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidatorMixins {
     final isOK = _formKey.currentState.validate();
     if (isOK) {
       //_formKey.currentState.save();
-      MyServices myServices = MyServices();
+      Session myServices = Session();
       await myServices.register(
         context,
         username: _email,

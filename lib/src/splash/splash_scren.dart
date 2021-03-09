@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:after_layout/after_layout.dart';
 
-import '../../services/my_service.dart';
+import '../../provider/session.dart';
 import '../home/home.dart';
 import '../sign_in/sign_in_screen.dart';
 import '../../size_config.dart';
@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
 
   _check() async {
     final session =
-        await Provider.of<MyServices>(context, listen: false).getSession();
+        await Provider.of<Session>(context, listen: false).getSession();
     if (session != null) {
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     } else {

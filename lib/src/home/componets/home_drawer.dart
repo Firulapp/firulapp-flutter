@@ -1,4 +1,4 @@
-import 'package:firulapp/services/my_service.dart';
+import 'package:firulapp/provider/session.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +59,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             leading: Icon(Icons.exit_to_app),
             title: Text('Cerrar Sesion'),
             onTap: () =>
-                Provider.of<MyServices>(context, listen: false).logOut(context),
+                Provider.of<Session>(context, listen: false).logOut(context),
           ),
           Divider(
             height: 2.0,

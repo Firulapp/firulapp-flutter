@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/session.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => SuperUserData())],
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SuperUserData(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Session(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Firulapp',
