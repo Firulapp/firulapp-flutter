@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../components/dialogs.dart';
 import '../src/home/home.dart';
-import '../utils/auth.dart';
+import '../src/sign_in/sign_in_screen.dart';
 
-class MyServices {
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://7f5ab90c4daa.ngrok.io'));
+class MyServices extends ChangeNotifier {
+  final _storage = FlutterSecureStorage();
+  final emailKey = "EMAILK";
+  final passwordKey = "PASSWORDK";
+
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:9000'));
 
   Future<void> register(
     BuildContext context, {
@@ -17,15 +22,9 @@ class MyServices {
   }) async {
     final ProgressDilog progressDilog = ProgressDilog(context);
     try {
-      progressDilog.show(); // muestra barra de carga
-      final Response response = await this._dio.post(
+      progressDilog.show();
+      await this._dio.post(
         '/api/user/register',
-        //Dio utiliza por defecto el conten-tipe Json
-        // options: Options(
-        //     // headers: {
-        //     //   'Content-Type': 'application/json',
-        //     // },
-        //     ),
         data: {
           "id": null,
           "userId": null,
@@ -44,9 +43,8 @@ class MyServices {
           "userType": "APP"
         },
       );
-      print(response);
       //guarda datos en el dispositivo
-      await Auth.instance.setSession(email, password);
+      await setSession(email, password);
       progressDilog.dismiss();
       // redirecciona al home eliminando paginas previas
       Navigator.pushNamedAndRemoveUntil(
@@ -76,7 +74,7 @@ class MyServices {
     final ProgressDilog progressDilog = ProgressDilog(context);
     try {
       progressDilog.show(); // muestra barra de carga
-      final Response response = await this._dio.post(
+      await this._dio.post(
         '/api/user/login',
         data: {
           "username": null,
@@ -86,10 +84,8 @@ class MyServices {
           "loguedIn": true
         },
       );
-      print(response);
-      print(DateTime.now());
       // GUARDA LAS CREDENCIALES EN STORAGE DEL DISPOSITIVO
-      await Auth.instance.setSession(email, password);
+      await setSession(email, password);
       progressDilog.dismiss();
       // redirecciona al home eliminando paginas previas
       Navigator.pushNamedAndRemoveUntil(
@@ -114,37 +110,19 @@ class MyServices {
     }
   }
 
-  Future<void> logOut(
-    BuildContext context, {
-    @required String email,
-    @required String password,
-  }) async {
+  Future<void> logOut(BuildContext context) async {
     final ProgressDilog progressDilog = ProgressDilog(context);
     try {
       progressDilog.show(); // muestra barra de carga
-      final Response response = await this._dio.post(
+      await this._dio.post(
         '/api/logout',
-        data: {
-          "id": 1,
-          "userId": 1,
-          "deviceId": 1,
-          "startDate": "2021-02-26T17:59:36.449779",
-          "endDate": "2021-02-26T17:59:36.449779",
-          "modifiedAt": null,
-          "modifiedBy": null
-        },
+        data: {"id": 1, "userId": 1, "deviceId": 1},
       );
-      print(response);
-      print(DateTime.now());
-      // GUARDA LAS CREDENCIALES EN STORAGE DEL DISPOSITIVO
-      await Auth.instance.setSession(email, password);
-      progressDilog.dismiss();
-      // redirecciona al home eliminando paginas previas
+      //Elimina los datos del dispositivo y redirecciona a la pagina del login
+      await this._storage.deleteAll();
       Navigator.pushNamedAndRemoveUntil(
-        context,
-        HomeScreen.routeName,
-        (_) => false,
-      );
+          context, SignInScreen.routeName, (_) => false);
+      progressDilog.dismiss();
     } catch (error) {
       progressDilog.dismiss();
       print(error);
@@ -160,5 +138,25 @@ class MyServices {
         print(error);
       }
     }
+  }
+
+  Future<void> setSession(String userEmail, String userPassword) async {
+    await this._storage.write(key: emailKey, value: userEmail);
+    await this._storage.write(key: passwordKey, value: userPassword);
+    print("SE GUARDARON LAS CREDENCIALES");
+  }
+
+  Future getSession() async {
+    final String emailValue = await this._storage.read(key: emailKey);
+    final String passwordValue = await this._storage.read(key: passwordKey);
+
+    if (passwordValue != null && emailValue != null) {
+      final session = {
+        "email": emailValue,
+        "encryptedPassword": passwordValue,
+      };
+      return session;
+    }
+    return null;
   }
 }

@@ -1,10 +1,10 @@
+import 'package:firulapp/services/my_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 import '../../profile/profile_screen.dart';
 import '../../../provider/super_user_data.dart';
-import '../../../utils/auth.dart';
 
 class HomeDrawer extends StatefulWidget {
   HomeDrawer({Key key}) : super(key: key);
@@ -58,7 +58,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Cerrar Sesion'),
-            onTap: () => Auth.instance.logOut(context),
+            onTap: () =>
+                Provider.of<MyServices>(context, listen: false).logOut(context),
           ),
           Divider(
             height: 2.0,
