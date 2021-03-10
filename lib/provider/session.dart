@@ -24,6 +24,11 @@ class Session extends ChangeNotifier {
   final sessionKey = "SESSIONK";
   final userKey = "USERK";
   final deviceKey = "DEVICEK";
+  UserSession _userSession;
+
+  UserSession get userSession {
+    return _userSession;
+  }
 
   final Dio _dio = Dio(BaseOptions(baseUrl: 'http://0822a4f3f700.ngrok.io'));
 
@@ -58,19 +63,18 @@ class Session extends ChangeNotifier {
       );
       //guarda datos en el dispositivo
       final user = response.data["dto"];
-      final userSession = UserSession(
-        id: user["id"],
-        deviceId: user["deviceId"],
-        userId: user["userId"],
+      _userSession = UserSession(
+        id: user["id"].toString(),
+        deviceId: user["deviceId"].toString(),
+        userId: user["userId"].toString(),
       );
-      await setSession(userSession);
+      await setSession();
       progressDialog.dismiss();
       // redirecciona al home eliminando paginas previas
       Navigator.pushNamedAndRemoveUntil(
           context, HomeScreen.routeName, (_) => false);
     } catch (error) {
       progressDialog.dismiss();
-      print(error);
       if (error is DioError) {
         final errorCode = error.response.statusCode.toString();
         final message = error.message;
@@ -104,13 +108,14 @@ class Session extends ChangeNotifier {
         },
       );
       final user = response.data["dto"];
-      final userSession = UserSession(
+      _userSession = UserSession(
         id: user["id"].toString(),
         deviceId: user["deviceId"].toString(),
         userId: user["userId"].toString(),
       );
-      await setSession(userSession);
+      await setSession();
       progressDialog.dismiss();
+      notifyListeners();
       // redirecciona al home eliminando paginas previas
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -152,12 +157,13 @@ class Session extends ChangeNotifier {
         },
       );
       //Elimina los datos del dispositivo y redirecciona a la pagina del login
+      _userSession = null;
       await this._storage.deleteAll();
+      notifyListeners();
       Navigator.pushNamedAndRemoveUntil(
           context, SignInScreen.routeName, (_) => false);
     } catch (error) {
       progressDialog.dismiss();
-      print(error);
       if (error is DioError) {
         String message = error.response.data['message'];
         print(error.response.data);
@@ -167,15 +173,20 @@ class Session extends ChangeNotifier {
           content: message,
         );
       } else {
+        Dialogs.info(
+          context,
+          title: 'ERROR',
+          content: "Error al desloguearse",
+        );
         print(error);
       }
     }
   }
 
-  Future<void> setSession(UserSession userSession) async {
-    await this._storage.write(key: sessionKey, value: userSession.id);
-    await this._storage.write(key: userKey, value: userSession.userId);
-    await this._storage.write(key: deviceKey, value: userSession.deviceId);
+  Future<void> setSession() async {
+    await this._storage.write(key: sessionKey, value: _userSession.id);
+    await this._storage.write(key: userKey, value: _userSession.userId);
+    await this._storage.write(key: deviceKey, value: _userSession.deviceId);
   }
 
   Future getSession() async {
