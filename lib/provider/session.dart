@@ -7,12 +7,24 @@ import '../components/dialogs.dart';
 import '../src/home/home.dart';
 import '../src/sign_in/sign_in_screen.dart';
 
-class MyServices extends ChangeNotifier {
+class UserSession {
+  final String id;
+  final String userId;
+  final String deviceId;
+
+  UserSession({
+    this.id,
+    this.userId,
+    this.deviceId,
+  });
+}
+
+class Session extends ChangeNotifier {
   final _storage = FlutterSecureStorage();
   final emailKey = "EMAILK";
   final passwordKey = "PASSWORDK";
 
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:9000'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://8bcbe5da8e91.ngrok.io'));
 
   Future<void> register(
     BuildContext context, {
@@ -74,7 +86,7 @@ class MyServices extends ChangeNotifier {
     final ProgressDialog progressDialog = ProgressDialog(context);
     try {
       progressDialog.show(); // muestra barra de carga
-      await this._dio.post(
+      final user = await this._dio.post(
         '/api/user/login',
         data: {
           "username": null,
@@ -84,7 +96,8 @@ class MyServices extends ChangeNotifier {
           "loguedIn": true
         },
       );
-      // GUARDA LAS CREDENCIALES EN STORAGE DEL DISPOSITIVO
+      final UserSession userSession = null;
+      //user = user["data"] as Map<String, dynamic>;
       await setSession(email, password);
       progressDialog.dismiss();
       // redirecciona al home eliminando paginas previas
