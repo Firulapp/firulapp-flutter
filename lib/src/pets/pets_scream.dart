@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'components/pets-body.dart';
 
 class PetsScreen extends StatelessWidget {
-  static String routeName = "/pets";
+  static const routeName = "/pets";
   @override
   Widget build(BuildContext context) {
     return Scaffold(

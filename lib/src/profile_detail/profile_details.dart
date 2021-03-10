@@ -7,7 +7,7 @@ import '../profile_detail/components/photo-perfil.dart';
 import '../../provider/super_user_data.dart';
 
 class ProfilePage extends StatefulWidget {
-  static String routeName = "/profile-details";
+  static const routeName = "/profile-details";
   @override
   MapScreenState createState() => MapScreenState();
 }
@@ -25,7 +25,7 @@ class MapScreenState extends State<ProfilePage>
     final userData = Provider.of<SuperUserData>(context);
     return new Scaffold(
         appBar: AppBar(
-          title: Text("Informacion Personal"),
+          title: const Text("Informacion Personal"),
         ),
         body: new ListView(
           children: <Widget>[
@@ -208,7 +208,7 @@ class MapScreenState extends State<ProfilePage>
               padding: EdgeInsets.only(right: 10.0),
               child: Container(
                   child: RaisedButton(
-                child: Text("Save"),
+                child: const Text("Save"),
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () {
@@ -228,7 +228,7 @@ class MapScreenState extends State<ProfilePage>
               padding: EdgeInsets.only(left: 10.0),
               child: Container(
                   child: RaisedButton(
-                child: Text("Cancel"),
+                child: const Text("Cancel"),
                 textColor: Colors.white,
                 color: Colors.red,
                 onPressed: () {

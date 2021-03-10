@@ -4,7 +4,7 @@ import 'componets/body.dart';
 import 'componets/home_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
-  static String routeName = "/home";
+  static const routeName = "/home";
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override

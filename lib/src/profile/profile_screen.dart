@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'components/body.dart';
 
 class ProfileScreen extends StatelessWidget {
-  static String routeName = "/profile";
+  static const routeName = "/profile";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Perfil"),
+        title: const Text("Perfil"),
       ),
       body: Body(),
     );
