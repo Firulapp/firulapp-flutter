@@ -21,10 +21,11 @@ class UserSession {
 
 class Session extends ChangeNotifier {
   final _storage = FlutterSecureStorage();
-  final emailKey = "EMAILK";
-  final passwordKey = "PASSWORDK";
+  final sessionKey = "SESSIONK";
+  final userKey = "USERK";
+  final deviceKey = "DEVICEK";
 
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://8bcbe5da8e91.ngrok.io'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://0822a4f3f700.ngrok.io'));
 
   Future<void> register(
     BuildContext context, {
@@ -35,7 +36,7 @@ class Session extends ChangeNotifier {
     final ProgressDialog progressDialog = ProgressDialog(context);
     try {
       progressDialog.show();
-      await this._dio.post(
+      final response = await this._dio.post(
         '/api/user/register',
         data: {
           "id": null,
@@ -56,7 +57,13 @@ class Session extends ChangeNotifier {
         },
       );
       //guarda datos en el dispositivo
-      await setSession(email, password);
+      final user = response.data["dto"];
+      final userSession = UserSession(
+        id: user["id"],
+        deviceId: user["deviceId"],
+        userId: user["userId"],
+      );
+      await setSession(userSession);
       progressDialog.dismiss();
       // redirecciona al home eliminando paginas previas
       Navigator.pushNamedAndRemoveUntil(
@@ -86,7 +93,7 @@ class Session extends ChangeNotifier {
     final ProgressDialog progressDialog = ProgressDialog(context);
     try {
       progressDialog.show(); // muestra barra de carga
-      final user = await this._dio.post(
+      final response = await this._dio.post(
         '/api/user/login',
         data: {
           "username": null,
@@ -96,9 +103,13 @@ class Session extends ChangeNotifier {
           "loguedIn": true
         },
       );
-      final UserSession userSession = null;
-      //user = user["data"] as Map<String, dynamic>;
-      await setSession(email, password);
+      final user = response.data["dto"];
+      final userSession = UserSession(
+        id: user["id"].toString(),
+        deviceId: user["deviceId"].toString(),
+        userId: user["userId"].toString(),
+      );
+      await setSession(userSession);
       progressDialog.dismiss();
       // redirecciona al home eliminando paginas previas
       Navigator.pushNamedAndRemoveUntil(
@@ -118,7 +129,11 @@ class Session extends ChangeNotifier {
           content: message,
         );
       } else {
-        print(error);
+        Dialogs.info(
+          context,
+          title: 'ERROR',
+          content: "Error al loguearse",
+        );
       }
     }
   }
@@ -127,15 +142,21 @@ class Session extends ChangeNotifier {
     final ProgressDialog progressDialog = ProgressDialog(context);
     try {
       progressDialog.show(); // muestra barra de carga
+      final UserSession userSession = await getSession();
       await this._dio.post(
         '/api/user/logout',
-        data: {"id": 1, "userId": 1, "deviceId": 1},
+        data: {
+          "id": userSession.id,
+          "deviceId": userSession.deviceId,
+          "userId": userSession.userId,
+        },
       );
       //Elimina los datos del dispositivo y redirecciona a la pagina del login
       await this._storage.deleteAll();
       Navigator.pushNamedAndRemoveUntil(
           context, SignInScreen.routeName, (_) => false);
     } catch (error) {
+      progressDialog.dismiss();
       print(error);
       if (error is DioError) {
         String message = error.response.data['message'];
@@ -151,21 +172,24 @@ class Session extends ChangeNotifier {
     }
   }
 
-  Future<void> setSession(String userEmail, String userPassword) async {
-    await this._storage.write(key: emailKey, value: userEmail);
-    await this._storage.write(key: passwordKey, value: userPassword);
+  Future<void> setSession(UserSession userSession) async {
+    await this._storage.write(key: sessionKey, value: userSession.id);
+    await this._storage.write(key: userKey, value: userSession.userId);
+    await this._storage.write(key: deviceKey, value: userSession.deviceId);
   }
 
   Future getSession() async {
-    final String emailValue = await this._storage.read(key: emailKey);
-    final String passwordValue = await this._storage.read(key: passwordKey);
+    final String sessionValue = await this._storage.read(key: sessionKey);
+    final String userValue = await this._storage.read(key: userKey);
+    final String deviceValue = await this._storage.read(key: deviceKey);
 
-    if (passwordValue != null && emailValue != null) {
-      final session = {
-        "email": emailValue,
-        "encryptedPassword": passwordValue,
-      };
-      return session;
+    if (userValue != null && sessionValue != null && deviceValue != null) {
+      final userSession = UserSession(
+        id: sessionValue,
+        deviceId: deviceValue,
+        userId: userValue,
+      );
+      return userSession;
     }
     return null;
   }
