@@ -30,7 +30,7 @@ class Session extends ChangeNotifier {
     return _userSession;
   }
 
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://0822a4f3f700.ngrok.io'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://f9860de4a333.ngrok.io'));
 
   Future<void> register(
     BuildContext context, {
@@ -147,13 +147,12 @@ class Session extends ChangeNotifier {
     final ProgressDialog progressDialog = ProgressDialog(context);
     try {
       progressDialog.show(); // muestra barra de carga
-      final UserSession userSession = await getSession();
       await this._dio.post(
         '/api/user/logout',
         data: {
-          "id": userSession.id,
-          "deviceId": userSession.deviceId,
-          "userId": userSession.userId,
+          "id": _userSession.id,
+          "deviceId": _userSession.deviceId,
+          "userId": _userSession.userId,
         },
       );
       //Elimina los datos del dispositivo y redirecciona a la pagina del login
@@ -195,13 +194,13 @@ class Session extends ChangeNotifier {
     final String deviceValue = await this._storage.read(key: deviceKey);
 
     if (userValue != null && sessionValue != null && deviceValue != null) {
-      final userSession = UserSession(
+      _userSession = UserSession(
         id: sessionValue,
         deviceId: deviceValue,
         userId: userValue,
       );
-      return userSession;
+    } else {
+      _userSession = null;
     }
-    return null;
   }
 }

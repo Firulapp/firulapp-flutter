@@ -9,7 +9,7 @@ import '../../size_config.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key key}) : super(key: key);
-  static String routeName = "/splash";
+  static const routeName = "/splash";
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -21,8 +21,8 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
   }
 
   _check() async {
-    final session =
-        await Provider.of<Session>(context, listen: false).getSession();
+    await Provider.of<Session>(context, listen: false).getSession();
+    final session = Provider.of<Session>(context, listen: false).userSession;
     if (session != null) {
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     } else {
