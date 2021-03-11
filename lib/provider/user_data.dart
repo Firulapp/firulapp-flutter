@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SuperUserData with ChangeNotifier {
+class UserData with ChangeNotifier {
   String _userName = 'mfare';
   String _name = 'Matias';
   String _surname = 'Fare';

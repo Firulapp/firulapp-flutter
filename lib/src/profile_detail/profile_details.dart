@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
 import '../profile_detail/components/photo-perfil.dart';
-import '../../provider/super_user_data.dart';
+import '../../provider/user_data.dart';
 
 class ProfilePage extends StatefulWidget {
   static const routeName = "/profile-details";
@@ -22,7 +22,7 @@ class MapScreenState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<SuperUserData>(context);
+    final userData = Provider.of<UserData>(context);
     return new Scaffold(
         appBar: AppBar(
           title: const Text("Informacion Personal"),

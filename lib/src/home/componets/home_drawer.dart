@@ -6,7 +6,7 @@ import '../../../provider/session.dart';
 import '../../sign_in/sign_in_screen.dart';
 import '../../../constants/constants.dart';
 import '../../profile/profile_screen.dart';
-import '../../../provider/super_user_data.dart';
+import '../../../provider/user_data.dart';
 
 class HomeDrawer extends StatefulWidget {
   HomeDrawer({Key key}) : super(key: key);
@@ -18,7 +18,7 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<SuperUserData>(context);
+    final userData = Provider.of<UserData>(context);
     final name = userData.name;
     final surname = userData.surname;
     final ProgressDialog progressDialog = ProgressDialog(context);
