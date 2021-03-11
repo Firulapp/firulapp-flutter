@@ -1,8 +1,8 @@
-import 'package:firulapp/components/dialogs.dart';
-import 'package:firulapp/provider/session.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import '../../../components/dialogs.dart';
+import '../../../provider/session.dart';
 import '../../sign_in/sign_in_screen.dart';
 import '../../../constants/constants.dart';
 import '../../profile/profile_screen.dart';
