@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../size_config.dart';
 import '../../pets/pets_scream.dart';
-import '../../constants.dart';
+import '../../../constants/constants.dart';
 
 class HomeButtons extends StatelessWidget {
   @override

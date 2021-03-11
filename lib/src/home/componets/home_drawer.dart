@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import '../../sign_in/sign_in_screen.dart';
-import '../../constants.dart';
+import '../../../constants/constants.dart';
 import '../../profile/profile_screen.dart';
 import '../../../provider/super_user_data.dart';
 

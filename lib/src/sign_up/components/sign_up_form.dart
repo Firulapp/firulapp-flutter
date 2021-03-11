@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../../../constants/constants.dart';
 import '../../mixins/validator_mixins.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';

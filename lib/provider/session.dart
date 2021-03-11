@@ -1,12 +1,11 @@
-import 'package:firulapp/constants/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../constants/endpoints.dart';
 import '../components/dialogs.dart';
 import '../src/home/home.dart';
-import '../src/sign_in/sign_in_screen.dart';
 
 class UserSession {
   final String id;

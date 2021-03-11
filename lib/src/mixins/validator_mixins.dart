@@ -1,4 +1,4 @@
-import '../constants.dart';
+import '../../constants/constants.dart';
 
 class ValidatorMixins {
   String validateEmail(String value) {

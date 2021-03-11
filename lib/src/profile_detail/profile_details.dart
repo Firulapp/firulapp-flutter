@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
+import '../../constants/constants.dart';
 import '../profile_detail/components/photo-perfil.dart';
 import '../../provider/super_user_data.dart';
 
