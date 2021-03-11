@@ -8,9 +8,6 @@ import 'src/pets/pets_scream.dart';
 import 'src/sign_up/sign_up_screen.dart';
 import 'src/splash/splash_scren.dart';
 
-// We use name route
-// All our routes will be available here
-
 final Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => HomeScreen(),
   SignInScreen.routeName: (context) => SignInScreen(),

@@ -1,3 +1,4 @@
+import 'package:firulapp/constants/endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
@@ -30,7 +31,7 @@ class Session extends ChangeNotifier {
     return _userSession;
   }
 
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://18bc2be29b00.ngrok.io'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
   Future<void> register(
     BuildContext context, {
@@ -42,7 +43,7 @@ class Session extends ChangeNotifier {
     try {
       progressDialog.show();
       final response = await this._dio.post(
-        '/api/user/register',
+        Endpoints.signUp,
         data: {
           "id": null,
           "userId": null,
@@ -97,7 +98,7 @@ class Session extends ChangeNotifier {
     final ProgressDialog progressDialog = ProgressDialog(context);
     try {
       final response = await this._dio.post(
-        '/api/user/login',
+        Endpoints.login,
         data: {
           "username": null,
           "email": email,
@@ -147,7 +148,7 @@ class Session extends ChangeNotifier {
     try {
       progressDialog.show(); // muestra barra de carga
       await this._dio.post(
-        '/api/user/logout',
+        Endpoints.logout,
         data: {
           "id": _userSession.id,
           "deviceId": _userSession.deviceId,
