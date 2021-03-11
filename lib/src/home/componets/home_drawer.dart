@@ -1,7 +1,9 @@
+import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/provider/session.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import '../../sign_in/sign_in_screen.dart';
 import '../../constants.dart';
 import '../../profile/profile_screen.dart';
 import '../../../provider/super_user_data.dart';
@@ -19,7 +21,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     final userData = Provider.of<SuperUserData>(context);
     final name = userData.name;
     final surname = userData.surname;
-
+    final ProgressDialog progressDialog = ProgressDialog(context);
     return Drawer(
       elevation: 10.0,
       child: ListView(
@@ -56,11 +58,24 @@ class _HomeDrawerState extends State<HomeDrawer> {
             height: 2.0,
           ),
           ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text('Cerrar Sesion'),
-            onTap: () =>
-                Provider.of<Session>(context, listen: false).logOut(context),
-          ),
+              leading: Icon(Icons.exit_to_app),
+              title: const Text('Cerrar Sesion'),
+              onTap: () {
+                try {
+                  progressDialog.show();
+                  Provider.of<Session>(context, listen: false).logOut(context);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, SignInScreen.routeName, (_) => false);
+                } catch (error) {
+                  progressDialog.dismiss();
+                  Dialogs.info(
+                    context,
+                    title: 'ERROR',
+                    content: "Error al desloguearse",
+                  );
+                  print(error);
+                }
+              }),
           Divider(
             height: 2.0,
           ),

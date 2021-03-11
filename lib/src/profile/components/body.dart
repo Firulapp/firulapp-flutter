@@ -35,11 +35,6 @@ class Body extends StatelessWidget {
             press: () {},
           ),
           ProfileMenu(
-            text: "Cerrar sesión",
-            icon: "assets/icons/Log out.svg",
-            press: () {},
-          ),
-          ProfileMenu(
             text: "Desactivar cuenta",
             icon: "assets/icons/Log out.svg",
             press: () {

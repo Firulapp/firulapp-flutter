@@ -30,7 +30,7 @@ class Session extends ChangeNotifier {
     return _userSession;
   }
 
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://f9860de4a333.ngrok.io'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://18bc2be29b00.ngrok.io'));
 
   Future<void> register(
     BuildContext context, {
@@ -96,7 +96,6 @@ class Session extends ChangeNotifier {
   }) async {
     final ProgressDialog progressDialog = ProgressDialog(context);
     try {
-      progressDialog.show(); // muestra barra de carga
       final response = await this._dio.post(
         '/api/user/login',
         data: {
@@ -159,26 +158,8 @@ class Session extends ChangeNotifier {
       _userSession = null;
       await this._storage.deleteAll();
       notifyListeners();
-      Navigator.pushNamedAndRemoveUntil(
-          context, SignInScreen.routeName, (_) => false);
     } catch (error) {
-      progressDialog.dismiss();
-      if (error is DioError) {
-        String message = error.response.data['message'];
-        print(error.response.data);
-        Dialogs.info(
-          context,
-          title: 'ERROR',
-          content: message,
-        );
-      } else {
-        Dialogs.info(
-          context,
-          title: 'ERROR',
-          content: "Error al desloguearse",
-        );
-        print(error);
-      }
+      throw error;
     }
   }
 
