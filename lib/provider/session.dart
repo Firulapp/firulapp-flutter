@@ -89,12 +89,10 @@ class Session extends ChangeNotifier {
     }
   }
 
-  Future<void> login(
-    BuildContext context, {
+  Future<void> login({
     @required String email,
     @required String password,
   }) async {
-    final ProgressDialog progressDialog = ProgressDialog(context);
     try {
       final response = await this._dio.post(
         Endpoints.login,
@@ -113,39 +111,15 @@ class Session extends ChangeNotifier {
         userId: user["userId"].toString(),
       );
       await setSession();
-      progressDialog.dismiss();
       notifyListeners();
-      // redirecciona al home eliminando paginas previas
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        HomeScreen.routeName,
-        (_) => false,
-      );
     } catch (error) {
-      progressDialog.dismiss();
-      print(error);
-      if (error is DioError) {
-        String message = error.response.data['message'];
-        print(error.response.data);
-        Dialogs.info(
-          context,
-          title: 'ERROR',
-          content: message,
-        );
-      } else {
-        Dialogs.info(
-          context,
-          title: 'ERROR',
-          content: "Error al loguearse",
-        );
-      }
+      throw error;
     }
   }
 
   Future<void> logOut(BuildContext context) async {
-    final ProgressDialog progressDialog = ProgressDialog(context);
     try {
-      progressDialog.show(); // muestra barra de carga
+      // muestra barra de carga
       await this._dio.post(
         Endpoints.logout,
         data: {

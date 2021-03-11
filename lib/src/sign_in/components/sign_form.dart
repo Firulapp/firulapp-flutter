@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../src/home/home.dart';
+import '../../../components/dialogs.dart';
 import '../../../provider/session.dart';
 import '../../../components/default_button.dart';
 import '../../../components/input_text.dart';
@@ -23,12 +26,24 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
     final isOK = _formKey.currentState.validate();
     _formKey.currentState.save();
     if (isOK) {
-      Session myServices = Session();
-      myServices.login(
-        context,
-        email: _email,
-        password: _password,
-      );
+      try {
+        Provider.of<Session>(context, listen: false).login(
+          email: _email,
+          password: _password,
+        );
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          HomeScreen.routeName,
+          (_) => false,
+        );
+      } catch (error) {
+        print(error);
+        Dialogs.info(
+          context,
+          title: 'ERROR',
+          content: "Error al loguearse",
+        );
+      }
     }
   }
 
@@ -43,8 +58,6 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
           SizedBox(height: getProportionateScreenHeight(30)),
           passwordFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
-          //FormError(errors: errors),
-          //SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Iniciar Sesión",
             press: _submit,
