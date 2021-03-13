@@ -18,9 +18,9 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<UserData>(context);
-    final name = userData.name;
-    final surname = userData.surname;
+    final user = Provider.of<User>(context);
+    final name = user.userData.name;
+    final surname = user.userData.surname;
     final ProgressDialog progressDialog = ProgressDialog(context);
     return Drawer(
       elevation: 10.0,
@@ -30,7 +30,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         children: <Widget>[
           UserAccountsDrawerHeader(
             accountName: Text("$name $surname"),
-            accountEmail: Text(userData.mail),
+            accountEmail: Text(user.userData.mail),
             currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage(
               "assets/images/Profile Image.png",
