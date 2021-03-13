@@ -5,8 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../constants/endpoints.dart';
-import '../components/dialogs.dart';
-import '../src/home/home.dart';
 
 class UserSession {
   final String id;
@@ -46,7 +44,7 @@ class Session extends ChangeNotifier {
           "documentType": userData.documentType,
           "name": userData.name,
           "surname": userData.surname,
-          "city": "Asunción",
+          "city": userData.city,
           "profilePicture": userData.profilePicture,
           "birthDate": userData.birthDate,
           "notifications": userData.notifications,

@@ -18,4 +18,11 @@ class ValidatorMixins {
     }
     return null;
   }
+
+  String validateTextNotNull(String value) {
+    if (value.isEmpty || value.trim().length == 0) {
+      return kTextNotNull;
+    }
+    return null;
+  }
 }

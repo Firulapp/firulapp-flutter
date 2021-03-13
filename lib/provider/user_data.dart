@@ -22,7 +22,7 @@ class UserData {
   final String document;
   final String documentType;
   final String city;
-  final DateTime birthDate;
+  final String birthDate;
   final FileImage profilePicture;
   final String userType = 'APP';
   final bool enabled = true;
@@ -49,6 +49,10 @@ class User with ChangeNotifier {
 
   UserData get userData {
     return _userData;
+  }
+
+  List<String> getDocumentTypeOptions() {
+    return ['CI', 'RUC', 'Pasaporte'];
   }
 
   void addUser(UserData userData) {

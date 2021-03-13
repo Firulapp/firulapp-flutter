@@ -22,7 +22,7 @@ class MapScreenState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<UserData>(context);
+    final user = Provider.of<User>(context);
     return new Scaffold(
         appBar: AppBar(
           title: const Text("Informacion Personal"),
@@ -75,7 +75,7 @@ class MapScreenState extends State<ProfilePage>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: userData.name,
+                            initialValue: user.userData.name,
                             decoration: InputDecoration(
                               hintText: "Ingresa tu Nombre",
                               labelText: 'Nombre',
@@ -89,7 +89,7 @@ class MapScreenState extends State<ProfilePage>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: userData.surname,
+                            initialValue: user.userData.surname,
                             decoration: InputDecoration(
                               hintText: "Ingresa tu Apellido",
                               labelText: 'Apellido',
@@ -103,7 +103,7 @@ class MapScreenState extends State<ProfilePage>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: userData.mail,
+                            initialValue: user.userData.mail,
                             decoration: InputDecoration(
                               hintText: "Ingresa tu Correo",
                               labelText: 'Correo',
@@ -117,7 +117,7 @@ class MapScreenState extends State<ProfilePage>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: userData.birthDate.toString(),
+                            initialValue: user.userData.birthDate.toString(),
                             decoration: InputDecoration(
                               hintText: "Ingresa tu fecha de nacimiento",
                               labelText: 'Fecha de nacimiento',
@@ -131,7 +131,7 @@ class MapScreenState extends State<ProfilePage>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: userData.city,
+                            initialValue: user.userData.city,
                             decoration: InputDecoration(
                               hintText: "Ingresa tu Ciudad",
                               labelText: 'Ciudad',

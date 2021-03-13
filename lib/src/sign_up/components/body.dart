@@ -30,7 +30,8 @@ class Body extends StatelessWidget {
                   'Al continuar, confirma que está de acuerdo \ncon nuestros Términos y condiciónes',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: sizeConfig.hp(1.7)),
-                )
+                ),
+                SizedBox(height: sizeConfig.hp(2)),
               ],
             ),
           ),
