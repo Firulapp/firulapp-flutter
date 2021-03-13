@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../provider/user_data.dart';
+import '../../sign_up/components/sign_up_details_form.dart';
 import '../../../constants/constants.dart';
 import '../../mixins/validator_mixins.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';
 import '../../../components/input_text.dart';
-import '../../../provider/session.dart';
 import '../../../size_config.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -17,21 +18,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidatorMixins {
   final _formKey = GlobalKey<FormState>();
   String _email;
   String _password;
-  String _conformPassword;
-
-  _submit() async {
-    final isOK = _formKey.currentState.validate();
-    if (isOK) {
-      //_formKey.currentState.save();
-      Session myServices = Session();
-      await myServices.register(
-        context,
-        username: _email,
-        email: _email,
-        password: _password,
-      );
-    }
-  }
+  String _confirmPassword;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +34,19 @@ class _SignUpFormState extends State<SignUpForm> with ValidatorMixins {
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Continue",
-            press: _submit,
+            press: () {
+              final isOK = _formKey.currentState.validate();
+              if (isOK) {
+                final user = UserCredentials(
+                    mail: _email,
+                    confirmPassword: _confirmPassword,
+                    encryptedPassword: _password);
+                Navigator.of(context).pushNamed(
+                  SignUpDetailsForm.routeName,
+                  arguments: user,
+                );
+              }
+            },
           ),
         ],
       ),
@@ -59,12 +58,12 @@ class _SignUpFormState extends State<SignUpForm> with ValidatorMixins {
         label: "Confirmar Contraseña",
         hintText: "Re-ingrese su contraseña",
         obscureText: true,
-        onSaved: (newValue) => _conformPassword = newValue,
+        onSaved: (newValue) => _confirmPassword = newValue,
         onChanged: (value) {
-          if (value.isNotEmpty && _password == _conformPassword) {
+          if (value.isNotEmpty && _password == _confirmPassword) {
             return kMatchPassError;
           }
-          _conformPassword = value;
+          _confirmPassword = value;
         },
         validator: (value) {
           if (value.isEmpty) {
