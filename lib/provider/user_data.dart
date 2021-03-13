@@ -1,31 +1,58 @@
 import 'package:flutter/material.dart';
 
-class UserData with ChangeNotifier {
-  String _userName = 'mfare';
-  String _name = 'Matias';
-  String _surname = 'Fare';
-  String _mail = 'matiasfare59@gmail.com';
-  String _document = '5719493';
-  String _documentType = 'CI';
-  String _city = 'Asunción';
-  DateTime _birthDate = DateTime.now();
-  FileImage _profilePicture;
-  String _userType = 'APP';
+class UserCredentials {
+  final String encryptedPassword;
+  final String confirmPassword;
+  final String mail;
 
-  // Getters datos del usuario
-  get userName => _userName;
-  get name => _name;
-  get surname => _surname;
-  get mail => _mail;
-  get document => _document;
-  get documentType => _documentType;
-  get city => _city;
-  get birthDate => _birthDate;
-  get profilePicture => _profilePicture;
-  get userType => _userType;
+  UserCredentials({
+    this.encryptedPassword,
+    this.confirmPassword,
+    this.mail,
+  });
+}
 
-  set userName(String value) {
-    this._name = value;
+class UserData {
+  final String userName;
+  final String encryptedPassword;
+  final String confirmPassword;
+  final String mail;
+  final String name;
+  final String surname;
+  final String document;
+  final String documentType;
+  final String city;
+  final DateTime birthDate;
+  final FileImage profilePicture;
+  final String userType = 'APP';
+  final bool enabled = true;
+  final bool notifications;
+
+  UserData({
+    this.userName,
+    this.encryptedPassword,
+    this.confirmPassword,
+    this.mail,
+    this.name,
+    this.surname,
+    this.document,
+    this.documentType,
+    this.city,
+    this.profilePicture,
+    this.notifications,
+    this.birthDate,
+  });
+}
+
+class User with ChangeNotifier {
+  UserData _userData;
+
+  UserData get userData {
+    return _userData;
+  }
+
+  void addUser(UserData userData) {
+    _userData = userData;
     notifyListeners();
   }
 }

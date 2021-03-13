@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => UserData(),
+          create: (_) => User(),
         ),
         ChangeNotifierProvider(
           create: (_) => Session(),

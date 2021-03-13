@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
@@ -32,36 +33,30 @@ class Session extends ChangeNotifier {
 
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
-  Future<void> register(
-    BuildContext context, {
-    @required String username,
-    @required String email,
-    @required String password,
+  Future<void> register({
+    @required UserData userData,
   }) async {
-    final ProgressDialog progressDialog = ProgressDialog(context);
     try {
-      progressDialog.show();
       final response = await this._dio.post(
         Endpoints.signUp,
         data: {
           "id": null,
           "userId": null,
-          "document": "5719493",
-          "documentType": "CI",
-          "name": username,
-          "surname": username,
+          "document": userData.document,
+          "documentType": userData.documentType,
+          "name": userData.name,
+          "surname": userData.surname,
           "city": "Asunción",
-          "profilePicture": null,
-          "birthDate": "1998-06-27T00:00:00.000Z",
-          "notifications": true,
-          "username": username,
-          "email": email,
-          "encryptedPassword": password,
-          "confirmPassword": password,
-          "userType": "APP"
+          "profilePicture": userData.profilePicture,
+          "birthDate": userData.birthDate,
+          "notifications": userData.notifications,
+          "username": userData.userName,
+          "email": userData.mail,
+          "encryptedPassword": userData.encryptedPassword,
+          "confirmPassword": userData.confirmPassword,
+          "userType": userData.userType
         },
       );
-      //guarda datos en el dispositivo
       final user = response.data["dto"];
       _userSession = UserSession(
         id: user["id"].toString(),
@@ -69,23 +64,8 @@ class Session extends ChangeNotifier {
         userId: user["userId"].toString(),
       );
       await setSession();
-      progressDialog.dismiss();
-      // redirecciona al home eliminando paginas previas
-      Navigator.pushNamedAndRemoveUntil(
-          context, HomeScreen.routeName, (_) => false);
     } catch (error) {
-      progressDialog.dismiss();
-      if (error is DioError) {
-        final errorCode = error.response.statusCode.toString();
-        final message = error.message;
-        Dialogs.info(
-          context,
-          title: errorCode,
-          content: message,
-        );
-      } else {
-        print(error);
-      }
+      throw error;
     }
   }
 
