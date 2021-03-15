@@ -1,11 +1,12 @@
-import 'package:firulapp/provider/session.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import './src/splash/splash_scren.dart';
 import './routes.dart';
 import './src/theme.dart';
-import 'provider/user_data.dart';
+import './provider/user_data.dart';
+import './provider/species.dart';
+import './provider/session.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,6 +20,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => Session(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Species(),
         ),
       ],
       child: MaterialApp(
