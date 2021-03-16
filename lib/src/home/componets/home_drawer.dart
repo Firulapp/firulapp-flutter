@@ -60,18 +60,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ListTile(
               leading: Icon(Icons.exit_to_app),
               title: const Text('Cerrar Sesion'),
-              onTap: () {
+              onTap: () async {
                 try {
-                  progressDialog.show();
-                  Provider.of<Session>(context, listen: false).logOut(context);
+                  await Provider.of<Session>(context, listen: false)
+                      .logOut(context);
                   Navigator.pushNamedAndRemoveUntil(
                       context, SignInScreen.routeName, (_) => false);
                 } catch (error) {
-                  progressDialog.dismiss();
                   Dialogs.info(
                     context,
                     title: 'ERROR',
-                    content: "Error al desloguearse",
+                    content: error.response.data["message"],
                   );
                   print(error);
                 }

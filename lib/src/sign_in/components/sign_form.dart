@@ -18,16 +18,20 @@ class SingFrom extends StatefulWidget {
 }
 
 class _SingFromState extends State<SingFrom> with ValidatorMixins {
+  var _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   String _email;
   String _password;
 
-  _submit() {
+  _submit() async {
+    setState(() {
+      _isLoading = true;
+    });
     final isOK = _formKey.currentState.validate();
     _formKey.currentState.save();
     if (isOK) {
       try {
-        Provider.of<Session>(context, listen: false).login(
+        await Provider.of<Session>(context, listen: false).login(
           email: _email,
           password: _password,
         );
@@ -41,30 +45,35 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
         Dialogs.info(
           context,
           title: 'ERROR',
-          content: "Error al loguearse",
+          content: error.response.data["message"],
         );
       }
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          SizedBox(height: getProportionateScreenHeight(30)),
-          emailFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          passwordFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          DefaultButton(
-            text: "Iniciar Sesión",
-            press: _submit,
-          ),
-        ],
-      ),
-    );
+    return _isLoading
+        ? CircularProgressIndicator()
+        : Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                SizedBox(height: getProportionateScreenHeight(30)),
+                emailFormField(),
+                SizedBox(height: getProportionateScreenHeight(30)),
+                passwordFormField(),
+                SizedBox(height: getProportionateScreenHeight(30)),
+                DefaultButton(
+                  text: "Iniciar Sesión",
+                  press: _submit,
+                ),
+              ],
+            ),
+          );
   }
 
   Widget emailFormField() {
