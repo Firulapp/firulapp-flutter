@@ -48,10 +48,10 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
           content: error.response.data["message"],
         );
       }
-      setState(() {
-        _isLoading = false;
-      });
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override

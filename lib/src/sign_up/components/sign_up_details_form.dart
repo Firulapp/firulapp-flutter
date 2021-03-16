@@ -198,10 +198,10 @@ class _BodyState extends State<Body> with ValidatorMixins {
                         content: error.response.data["message"],
                       );
                     }
-                    setState(() {
-                      _isLoading = false;
-                    });
                   }
+                  setState(() {
+                    _isLoading = false;
+                  });
                 },
               ),
             ]),
