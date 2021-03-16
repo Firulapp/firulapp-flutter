@@ -1,4 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import '../constants/endpoints.dart';
+import './session.dart';
 
 class UserCredentials {
   final String encryptedPassword;
@@ -46,6 +50,11 @@ class UserData {
 
 class User with ChangeNotifier {
   UserData _userData;
+  final UserSession session;
+
+  User(this.session, _userData);
+
+  final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
   UserData get userData {
     return _userData;
@@ -58,5 +67,27 @@ class User with ChangeNotifier {
   void addUser(UserData userData) {
     _userData = userData;
     notifyListeners();
+  }
+
+  Future<void> getUser() async {
+    try {
+      final response =
+          await this._dio.get('${Endpoints.user}/${session.userId}');
+      final userResponse = response.data["dto"];
+      _userData = UserData(
+          name: userResponse["name"],
+          surname: userResponse["surname"],
+          city: userResponse["city"],
+          document: userResponse["document"],
+          documentType: userResponse["documentType"],
+          profilePicture: userResponse["profilePicture"],
+          birthDate: userResponse["birthDate"],
+          notifications: userResponse["notifications"],
+          userName: userResponse["username"],
+          mail: userResponse["email"]);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 }

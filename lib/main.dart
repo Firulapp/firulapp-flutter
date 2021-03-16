@@ -14,8 +14,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => User(),
+        ChangeNotifierProxyProvider<Session, User>(
+          update: (context, session, user) => User(
+            session.userSession,
+            user == null ? {} : user.userData,
+          ),
+          create: (_) => User(null, null),
         ),
         ChangeNotifierProvider(
           create: (_) => Session(),
