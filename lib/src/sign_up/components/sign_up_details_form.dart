@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../home/home.dart';
@@ -70,6 +71,21 @@ class _BodyState extends State<Body> with ValidatorMixins {
   String _document;
   String _city;
   String _birthDate;
+  final df = new DateFormat('dd-MM-yyyy');
+  DateTime currentDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: DateTime(1940),
+        lastDate: DateTime(2050));
+    if (pickedDate != null && pickedDate != currentDate)
+      setState(() {
+        currentDate = pickedDate;
+        _birthDate = currentDate.toIso8601String();
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,10 +132,34 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 TextInputType.number,
               ),
               SizedBox(height: getProportionateScreenHeight(25)),
-              buildBirthdateFormField(
-                "Fecha de nacimiento",
-                "Ingrese su fecha de nacimiento",
-                TextInputType.number,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      RaisedButton(
+                        onPressed: () => _selectDate(context),
+                        child: Text("Fecha de nacimiento"),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        df.format(currentDate),
+                        style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
               SizedBox(height: getProportionateScreenHeight(25)),
               DefaultButton(
