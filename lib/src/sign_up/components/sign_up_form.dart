@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../provider/user_data.dart';
+import '../../../provider/user.dart';
 import '../../sign_up/components/sign_up_details_form.dart';
 import '../../../constants/constants.dart';
 import '../../mixins/validator_mixins.dart';

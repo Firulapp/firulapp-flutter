@@ -1,4 +1,4 @@
-import 'package:firulapp/provider/user_data.dart';
+import 'package:firulapp/provider/user.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';

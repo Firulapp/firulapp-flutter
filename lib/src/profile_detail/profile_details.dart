@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
 import '../profile_detail/components/photo-perfil.dart';
-import '../../provider/user_data.dart';
+import '../../provider/user.dart';
 
 class ProfilePage extends StatefulWidget {
   static const routeName = "/profile-details";

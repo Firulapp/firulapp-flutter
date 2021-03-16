@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../home/home.dart';
 import '../../../provider/session.dart';
-import '../../../provider/user_data.dart';
+import '../../../provider/user.dart';
 import '../../../components/dialogs.dart';
 import '../../../components/default_button.dart';
 import '../../../components/input_text.dart';
