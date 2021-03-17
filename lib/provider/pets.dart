@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-class PetsData with ChangeNotifier {
-  String _name = 'Firulains';
+class PetItem with ChangeNotifier {
+  String _name;
   String _photoUrl =
       'https://ar.zoetis.com/_locale-assets/mcm-portal-assets/publishingimages/especie/caninos_perro_img.png';
-  String _speci = 'Perro';
-  String _race = 'Labrador';
-  String _age = '2 meses';
-
-  // Getters datos del usuario
+  int _speciesId;
+  int _race = 1;
+  int _age;
+  // Getters datos de la mascota
   get name => _name;
   get photoUrl => _photoUrl;
-  get speci => _speci;
+  get speciesId => _speciesId;
   get race => _race;
   get age => _age;
 
@@ -25,17 +24,17 @@ class PetsData with ChangeNotifier {
     notifyListeners();
   }
 
-  set speci(String value) {
-    this._speci = value;
+  set speciesId(int value) {
+    this._speciesId = value;
     notifyListeners();
   }
 
-  set race(String value) {
+  set race(int value) {
     this._race = value;
     notifyListeners();
   }
 
-  set age(String value) {
+  set age(int value) {
     this._age = value;
     notifyListeners();
   }

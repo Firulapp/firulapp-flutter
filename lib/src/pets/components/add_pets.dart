@@ -1,12 +1,11 @@
 // Flutter imports:
-import 'dart:convert';
-
-import 'package:firulapp/provider/species.dart';
-import 'package:firulapp/src/pets/components/pets-image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../components/dialogs.dart';
+import '../../../provider/species.dart';
+import '../../../src/pets/components/pets-image.dart';
 import '../../../size_config.dart';
 import '../../../constants/constants.dart';
 
@@ -26,15 +25,16 @@ class MapScreenState extends State<AddPets>
   final df = new DateFormat('dd-MM-yyyy');
   DateTime currentDate = DateTime.now();
 
-  // valores dinamicos del formulario
+  // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
   String _name;
   String _speciesName;
   int _speciesId;
   String _race;
+  int _raceID;
   DateTime _birthDate;
   int _age;
   String _primaryColor;
-  String _description;
+  String _petDescription;
   String _secondaryColor;
   bool _petStatus;
 
@@ -103,7 +103,7 @@ class MapScreenState extends State<AddPets>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            //initialValue: userData.surname,
+                            initialValue: _name,
                             decoration: InputDecoration(
                               hintText: "Ingresa su nombre",
                               labelText: "Nombre",
@@ -155,10 +155,10 @@ class MapScreenState extends State<AddPets>
                                         .toList(),
                                     onChanged: !_status
                                         ? (v) => setState(() {
-                                              _speciesName = v;
+                                              _speciesId = v;
                                             })
                                         : null,
-                                    value: _speciesName,
+                                    value: _speciesId,
                                   ),
                                 ],
                               )
@@ -205,10 +205,10 @@ class MapScreenState extends State<AddPets>
                                         .toList(),
                                     onChanged: !_status
                                         ? (v) => setState(() {
-                                              _race = v;
+                                              _raceID = v;
                                             })
                                         : null,
-                                    value: _race,
+                                    value: _raceID,
                                   ),
                                 ],
                               )
@@ -273,7 +273,8 @@ class MapScreenState extends State<AddPets>
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Text(
-                                    calculateAge(currentDate).toString(),
+                                    (calculateAge(currentDate).toString() +
+                                        " Años"),
                                     style: TextStyle(
                                       fontSize: 23,
                                       fontWeight: FontWeight.bold,
@@ -288,7 +289,7 @@ class MapScreenState extends State<AddPets>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            //initialValue: userData.surname,
+                            initialValue: _primaryColor,
                             decoration: InputDecoration(
                               hintText: "Ingrese un color",
                               labelText: "Color Primario",
@@ -302,7 +303,7 @@ class MapScreenState extends State<AddPets>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            //initialValue: userData.surname,
+                            initialValue: _secondaryColor,
                             decoration: InputDecoration(
                               hintText: "Ingrese un color",
                               labelText: "Color secundario",
@@ -316,7 +317,7 @@ class MapScreenState extends State<AddPets>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            //initialValue: userData.surname,
+                            initialValue: _petDescription,
                             decoration: InputDecoration(
                               hintText: "Ingrese una description",
                               labelText: "Descripción",
@@ -326,6 +327,7 @@ class MapScreenState extends State<AddPets>
                             autofocus: !_status,
                           ),
                         ),
+                        _status ? _getDeletePetButton() : Container(),
                         !_status ? _getActionButtons() : Container(),
                       ],
                     ),
@@ -348,6 +350,38 @@ class MapScreenState extends State<AddPets>
     return TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
   }
 
+  Widget _getDeletePetButton() {
+    return Padding(
+      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Container(
+                  child: RaisedButton(
+                child: Text("Borrar Mascota"),
+                textColor: Colors.white,
+                color: Colors.red,
+                onPressed: () {
+                  SelectDialog().alertDialog(context,
+                      title: 'AVISO',
+                      content:
+                          'Está seguro que desa borrar el perfil de la mascota?');
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+              )),
+            ),
+            flex: 2,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
@@ -360,7 +394,7 @@ class MapScreenState extends State<AddPets>
               padding: EdgeInsets.only(right: 10.0),
               child: Container(
                   child: RaisedButton(
-                child: Text("Save"),
+                child: Text("Guardar"),
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () {
@@ -381,7 +415,7 @@ class MapScreenState extends State<AddPets>
               padding: EdgeInsets.only(left: 10.0),
               child: Container(
                   child: RaisedButton(
-                child: Text("Cancel"),
+                child: Text("Cancelar"),
                 textColor: Colors.white,
                 color: Colors.red,
                 onPressed: () {

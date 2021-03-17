@@ -1,3 +1,4 @@
+import 'package:firulapp/components/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
@@ -42,17 +43,24 @@ class Species with ChangeNotifier {
     try {
       final response = await _dio.get(Endpoints.species);
       final List<SpeciesItem> loadedSpecies = [];
-      response.data['list'].forEach((species) {
-        loadedSpecies.add(SpeciesItem(
-            id: species['id'],
-            name: species['name'],
-            description: species['description'],
-            status: species['status']));
-      });
-      _items = loadedSpecies;
-      notifyListeners();
-    } catch (error) {
-      print(error);
+      if (_items.isEmpty) {
+        response.data['list'].forEach((species) {
+          loadedSpecies.add(SpeciesItem(
+              id: species['id'],
+              name: species['name'],
+              description: species['description'],
+              status: species['status']));
+        });
+        _items = loadedSpecies;
+        notifyListeners();
+      }
+    } catch (e) {
+      print(e);
+      Dialogs.info(
+        context,
+        title: 'Guardar Mascota',
+        content: 'Ocurrui un error, favor vuelta a intentar',
+      );
     }
   }
 }
