@@ -29,6 +29,10 @@ class Session extends ChangeNotifier {
     return _userSession;
   }
 
+  bool get isAuth {
+    return userSession != null;
+  }
+
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
   Future<void> register({

@@ -74,17 +74,19 @@ class User with ChangeNotifier {
       final response =
           await this._dio.get('${Endpoints.user}/${session.userId}');
       final userResponse = response.data["dto"];
-      _userData = UserData(
-          name: userResponse["name"],
-          surname: userResponse["surname"],
-          city: userResponse["city"],
-          document: userResponse["document"],
-          documentType: userResponse["documentType"],
-          profilePicture: userResponse["profilePicture"],
-          birthDate: userResponse["birthDate"],
-          notifications: userResponse["notifications"],
-          userName: userResponse["username"],
-          mail: userResponse["email"]);
+      var userData = UserData(
+        name: userResponse["name"],
+        surname: userResponse["surname"],
+        city: userResponse["city"],
+        document: userResponse["document"],
+        documentType: userResponse["documentType"],
+        profilePicture: userResponse["profilePicture"],
+        birthDate: userResponse["birthDate"],
+        notifications: userResponse["notifications"],
+        userName: userResponse["username"],
+        mail: userResponse["email"],
+      );
+      addUser(userData);
       notifyListeners();
     } catch (error) {
       throw error;

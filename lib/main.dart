@@ -2,10 +2,18 @@ import 'package:firulapp/provider/session.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import './src/splash/splash_scren.dart';
 import './routes.dart';
 import './src/theme.dart';
 import 'provider/user.dart';
+import 'size_config.dart';
+import 'src/home/home.dart';
+import 'src/pets/pets_scream.dart';
+import 'src/profile/profile_screen.dart';
+import 'src/profile_detail/profile_details.dart';
+import 'src/sign_in/sign_in_screen.dart';
+import 'src/sign_up/components/sign_up_details_form.dart';
+import 'src/sign_up/sign_up_screen.dart';
+import 'src/splash/splash_scren.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,21 +27,34 @@ class MyApp extends StatelessWidget {
             session.userSession,
             user == null ? {} : user.userData,
           ),
-          create: (_) => User(null, null),
+          create: (_) => User(
+            UserSession(),
+            UserData(),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => Session(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Firulapp',
-        theme: theme(),
-        // home: SplashScreen(),
-        // We use routeName so that we dont need to remember the name
-        initialRoute: SplashScreen.routeName,
-        routes: routes,
-      ),
+      child: Consumer<Session>(builder: (ctx, session, child) {
+        ifAuth(targetScreen) => session.isAuth ? targetScreen : SignInScreen();
+        return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Firulapp',
+            theme: theme(),
+            home: SplashScreen(session.isAuth),
+            routes: {
+              HomeScreen.routeName: (ctx) => ifAuth(HomeScreen()),
+              SignInScreen.routeName: (ctx) => ifAuth(SignInScreen()),
+              ProfileScreen.routeName: (ctx) => ifAuth(ProfileScreen()),
+              ProfilePage.routeName: (ctx) => ifAuth(ProfilePage()),
+              PetsScreen.routeName: (ctx) => ifAuth(PetsScreen()),
+              SignUpScreen.routeName: (ctx) => ifAuth(SignUpScreen()),
+              SplashScreen.routeName: (ctx) =>
+                  ifAuth(SplashScreen(session.isAuth)),
+              SignUpDetailsForm.routeName: (ctx) => ifAuth(SignUpDetailsForm()),
+            });
+      }),
     );
   }
 }
