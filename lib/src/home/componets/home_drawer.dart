@@ -9,12 +9,9 @@ import '../../../constants/constants.dart';
 import '../../profile/profile_screen.dart';
 
 class HomeDrawer extends StatelessWidget {
-/*  final UserData user;
-
-  HomeDrawer(this.user);*/
-
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context, listen: false);
     return Drawer(
       elevation: 10.0,
       child: ListView(
@@ -22,8 +19,8 @@ class HomeDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text("asda"),
-            accountEmail: Text("ds"),
+            accountName: Text("${user.userData.name} ${user.userData.surname}"),
+            accountEmail: Text("${user.userData.mail}"),
             currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage(
               "assets/images/Profile Image.png",
