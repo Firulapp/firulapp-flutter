@@ -1,32 +1,15 @@
-import 'package:firulapp/provider/session.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import './provider/session.dart';
 import './src/theme.dart';
-import 'provider/user.dart';
-import 'src/home/home.dart';
-import 'src/pets/pets_scream.dart';
-import 'src/profile/profile_screen.dart';
-import 'src/profile_detail/profile_details.dart';
-import 'src/sign_in/sign_in_screen.dart';
-import 'src/sign_up/components/sign_up_details_form.dart';
-import 'src/sign_up/sign_up_screen.dart';
+import './provider/user.dart';
+import './routes.dart';
+import './src/splash/splash_screen.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  void afterFirstLayout(BuildContext context) {
-    _check(context);
-  }
-
-  _check(context) async {
-    final session = Provider.of<Session>(context, listen: false);
-    await session.getSession();
-    if (session.isAuth) {
-      await Provider.of<User>(context, listen: false).getUser();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -45,25 +28,12 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ],
-      child: Consumer<Session>(
-        builder: (ctx, session, child) {
-          ifAuth(targetScreen) =>
-              session.isAuth ? targetScreen : SignInScreen();
-          return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Firulapp',
-              theme: theme(),
-              home: session.isAuth ? HomeScreen() : SignInScreen(),
-              routes: {
-                HomeScreen.routeName: (ctx) => ifAuth(HomeScreen()),
-                SignInScreen.routeName: (ctx) => ifAuth(SignInScreen()),
-                ProfileScreen.routeName: (ctx) => ifAuth(ProfileScreen()),
-                ProfilePage.routeName: (ctx) => ifAuth(ProfilePage()),
-                PetsScreen.routeName: (ctx) => ifAuth(PetsScreen()),
-                SignUpScreen.routeName: (ctx) => SignUpScreen(),
-                SignUpDetailsForm.routeName: (ctx) => SignUpDetailsForm(),
-              });
-        },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Firulapp',
+        theme: theme(),
+        initialRoute: SplashScreen.routeName,
+        routes: routes,
       ),
     );
   }
