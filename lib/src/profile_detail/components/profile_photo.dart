@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/constants.dart';
 
-class PhotoPerfil extends StatefulWidget {
-  PhotoPerfil({Key key}) : super(key: key);
+class ProfilePhoto extends StatefulWidget {
+  ProfilePhoto({Key key}) : super(key: key);
 
   @override
-  _PhotoPerfilState createState() => _PhotoPerfilState();
+  _ProfilePhotoState createState() => _ProfilePhotoState();
 }
 
-class _PhotoPerfilState extends State<PhotoPerfil> {
+class _ProfilePhotoState extends State<ProfilePhoto> {
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
-import '../profile_detail/components/photo-perfil.dart';
+import 'components/profile_photo.dart';
 import '../../provider/user.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -33,7 +33,7 @@ class MapScreenState extends State<ProfilePage>
               children: <Widget>[
                 Container(
                   height: 180,
-                  child: PhotoPerfil(),
+                  child: ProfilePhoto(),
                 ),
                 Container(
                   child: Padding(
