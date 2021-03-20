@@ -7,7 +7,6 @@ import './src/profile/profile_screen.dart';
 import './src/profile_detail/profile_details.dart';
 import './src/pets/pets_scream.dart';
 import './src/sign_up/sign_up_screen.dart';
-import './src/splash/splash_screen.dart';
 
 final Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => HomeScreen(),
@@ -16,6 +15,5 @@ final Map<String, WidgetBuilder> routes = {
   ProfilePage.routeName: (context) => ProfilePage(),
   PetsScreen.routeName: (context) => PetsScreen(),
   SignUpScreen.routeName: (context) => SignUpScreen(),
-  SplashScreen.routeName: (context) => SplashScreen(),
   SignUpDetailsForm.routeName: (context) => SignUpDetailsForm(),
 };

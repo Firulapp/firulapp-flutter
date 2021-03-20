@@ -5,7 +5,7 @@ import './provider/session.dart';
 import './src/theme.dart';
 import './provider/user.dart';
 import './routes.dart';
-import './src/splash/splash_screen.dart';
+import 'src/home/home.dart';
 
 void main() => runApp(MyApp());
 
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Firulapp',
         theme: theme(),
-        initialRoute: SplashScreen.routeName,
+        initialRoute: HomeScreen.routeName,
         routes: routes,
       ),
     );
