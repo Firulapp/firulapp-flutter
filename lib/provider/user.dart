@@ -87,7 +87,6 @@ class User with ChangeNotifier {
         mail: userResponse["email"],
       );
       addUser(userData);
-      notifyListeners();
     } catch (error) {
       throw error;
     }

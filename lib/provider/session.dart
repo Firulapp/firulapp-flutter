@@ -29,7 +29,8 @@ class Session extends ChangeNotifier {
     return _userSession;
   }
 
-  bool get isAuth {
+  Future<bool> get isAuth async {
+    await getSession();
     return userSession != null;
   }
 

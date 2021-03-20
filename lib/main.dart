@@ -19,35 +19,36 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (_) => Session(),
+        ),
         ChangeNotifierProxyProvider<Session, User>(
           update: (context, session, user) => User(
             session.userSession,
             user == null ? {} : user.userData,
           ),
-          create: (_) => User(
+          create: (ctx) => User(
             UserSession(),
             UserData(),
           ),
         ),
-        ChangeNotifierProvider(
-          create: (_) => Session(),
-        ),
       ],
       child: Consumer<Session>(builder: (ctx, session, child) {
-        ifAuth(targetScreen) => session.isAuth ? targetScreen : SignInScreen();
+        ifAuth(targetScreen) =>
+            session.isAuth != null ? targetScreen : SignInScreen();
         return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Firulapp',
             theme: theme(),
-            home: session.isAuth ? HomeScreen() : SignInScreen(),
+            home: session.isAuth != null ? HomeScreen() : SignInScreen(),
             routes: {
               HomeScreen.routeName: (ctx) => ifAuth(HomeScreen()),
               SignInScreen.routeName: (ctx) => ifAuth(SignInScreen()),
               ProfileScreen.routeName: (ctx) => ifAuth(ProfileScreen()),
               ProfilePage.routeName: (ctx) => ifAuth(ProfilePage()),
               PetsScreen.routeName: (ctx) => ifAuth(PetsScreen()),
-              SignUpScreen.routeName: (ctx) => ifAuth(SignUpScreen()),
-              SignUpDetailsForm.routeName: (ctx) => ifAuth(SignUpDetailsForm()),
+              SignUpScreen.routeName: (ctx) => SignUpScreen(),
+              SignUpDetailsForm.routeName: (ctx) => SignUpDetailsForm(),
             });
       }),
     );
