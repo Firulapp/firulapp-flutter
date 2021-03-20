@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/user.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -6,22 +7,14 @@ import '../../../provider/session.dart';
 import '../../sign_in/sign_in_screen.dart';
 import '../../../constants/constants.dart';
 import '../../profile/profile_screen.dart';
-import '../../../provider/user.dart';
 
-class HomeDrawer extends StatefulWidget {
-  HomeDrawer({Key key}) : super(key: key);
+class HomeDrawer extends StatelessWidget {
+/*  final UserData user;
 
-  @override
-  _HomeDrawerState createState() => _HomeDrawerState();
-}
+  HomeDrawer(this.user);*/
 
-class _HomeDrawerState extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    final name = user.userData.name;
-    final surname = user.userData.surname;
-    final ProgressDialog progressDialog = ProgressDialog(context);
     return Drawer(
       elevation: 10.0,
       child: ListView(
@@ -29,8 +22,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text("$name $surname"),
-            accountEmail: Text(user.userData.mail),
+            accountName: Text("asda"),
+            accountEmail: Text("ds"),
             currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage(
               "assets/images/Profile Image.png",

@@ -72,7 +72,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
   String _city;
   String _birthDate;
   final df = new DateFormat('dd-MM-yyyy');
-  DateTime currentDate;
+  DateTime currentDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(

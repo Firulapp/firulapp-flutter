@@ -1,3 +1,4 @@
+import 'package:firulapp/size_config.dart';
 import 'package:flutter/material.dart';
 
 import 'componets/body.dart';
@@ -9,6 +10,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
         backgroundColor: Colors.white,
         body: Body(),
