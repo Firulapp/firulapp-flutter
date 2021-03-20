@@ -15,6 +15,18 @@ import 'src/sign_up/sign_up_screen.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  void afterFirstLayout(BuildContext context) {
+    _check(context);
+  }
+
+  _check(context) async {
+    final session = Provider.of<Session>(context, listen: false);
+    await session.getSession();
+    if (session.isAuth) {
+      await Provider.of<User>(context, listen: false).getUser();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -33,24 +45,26 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ],
-      child: Consumer<Session>(builder: (ctx, session, child) {
-        ifAuth(targetScreen) =>
-            session.isAuth != null ? targetScreen : SignInScreen();
-        return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Firulapp',
-            theme: theme(),
-            home: session.isAuth != null ? HomeScreen() : SignInScreen(),
-            routes: {
-              HomeScreen.routeName: (ctx) => ifAuth(HomeScreen()),
-              SignInScreen.routeName: (ctx) => ifAuth(SignInScreen()),
-              ProfileScreen.routeName: (ctx) => ifAuth(ProfileScreen()),
-              ProfilePage.routeName: (ctx) => ifAuth(ProfilePage()),
-              PetsScreen.routeName: (ctx) => ifAuth(PetsScreen()),
-              SignUpScreen.routeName: (ctx) => SignUpScreen(),
-              SignUpDetailsForm.routeName: (ctx) => SignUpDetailsForm(),
-            });
-      }),
+      child: Consumer<Session>(
+        builder: (ctx, session, child) {
+          ifAuth(targetScreen) =>
+              session.isAuth ? targetScreen : SignInScreen();
+          return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Firulapp',
+              theme: theme(),
+              home: session.isAuth ? HomeScreen() : SignInScreen(),
+              routes: {
+                HomeScreen.routeName: (ctx) => ifAuth(HomeScreen()),
+                SignInScreen.routeName: (ctx) => ifAuth(SignInScreen()),
+                ProfileScreen.routeName: (ctx) => ifAuth(ProfileScreen()),
+                ProfilePage.routeName: (ctx) => ifAuth(ProfilePage()),
+                PetsScreen.routeName: (ctx) => ifAuth(PetsScreen()),
+                SignUpScreen.routeName: (ctx) => SignUpScreen(),
+                SignUpDetailsForm.routeName: (ctx) => SignUpDetailsForm(),
+              });
+        },
+      ),
     );
   }
 }
