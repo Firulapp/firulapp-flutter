@@ -17,20 +17,20 @@ class UserCredentials {
 }
 
 class UserData {
-  final String userName;
-  final String encryptedPassword;
-  final String confirmPassword;
-  final String mail;
-  final String name;
-  final String surname;
-  final String document;
-  final String documentType;
-  final int city;
-  final String birthDate;
-  final FileImage profilePicture;
-  final String userType = 'APP';
-  final bool enabled = true;
-  final bool notifications;
+  String userName;
+  String encryptedPassword;
+  String confirmPassword;
+  String mail;
+  String name;
+  String surname;
+  String document;
+  String documentType;
+  int city;
+  String birthDate;
+  FileImage profilePicture;
+  String userType = 'APP';
+  bool enabled = true;
+  bool notifications;
 
   UserData({
     this.userName,
