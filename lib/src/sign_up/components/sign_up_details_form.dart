@@ -69,7 +69,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
   String _surname;
   String _documentType;
   String _document;
-  String _city;
+  int _city;
   String _birthDate;
   final df = new DateFormat('dd-MM-yyyy');
   DateTime currentDate = DateTime.now();
@@ -224,7 +224,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
       hintText: hint,
       keyboardType: tipo,
       validator: validateTextNotNull,
-      onChanged: (newValue) => _city = newValue,
+      onChanged: (newValue) => _city = int.parse(newValue),
     );
   }
 

@@ -25,7 +25,7 @@ class UserData {
   final String surname;
   final String document;
   final String documentType;
-  final String city;
+  final int city;
   final String birthDate;
   final FileImage profilePicture;
   final String userType = 'APP';

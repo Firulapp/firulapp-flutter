@@ -131,7 +131,7 @@ class MapScreenState extends State<ProfilePage>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: user.userData.city,
+                            initialValue: user.userData.city.toString(),
                             decoration: InputDecoration(
                               hintText: "Ingresa tu Ciudad",
                               labelText: 'Ciudad',
