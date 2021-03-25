@@ -1,12 +1,12 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import './src/splash/splash_scren.dart';
-import './routes.dart';
-import './src/theme.dart';
-import './provider/user_data.dart';
-import './provider/species.dart';
 import './provider/session.dart';
+import './src/theme.dart';
+import './provider/user.dart';
+import './routes.dart';
+import './provider/species.dart';
+import 'src/home/home.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,10 +16,17 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => User(),
-        ),
-        ChangeNotifierProvider(
           create: (_) => Session(),
+        ),
+        ChangeNotifierProxyProvider<Session, User>(
+          update: (context, session, user) => User(
+            session.userSession,
+            user == null ? {} : user.userData,
+          ),
+          create: (ctx) => User(
+            UserSession(),
+            UserData(),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => Species(),
@@ -29,9 +36,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Firulapp',
         theme: theme(),
-        // home: SplashScreen(),
-        // We use routeName so that we dont need to remember the name
-        initialRoute: SplashScreen.routeName,
+        initialRoute: HomeScreen.routeName,
         routes: routes,
       ),
     );

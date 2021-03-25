@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
-import '../profile_detail/components/photo-perfil.dart';
-import '../../provider/user_data.dart';
+import 'components/profile_photo.dart';
+import '../../provider/user.dart';
 
 class ProfilePage extends StatefulWidget {
   static const routeName = "/profile-details";
@@ -33,7 +33,7 @@ class MapScreenState extends State<ProfilePage>
               children: <Widget>[
                 Container(
                   height: 180,
-                  child: PhotoPerfil(),
+                  child: ProfilePhoto(),
                 ),
                 Container(
                   child: Padding(
@@ -75,63 +75,82 @@ class MapScreenState extends State<ProfilePage>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: user.userData.name,
-                            decoration: InputDecoration(
-                              hintText: "Ingresa tu Nombre",
-                              labelText: 'Nombre',
-                              labelStyle: defaultTextStyle(),
-                            ),
-                            enabled: !_status,
-                            autofocus: !_status,
-                          ),
+                              initialValue: user.userData.name,
+                              decoration: InputDecoration(
+                                hintText: "Ingresa tu Nombre",
+                                labelText: 'Nombre',
+                                labelStyle: defaultTextStyle(),
+                              ),
+                              enabled: !_status,
+                              autofocus: !_status,
+                              onChanged: (newValue) =>
+                                  user.userData.name = newValue),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: user.userData.surname,
-                            decoration: InputDecoration(
-                              hintText: "Ingresa tu Apellido",
-                              labelText: 'Apellido',
-                              labelStyle: defaultTextStyle(),
-                            ),
-                            enabled: !_status,
-                            autofocus: !_status,
-                          ),
+                              initialValue: user.userData.surname,
+                              decoration: InputDecoration(
+                                hintText: "Ingresa tu Apellido",
+                                labelText: 'Apellido',
+                                labelStyle: defaultTextStyle(),
+                              ),
+                              enabled: !_status,
+                              autofocus: !_status,
+                              onChanged: (newValue) =>
+                                  user.userData.surname = newValue),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: user.userData.mail,
-                            decoration: InputDecoration(
-                              hintText: "Ingresa tu Correo",
-                              labelText: 'Correo',
-                              labelStyle: defaultTextStyle(),
-                            ),
-                            enabled: !_status,
-                            autofocus: !_status,
-                          ),
+                              initialValue: user.userData.mail,
+                              decoration: InputDecoration(
+                                hintText: "Ingresa tu Correo",
+                                labelText: 'Correo',
+                                labelStyle: defaultTextStyle(),
+                              ),
+                              enabled: !_status,
+                              autofocus: !_status,
+                              onChanged: (newValue) =>
+                                  user.userData.mail = newValue),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: user.userData.birthDate.toString(),
-                            decoration: InputDecoration(
-                              hintText: "Ingresa tu fecha de nacimiento",
-                              labelText: 'Fecha de nacimiento',
-                              labelStyle: defaultTextStyle(),
-                            ),
-                            enabled: !_status,
-                            autofocus: !_status,
-                          ),
+                              initialValue: user.userData.userName,
+                              decoration: InputDecoration(
+                                hintText: "Ingresa se usuario",
+                                labelText: 'Usuario',
+                                labelStyle: defaultTextStyle(),
+                              ),
+                              enabled: !_status,
+                              autofocus: !_status,
+                              onChanged: (newValue) =>
+                                  user.userData.userName = newValue),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: user.userData.city,
+                              initialValue: user.userData.birthDate.toString(),
+                              decoration: InputDecoration(
+                                hintText: "Ingresa tu fecha de nacimiento",
+                                labelText: 'Fecha de nacimiento',
+                                labelStyle: defaultTextStyle(),
+                              ),
+                              enabled: !_status,
+                              autofocus: !_status,
+                              onChanged: (newValue) =>
+                                  user.userData.birthDate = newValue),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 25.0),
+                          child: TextFormField(
+                            initialValue: user.userData.city.toString(),
                             decoration: InputDecoration(
                               hintText: "Ingresa tu Ciudad",
                               labelText: 'Ciudad',
@@ -139,41 +158,46 @@ class MapScreenState extends State<ProfilePage>
                             ),
                             enabled: !_status,
                             autofocus: !_status,
+                            onChanged: (newValue) =>
+                                user.userData.city = int.parse(newValue),
                           ),
                         ),
                         Padding(
-                            padding: EdgeInsets.only(
-                                left: 25.0, right: 25.0, top: 25.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text(
-                                      'Telefono',
-                                      style: defaultTextStyle(),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )),
-                        Padding(
-                            padding: EdgeInsets.only(
-                                left: 25.0, right: 25.0, top: 2.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Flexible(
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                        hintText: "Ingrese Nro de Telefono"),
-                                    enabled: !_status,
+                          padding: EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 25.0),
+                          child: DropdownButtonFormField(
+                            items: user
+                                .getDocumentTypeOptions()
+                                .map(
+                                  (type) => DropdownMenuItem(
+                                    value: type,
+                                    child: Text(type),
                                   ),
-                                ),
-                              ],
-                            )),
+                                )
+                                .toList(),
+                            value: user.userData.documentType,
+                            autofocus: !_status,
+                            onChanged: (newValue) =>
+                                user.userData.documentType = newValue,
+                            hint: const Text("Tipo de documento"),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 25.0),
+                          child: TextFormField(
+                            initialValue: user.userData.document,
+                            decoration: InputDecoration(
+                              hintText: "Ingresa su documento",
+                              labelText: 'Documento de identidad',
+                              labelStyle: defaultTextStyle(),
+                            ),
+                            enabled: !_status,
+                            autofocus: !_status,
+                            onChanged: (newValue) =>
+                                user.userData.document = newValue,
+                          ),
+                        ),
                         !_status ? _getActionButtons() : Container(),
                       ],
                     ),

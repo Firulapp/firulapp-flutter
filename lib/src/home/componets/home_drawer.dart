@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/user.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -6,22 +7,11 @@ import '../../../provider/session.dart';
 import '../../sign_in/sign_in_screen.dart';
 import '../../../constants/constants.dart';
 import '../../profile/profile_screen.dart';
-import '../../../provider/user_data.dart';
 
-class HomeDrawer extends StatefulWidget {
-  HomeDrawer({Key key}) : super(key: key);
-
-  @override
-  _HomeDrawerState createState() => _HomeDrawerState();
-}
-
-class _HomeDrawerState extends State<HomeDrawer> {
+class HomeDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    final name = user.userData.name;
-    final surname = user.userData.surname;
-    final ProgressDialog progressDialog = ProgressDialog(context);
+    final user = Provider.of<User>(context, listen: false);
     return Drawer(
       elevation: 10.0,
       child: ListView(
@@ -29,8 +19,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text("$name $surname"),
-            accountEmail: Text(user.userData.mail),
+            accountName: Text("${user.userData.name} ${user.userData.surname}"),
+            accountEmail: Text("${user.userData.mail}"),
             currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage(
               "assets/images/Profile Image.png",
@@ -60,18 +50,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ListTile(
               leading: Icon(Icons.exit_to_app),
               title: const Text('Cerrar Sesion'),
-              onTap: () {
+              onTap: () async {
                 try {
-                  progressDialog.show();
-                  Provider.of<Session>(context, listen: false).logOut(context);
+                  await Provider.of<Session>(context, listen: false)
+                      .logOut(context);
                   Navigator.pushNamedAndRemoveUntil(
                       context, SignInScreen.routeName, (_) => false);
                 } catch (error) {
-                  progressDialog.dismiss();
                   Dialogs.info(
                     context,
                     title: 'ERROR',
-                    content: "Error al desloguearse",
+                    content: error.response.data["message"],
                   );
                   print(error);
                 }

@@ -1,4 +1,4 @@
-import 'package:firulapp/provider/user_data.dart';
+import 'package:firulapp/provider/user.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
@@ -27,6 +27,10 @@ class Session extends ChangeNotifier {
 
   UserSession get userSession {
     return _userSession;
+  }
+
+  bool get isAuth {
+    return userSession != null;
   }
 
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));

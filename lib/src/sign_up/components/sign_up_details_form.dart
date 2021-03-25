@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../home/home.dart';
 import '../../../provider/session.dart';
-import '../../../provider/user_data.dart';
+import '../../../provider/user.dart';
 import '../../../components/dialogs.dart';
 import '../../../components/default_button.dart';
 import '../../../components/input_text.dart';
@@ -68,98 +69,143 @@ class _BodyState extends State<Body> with ValidatorMixins {
   String _surname;
   String _documentType;
   String _document;
-  String _city;
+  int _city;
   String _birthDate;
+  final df = new DateFormat('dd-MM-yyyy');
+  DateTime currentDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: DateTime(1940),
+        lastDate: DateTime(2050));
+    if (pickedDate != null && pickedDate != currentDate)
+      setState(() {
+        currentDate = pickedDate;
+        _birthDate = currentDate.toIso8601String();
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final ProgressDialog progressDialog = ProgressDialog(context);
+    var _isLoading = false;
     final _userCredentials =
         ModalRoute.of(context).settings.arguments as UserCredentials;
     final _user = Provider.of<User>(context, listen: false);
-    return Form(
-      key: _formKey,
-      child: Column(children: [
-        buildUsernameFormField(
-          "Usuario",
-          "Ingrese un nombre de usuario",
-          TextInputType.name,
-        ),
-        SizedBox(height: getProportionateScreenHeight(25)),
-        buildNameFormField(
-          "Nombre",
-          "Ingrese su primer nombre",
-          TextInputType.name,
-        ),
-        SizedBox(height: getProportionateScreenHeight(25)),
-        buildSurnameFormField(
-          "Apellido",
-          "Ingrese su apellido",
-          TextInputType.name,
-        ),
-        SizedBox(height: getProportionateScreenHeight(25)),
-        buildDropdown(
-          _user.getDocumentTypeOptions(),
-        ),
-        SizedBox(height: getProportionateScreenHeight(15)),
-        buildDocumentFormField(
-          "Documento de identidad",
-          "Ingrese su documento",
-          TextInputType.number,
-        ),
-        SizedBox(height: getProportionateScreenHeight(25)),
-        buildCityFormField(
-          "Ciudad",
-          "Ingrese una ciudad",
-          TextInputType.number,
-        ),
-        SizedBox(height: getProportionateScreenHeight(25)),
-        buildBirthdateFormField(
-          "Fecha de nacimiento",
-          "Ingrese su fecha de nacimiento",
-          TextInputType.number,
-        ),
-        SizedBox(height: getProportionateScreenHeight(25)),
-        DefaultButton(
-          text: "Registrar",
-          press: () {
-            final isOK = _formKey.currentState.validate();
-            if (isOK) {
-              try {
-                progressDialog.show();
-                _user.addUser(
-                  UserData(
-                    mail: _userCredentials.mail,
-                    encryptedPassword: _userCredentials.encryptedPassword,
-                    confirmPassword: _userCredentials.confirmPassword,
-                    userName: _username,
-                    birthDate: _birthDate,
-                    city: _city,
-                    documentType: _documentType,
-                    document: _document,
-                    name: _name,
-                    surname: _surname,
-                    notifications: true,
-                    profilePicture: null,
+    return _isLoading
+        ? CircularProgressIndicator()
+        : Form(
+            key: _formKey,
+            child: Column(children: [
+              buildUsernameFormField(
+                "Usuario",
+                "Ingrese un nombre de usuario",
+                TextInputType.name,
+              ),
+              SizedBox(height: getProportionateScreenHeight(25)),
+              buildNameFormField(
+                "Nombre",
+                "Ingrese su primer nombre",
+                TextInputType.name,
+              ),
+              SizedBox(height: getProportionateScreenHeight(25)),
+              buildSurnameFormField(
+                "Apellido",
+                "Ingrese su apellido",
+                TextInputType.name,
+              ),
+              SizedBox(height: getProportionateScreenHeight(25)),
+              buildDropdown(
+                _user.getDocumentTypeOptions(),
+              ),
+              SizedBox(height: getProportionateScreenHeight(15)),
+              buildDocumentFormField(
+                "Documento de identidad",
+                "Ingrese su documento",
+                TextInputType.number,
+              ),
+              SizedBox(height: getProportionateScreenHeight(25)),
+              buildCityFormField(
+                "Ciudad",
+                "Ingrese una ciudad",
+                TextInputType.number,
+              ),
+              SizedBox(height: getProportionateScreenHeight(25)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      RaisedButton(
+                        onPressed: () => _selectDate(context),
+                        child: Text("Fecha de nacimiento"),
+                      ),
+                    ],
                   ),
-                );
-                Provider.of<Session>(context, listen: false)
-                    .register(userData: _user.userData);
-                Navigator.pushNamedAndRemoveUntil(
-                    context, HomeScreen.routeName, (_) => false);
-              } catch (error) {
-                progressDialog.dismiss();
-                Dialogs.info(
-                  context,
-                  title: "ERROR",
-                  content: error.data.message,
-                );
-              }
-            }
-          },
-        ),
-      ]),
-    );
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        df.format(currentDate),
+                        style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(height: getProportionateScreenHeight(25)),
+              DefaultButton(
+                text: "Registrar",
+                press: () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  final isOK = _formKey.currentState.validate();
+                  if (isOK) {
+                    try {
+                      _user.addUser(
+                        UserData(
+                          mail: _userCredentials.mail,
+                          encryptedPassword: _userCredentials.encryptedPassword,
+                          confirmPassword: _userCredentials.confirmPassword,
+                          userName: _username,
+                          birthDate: _birthDate,
+                          city: _city,
+                          documentType: _documentType,
+                          document: _document,
+                          name: _name,
+                          surname: _surname,
+                          notifications: true,
+                          profilePicture: null,
+                        ),
+                      );
+                      await Provider.of<Session>(context, listen: false)
+                          .register(userData: _user.userData);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, HomeScreen.routeName, (_) => false);
+                    } catch (error) {
+                      Dialogs.info(
+                        context,
+                        title: "ERROR",
+                        content: error.response.data["message"],
+                      );
+                    }
+                  }
+                  setState(() {
+                    _isLoading = false;
+                  });
+                },
+              ),
+            ]),
+          );
   }
 
   Widget buildUsernameFormField(String label, String hint, TextInputType tipo) {
@@ -178,7 +224,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
       hintText: hint,
       keyboardType: tipo,
       validator: validateTextNotNull,
-      onChanged: (newValue) => _city = newValue,
+      onChanged: (newValue) => _city = int.parse(newValue),
     );
   }
 
