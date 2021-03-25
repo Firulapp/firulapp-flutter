@@ -1,5 +1,7 @@
 // Flutter imports:
+import 'package:firulapp/components/extras.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -61,7 +63,9 @@ class MapScreenState extends State<AddPets>
               children: <Widget>[
                 Container(
                   height: sizeConfig.hp(20),
-                  child: PetImage(),
+                  child: PetImage(
+                    onPressed: _pickImage,
+                  ),
                 ),
                 Container(
                   child: Padding(
@@ -483,5 +487,13 @@ class MapScreenState extends State<AddPets>
     }
     _age = age; // aqui deberia actualizar el objeto de la mascotas
     return age;
+  }
+
+  _pickImage() async {
+    final PickedFile file = await Extra.pickImage(false);
+    if (file != null) {
+      //guardar en providercorrespondiente
+      print("path ${file.path}");
+    }
   }
 }
