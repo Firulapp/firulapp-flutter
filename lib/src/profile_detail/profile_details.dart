@@ -178,8 +178,10 @@ class MapScreenState extends State<ProfilePage>
                                 .toList(),
                             value: user.userData.documentType,
                             autofocus: !_status,
-                            onChanged: (newValue) =>
-                                user.userData.documentType = newValue,
+                            onChanged: !_status
+                                ? (newValue) =>
+                                    user.userData.documentType = newValue
+                                : null,
                             hint: const Text("Tipo de documento"),
                           ),
                         ),
