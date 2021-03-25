@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/dialogs.dart';
 import '../../constants/constants.dart';
 import 'components/profile_photo.dart';
 import '../../provider/user.dart';
@@ -240,6 +241,15 @@ class MapScreenState extends State<ProfilePage>
                     _status = true;
                     FocusScope.of(context).requestFocus(FocusNode());
                   });
+                  try {
+                    Provider.of<User>(context, listen: false).saveUser();
+                  } catch (error) {
+                    Dialogs.info(
+                      context,
+                      title: "ERROR",
+                      content: error.response.data["message"],
+                    );
+                  }
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0)),

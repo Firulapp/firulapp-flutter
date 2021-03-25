@@ -4,4 +4,5 @@ class Endpoints {
   static final login = '$user/login';
   static final signUp = '$user/register';
   static final logout = '$user/logout';
+  static final update = '$user/update';
 }

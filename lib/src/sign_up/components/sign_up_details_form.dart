@@ -173,6 +173,8 @@ class _BodyState extends State<Body> with ValidatorMixins {
                     try {
                       _user.addUser(
                         UserData(
+                          id: null,
+                          userId: null,
                           mail: _userCredentials.mail,
                           encryptedPassword: _userCredentials.encryptedPassword,
                           confirmPassword: _userCredentials.confirmPassword,
