@@ -20,10 +20,9 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
   File _storedImage;
   final imagePicker = ImagePicker();
 
-  Future _getImage(bool fromCamera) async {
+  Future _getImage() async {
     final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.getImage(
-        source: fromCamera ? ImageSource.camera : ImageSource.gallery);
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
     File imageFile;
     if (pickedFile != null) {
       imageFile = File(pickedFile.path);
@@ -70,29 +69,25 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                   ),
                 ],
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 90.0, right: 100.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CupertinoButton(
-                        child: Container(
-                          child: CircleAvatar(
-                            backgroundColor: kPrimaryColor,
-                            radius: 25.0,
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                            ),
+              Padding(
+                padding: const EdgeInsets.only(top: 90.0, right: 100.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CupertinoButton(
+                      child: Container(
+                        child: CircleAvatar(
+                          backgroundColor: kPrimaryColor,
+                          radius: 25.0,
+                          child: Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
                           ),
                         ),
-                        onPressed: () {
-                          _getImage(false);
-                        },
-                      )
-                    ],
-                  ),
+                      ),
+                      onPressed: _getImage,
+                    )
+                  ],
                 ),
               ),
             ],
