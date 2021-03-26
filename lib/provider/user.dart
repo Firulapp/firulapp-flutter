@@ -17,6 +17,8 @@ class UserCredentials {
 }
 
 class UserData {
+  int id;
+  int userId;
   String userName;
   String encryptedPassword;
   String confirmPassword;
@@ -33,6 +35,8 @@ class UserData {
   bool notifications;
 
   UserData({
+    this.id,
+    this.userId,
     this.userName,
     this.encryptedPassword,
     this.confirmPassword,
@@ -75,6 +79,8 @@ class User with ChangeNotifier {
           await this._dio.get('${Endpoints.user}/${session.userId}');
       final userResponse = response.data["dto"];
       var userData = UserData(
+        id: userResponse["id"],
+        userId: userResponse["userId"],
         name: userResponse["name"],
         surname: userResponse["surname"],
         city: userResponse["city"],
@@ -87,6 +93,34 @@ class User with ChangeNotifier {
         mail: userResponse["email"],
       );
       addUser(userData);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> saveUser() async {
+    try {
+      await this._dio.post(
+        '${Endpoints.update}',
+        data: {
+          "id": userData.id,
+          "userId": userData.userId,
+          "document": userData.document,
+          "documentType": userData.documentType,
+          "name": userData.name,
+          "surname": userData.surname,
+          "city": userData.city,
+          "profilePicture": userData.profilePicture,
+          "birthDate": userData.birthDate,
+          "notifications": userData.notifications,
+          "username": userData.userName,
+          "email": userData.mail,
+          "encryptedPassword": userData.encryptedPassword,
+          "confirmPassword": userData.confirmPassword,
+          "userType": userData.userType,
+          "enabled": true
+        },
+      );
     } catch (error) {
       throw error;
     }

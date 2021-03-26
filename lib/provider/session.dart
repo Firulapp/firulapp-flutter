@@ -66,6 +66,7 @@ class Session extends ChangeNotifier {
         userId: user["userId"].toString(),
       );
       await setSession();
+      notifyListeners();
     } catch (error) {
       throw error;
     }
