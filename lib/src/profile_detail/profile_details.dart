@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/dialogs.dart';
@@ -17,6 +20,11 @@ class MapScreenState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
+  File _pickedImage;
+
+  void _selectImage(File pickedImage) {
+    _pickedImage = pickedImage;
+  }
 
   @override
   void initState() => super.initState();
@@ -24,17 +32,17 @@ class MapScreenState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return new Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text("Informacion Personal"),
         ),
-        body: new ListView(
+        body: ListView(
           children: <Widget>[
             Column(
               children: <Widget>[
                 Container(
-                  height: 180,
-                  child: ProfilePhoto(),
+                  height: 200,
+                  child: ProfilePhoto(_selectImage),
                 ),
                 Container(
                   child: Padding(
@@ -44,7 +52,7 @@ class MapScreenState extends State<ProfilePage>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                                 left: 25.0, right: 25.0, top: 25.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
