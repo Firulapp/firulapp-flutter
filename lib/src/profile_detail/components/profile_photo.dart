@@ -86,18 +86,17 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    width: 140.0,
-                    height: 140.0,
-                    child: _storedImage != null
-                        ? Image.file(
-                            _storedImage,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          )
-                        : Text(
-                            'No Image Taken!',
-                            textAlign: TextAlign.center,
-                          ),
+                    width: 150.0,
+                    height: 150.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: _storedImage != null
+                              ? FileImage(_storedImage)
+                              : AssetImage("assets/images/default-avatar.png"),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center),
+                    ),
                   ),
                 ],
               ),

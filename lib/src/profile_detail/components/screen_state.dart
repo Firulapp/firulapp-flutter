@@ -320,7 +320,7 @@ class MapScreenState extends State<ProfilePage>
               padding: const EdgeInsets.only(right: 10.0),
               child: Container(
                   child: RaisedButton(
-                child: const Text("Save"),
+                child: const Text("Guardar"),
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () {
@@ -340,7 +340,7 @@ class MapScreenState extends State<ProfilePage>
               padding: const EdgeInsets.only(left: 10.0),
               child: Container(
                   child: RaisedButton(
-                child: const Text("Cancel"),
+                child: const Text("Cancelar"),
                 textColor: Colors.white,
                 color: Colors.red,
                 onPressed: () {
