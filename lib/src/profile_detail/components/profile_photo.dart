@@ -20,9 +20,10 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
   File _storedImage;
   final imagePicker = ImagePicker();
 
-  Future _getImage() async {
+  Future _getImage(bool fromCamera) async {
     final ImagePicker picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(
+        source: fromCamera ? ImageSource.camera : ImageSource.gallery);
     File imageFile;
     if (pickedFile != null) {
       imageFile = File(pickedFile.path);
@@ -40,12 +41,43 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
     widget.onSelectImage(savedImage);
   }
 
+  void _showPicker(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                    leading: Icon(Icons.photo_library),
+                    title: const Text('Galería'),
+                    onTap: () {
+                      _getImage(false);
+                      Navigator.of(context).pop();
+                    }),
+                ListTile(
+                  leading: Icon(Icons.photo_camera),
+                  title: const Text('Cámara'),
+                  onTap: () {
+                    _getImage(true);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 20.0),
+          padding: const EdgeInsets.only(top: 20.0),
           child: Stack(
             fit: StackFit.loose,
             children: <Widget>[
@@ -85,7 +117,9 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                           ),
                         ),
                       ),
-                      onPressed: _getImage,
+                      onPressed: () {
+                        _showPicker(context);
+                      },
                     )
                   ],
                 ),
