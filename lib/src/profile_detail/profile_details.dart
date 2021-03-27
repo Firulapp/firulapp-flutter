@@ -44,8 +44,8 @@ class MapScreenState extends State<ProfilePage>
               children: <Widget>[
                 Container(
                   height: 200,
-                  child:
-                      ProfilePhoto(_selectImage, user.userData.profilePicture),
+                  child: ProfilePhoto(
+                      _selectImage, user.userData.profilePicture, _status),
                 ),
                 Container(
                   child: Padding(

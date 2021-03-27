@@ -12,7 +12,8 @@ import '../../../constants/constants.dart';
 class ProfilePhoto extends StatefulWidget {
   final Function onSelectImage;
   final String profilePicture;
-  ProfilePhoto(this.onSelectImage, this.profilePicture);
+  final bool status;
+  ProfilePhoto(this.onSelectImage, this.profilePicture, this.status);
 
   @override
   _ProfilePhotoState createState() => _ProfilePhotoState();
@@ -150,7 +151,9 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                         ),
                       ),
                       onPressed: () {
-                        _showPicker(context);
+                        if (!widget.status) {
+                          _showPicker(context);
+                        }
                       },
                     )
                   ],
