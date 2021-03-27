@@ -1,8 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/dialogs.dart';
@@ -24,6 +24,8 @@ class MapScreenState extends State<ProfilePage>
 
   void _selectImage(File pickedImage) {
     _pickedImage = pickedImage;
+    Provider.of<User>(context, listen: false).userData.profilePicture =
+        base64Encode(_pickedImage.readAsBytesSync());
   }
 
   @override
@@ -42,7 +44,8 @@ class MapScreenState extends State<ProfilePage>
               children: <Widget>[
                 Container(
                   height: 200,
-                  child: ProfilePhoto(_selectImage),
+                  child:
+                      ProfilePhoto(_selectImage, user.userData.profilePicture),
                 ),
                 Container(
                   child: Padding(
@@ -233,14 +236,14 @@ class MapScreenState extends State<ProfilePage>
 
   Widget _getActionButtons() {
     return Padding(
-      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+      padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
+              padding: const EdgeInsets.only(right: 10.0),
               child: Container(
                   child: RaisedButton(
                 child: const Text("Guardar"),

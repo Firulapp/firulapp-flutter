@@ -29,7 +29,7 @@ class UserData {
   String documentType;
   int city;
   String birthDate;
-  FileImage profilePicture;
+  String profilePicture;
   String userType = 'APP';
   bool enabled = true;
   bool notifications;

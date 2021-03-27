@@ -1,16 +1,18 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspaths;
 
 import '../../../constants/constants.dart';
 
 class ProfilePhoto extends StatefulWidget {
   final Function onSelectImage;
-  ProfilePhoto(this.onSelectImage);
+  final String profilePicture;
+  ProfilePhoto(this.onSelectImage, this.profilePicture);
 
   @override
   _ProfilePhotoState createState() => _ProfilePhotoState();
@@ -18,7 +20,22 @@ class ProfilePhoto extends StatefulWidget {
 
 class _ProfilePhotoState extends State<ProfilePhoto> {
   File _storedImage;
+  Future _initialImage;
   final imagePicker = ImagePicker();
+
+  @override
+  void initState() {
+    _initialImage = _initiateStoredImage();
+    super.initState();
+  }
+
+  Future _initiateStoredImage() async {
+    Uint8List bytes = base64Decode(widget.profilePicture);
+    final tempPath = await syspaths.getTemporaryDirectory();
+    _storedImage = File('${tempPath.path}/profile.png');
+    await _storedImage.writeAsBytes(
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+  }
 
   Future _getImage(bool fromCamera) async {
     final ImagePicker picker = ImagePicker();
@@ -35,9 +52,8 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
         _storedImage = imageFile;
       }
     });
-    final appDir = await syspaths.getApplicationDocumentsDirectory();
-    final fileName = path.basename(imageFile.path);
-    final savedImage = await imageFile.copy('${appDir.path}/$fileName');
+    final tempPath = await syspaths.getTemporaryDirectory();
+    final savedImage = await imageFile.copy('${tempPath.path}/profile.png');
     widget.onSelectImage(savedImage);
   }
 
@@ -85,18 +101,35 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    width: 150.0,
-                    height: 150.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: _storedImage != null
-                              ? FileImage(_storedImage)
-                              : AssetImage("assets/images/default-avatar.png"),
-                          fit: BoxFit.cover,
-                          alignment: Alignment.center),
-                    ),
+                  FutureBuilder(
+                    future: _initialImage,
+                    builder: (_, dataSnapshot) {
+                      if (dataSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else {
+                        if (dataSnapshot.error != null) {
+                          return Center(
+                            child: Text('Algo salio mal'),
+                          );
+                        } else {
+                          return Container(
+                            width: 150.0,
+                            height: 150.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: _storedImage != null
+                                      ? FileImage(_storedImage)
+                                      : AssetImage(
+                                          "assets/images/default-avatar.png"),
+                                  fit: BoxFit.cover,
+                                  alignment: Alignment.center),
+                            ),
+                          );
+                        }
+                      }
+                    },
                   ),
                 ],
               ),
