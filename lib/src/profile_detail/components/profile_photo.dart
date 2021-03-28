@@ -36,6 +36,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
     _storedImage = File('${tempPath.path}/profile.png');
     await _storedImage.writeAsBytes(
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+    FileImage(_storedImage).evict();
   }
 
   Future _getImage(bool fromCamera) async {
