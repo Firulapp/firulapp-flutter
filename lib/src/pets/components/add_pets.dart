@@ -1,9 +1,11 @@
 // Flutter imports:
 import 'package:firulapp/components/extras.dart';
+import 'package:firulapp/provider/breeds.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 import '../../../components/dialogs.dart';
 import '../../../provider/species.dart';
@@ -141,7 +143,7 @@ class MapScreenState extends State<AddPets>
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  DropdownButton(
+                                  SearchableDropdown(
                                     hint: _speciesName == null
                                         ? Text('Eliga una especie')
                                         : null,
@@ -153,17 +155,17 @@ class MapScreenState extends State<AddPets>
                                         : null,
                                     items: listSpecies
                                         .map((e) => DropdownMenuItem(
-                                              value: e.id,
+                                              value: e.name,
                                               child: Text(e.name),
                                             ))
                                         .toList(),
                                     onChanged: !_status
                                         ? (v) => setState(() {
-                                              _speciesId = v;
+                                              _speciesName = v;
                                             })
                                         : null,
-                                    value: _speciesId,
-                                  ),
+                                    value: _speciesName,
+                                  )
                                 ],
                               )
                             ],
@@ -193,7 +195,7 @@ class MapScreenState extends State<AddPets>
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  DropdownButton(
+                                  SearchableDropdown(
                                     hint: _race == null
                                         ? Text('Eliga una raza')
                                         : null,
