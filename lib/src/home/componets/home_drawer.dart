@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:firulapp/provider/user.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart' as syspaths;
 
 import '../../../components/dialogs.dart';
 import '../../../provider/session.dart';
@@ -8,7 +13,31 @@ import '../../sign_in/sign_in_screen.dart';
 import '../../../constants/constants.dart';
 import '../../profile/profile_screen.dart';
 
-class HomeDrawer extends StatelessWidget {
+class HomeDrawer extends StatefulWidget {
+  @override
+  _HomeDrawerState createState() => _HomeDrawerState();
+}
+
+class _HomeDrawerState extends State<HomeDrawer> {
+  File _storedImage;
+  Future _initialImage;
+
+  @override
+  void initState() {
+    _initialImage = _initiateStoredImage();
+    super.initState();
+  }
+
+  Future _initiateStoredImage() async {
+    Uint8List bytes = base64Decode(
+        Provider.of<User>(context, listen: false).userData.profilePicture);
+    final tempPath = await syspaths.getTemporaryDirectory();
+    _storedImage = File('${tempPath.path}/profile.png');
+    await _storedImage.writeAsBytes(
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+    FileImage(_storedImage).evict();
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context, listen: false);
@@ -21,10 +50,22 @@ class HomeDrawer extends StatelessWidget {
           UserAccountsDrawerHeader(
             accountName: Text("${user.userData.name} ${user.userData.surname}"),
             accountEmail: Text("${user.userData.mail}"),
-            currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage(
-              "assets/images/Profile Image.png",
-            )),
+            currentAccountPicture: FutureBuilder(
+                future: _initialImage,
+                builder: (_, dataSnapshot) {
+                  if (dataSnapshot.connectionState == ConnectionState.waiting) {
+                    return CircleAvatar(
+                      backgroundImage:
+                          AssetImage("assets/images/default-avatar.png"),
+                    );
+                  } else {
+                    return CircleAvatar(
+                      backgroundImage: _storedImage != null
+                          ? FileImage(_storedImage)
+                          : AssetImage("assets/images/default-avatar.png"),
+                    );
+                  }
+                }),
             decoration: BoxDecoration(color: kSecondaryColor),
             //Lista de Otros Usuarios
             otherAccountsPictures: <Widget>[
