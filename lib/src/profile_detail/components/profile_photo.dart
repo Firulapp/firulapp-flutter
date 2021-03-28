@@ -107,7 +107,18 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                     builder: (_, dataSnapshot) {
                       if (dataSnapshot.connectionState ==
                           ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return Container(
+                          width: 150.0,
+                          height: 150.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "assets/images/default-avatar.png"),
+                                fit: BoxFit.cover,
+                                alignment: Alignment.center),
+                          ),
+                        );
                       } else {
                         if (dataSnapshot.error != null) {
                           return Center(
