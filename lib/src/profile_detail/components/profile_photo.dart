@@ -22,7 +22,6 @@ class ProfilePhoto extends StatefulWidget {
 class _ProfilePhotoState extends State<ProfilePhoto> {
   File _storedImage;
   Future _initialImage;
-  final imagePicker = ImagePicker();
 
   @override
   void initState() {

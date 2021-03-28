@@ -49,7 +49,7 @@ class MapScreenState extends State<ProfilePage>
                 ),
                 Container(
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: 25.0),
+                    padding: const EdgeInsets.only(bottom: 25.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
