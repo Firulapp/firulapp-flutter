@@ -197,6 +197,29 @@ class MapScreenState extends State<ProfilePage>
                                           )
                                       : null,
                                   hint: const Text("Ciudad"),
+                                  searchFn: (String keyword, items) {
+                                    List<int> ret = [];
+                                    if (items != null && keyword.isNotEmpty) {
+                                      keyword.split(" ").forEach((k) {
+                                        int i = 0;
+                                        items.forEach((item) {
+                                          if (k.isNotEmpty &&
+                                              (item.child.data
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(k.toLowerCase()))) {
+                                            ret.add(i);
+                                          }
+                                          i++;
+                                        });
+                                      });
+                                    }
+                                    if (keyword.isEmpty) {
+                                      ret = Iterable<int>.generate(items.length)
+                                          .toList();
+                                    }
+                                    return (ret);
+                                  },
                                 ),
                               );
                             },
