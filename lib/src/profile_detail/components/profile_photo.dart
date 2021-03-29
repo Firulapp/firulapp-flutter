@@ -30,7 +30,11 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
   }
 
   Future _initiateStoredImage() async {
-    Uint8List bytes = base64Decode(widget.profilePicture);
+    String base64 = widget.profilePicture;
+    if (base64 == null) {
+      return;
+    }
+    Uint8List bytes = base64Decode(base64);
     final tempPath = await syspaths.getTemporaryDirectory();
     _storedImage = File('${tempPath.path}/profile.png');
     await _storedImage.writeAsBytes(

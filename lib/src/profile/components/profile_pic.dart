@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:firulapp/provider/user.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:provider/provider.dart';
 
@@ -26,8 +25,12 @@ class _ProfilePicState extends State<ProfilePic> {
   }
 
   Future _initiateStoredImage() async {
-    Uint8List bytes = base64Decode(
-        Provider.of<User>(context, listen: false).userData.profilePicture);
+    String base64 =
+        Provider.of<User>(context, listen: false).userData.profilePicture;
+    if (base64 == null) {
+      return;
+    }
+    Uint8List bytes = base64Decode(base64);
     final tempPath = await syspaths.getTemporaryDirectory();
     _storedImage = File('${tempPath.path}/profile.png');
     await _storedImage.writeAsBytes(
@@ -44,7 +47,17 @@ class _ProfilePicState extends State<ProfilePic> {
           future: _initialImage,
           builder: (_, dataSnapshot) {
             if (dataSnapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Container(
+                width: 150.0,
+                height: 150.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/default-avatar.png"),
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center),
+                ),
+              );
             } else {
               if (dataSnapshot.error != null) {
                 return Center(

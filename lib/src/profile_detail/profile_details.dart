@@ -143,7 +143,7 @@ class MapScreenState extends State<ProfilePage>
                           child: TextFormField(
                               initialValue: user.userData.userName,
                               decoration: InputDecoration(
-                                hintText: "Ingresa se usuario",
+                                hintText: "Ingresa su usuario",
                                 labelText: 'Usuario',
                                 labelStyle: defaultTextStyle(),
                               ),
