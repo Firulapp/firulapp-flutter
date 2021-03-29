@@ -23,7 +23,6 @@ class MapScreenState extends State<ProfilePage>
   final FocusNode myFocusNode = FocusNode();
   File _pickedImage;
   Future _citiesFuture;
-  int _city;
 
   Future _obtainCitiesFuture() {
     return Provider.of<City>(context, listen: false).fetchCities();
@@ -44,7 +43,6 @@ class MapScreenState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    _city = user.userData.city;
     return Scaffold(
         appBar: AppBar(
           title: const Text("Informacion Personal"),
@@ -188,11 +186,8 @@ class MapScreenState extends State<ProfilePage>
                                       .toList(),
                                   value: user.userData.city,
                                   onChanged: !_status
-                                      ? (newValue) => setState(
-                                            () {
-                                              user.userData.city = newValue;
-                                            },
-                                          )
+                                      ? (newValue) =>
+                                          user.userData.city = newValue
                                       : null,
                                   hint: const Text("Ciudad"),
                                 ),
