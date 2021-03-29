@@ -1,19 +1,19 @@
 import 'package:flutter/widgets.dart';
-import 'package:firulapp/src/home/home.dart';
 
-// We use name route
-// All our routes will be available here
+import './src/sign_up/components/sign_up_details_form.dart';
+import './src/sign_in/sign_in_screen.dart';
+import './src/home/home.dart';
+import './src/profile/profile_screen.dart';
+import './src/profile_detail/profile_details.dart';
+import './src/pets/pets_scream.dart';
+import './src/sign_up/sign_up_screen.dart';
 
 final Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => HomeScreen(),
-  // SplashScreen.routeName: (context) => SplashScreen(),
-  // SignInScreen.routeName: (context) => SignInScreen(),
-  // ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
-  // LoginSuccessScreen.routeName: (context) => LoginSuccessScreen(),
-  // SignUpScreen.routeName: (context) => SignUpScreen(),
-  // CompleteProfisleScreen.routeName: (context) => CompleteProfileScreen(),
-  // OtpScreen.routeName: (context) => OtpScreen(),
-  // DetailsScreen.routeName: (context) => DetailsScreen(),
-  // CartScreen.routeName: (context) => CartScreen(),
-  // ProfileScreen.routeName: (context) => ProfileScreen(),
+  SignInScreen.routeName: (context) => SignInScreen(),
+  ProfileScreen.routeName: (context) => ProfileScreen(),
+  ProfilePage.routeName: (context) => ProfilePage(),
+  PetsScreen.routeName: (context) => PetsScreen(),
+  SignUpScreen.routeName: (context) => SignUpScreen(),
+  SignUpDetailsForm.routeName: (context) => SignUpDetailsForm(),
 };
