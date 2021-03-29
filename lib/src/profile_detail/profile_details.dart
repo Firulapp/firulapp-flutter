@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 import '../../provider/city.dart';
 import '../../components/dialogs.dart';
@@ -178,7 +177,7 @@ class MapScreenState extends State<ProfilePage>
                             builder: (_, dataSnapshot) {
                               return Consumer<City>(
                                 builder: (ctx, cityData, child) =>
-                                    SearchableDropdown(
+                                    DropdownButtonFormField(
                                   items: cityData.cities
                                       .map(
                                         (city) => DropdownMenuItem(
@@ -187,39 +186,15 @@ class MapScreenState extends State<ProfilePage>
                                         ),
                                       )
                                       .toList(),
-                                  value: _city,
+                                  value: user.userData.city,
                                   onChanged: !_status
                                       ? (newValue) => setState(
                                             () {
-                                              _city = newValue;
-                                              user.userData.city = _city;
+                                              user.userData.city = newValue;
                                             },
                                           )
                                       : null,
                                   hint: const Text("Ciudad"),
-                                  searchFn: (String keyword, items) {
-                                    List<int> ret = [];
-                                    if (items != null && keyword.isNotEmpty) {
-                                      keyword.split(" ").forEach((k) {
-                                        int i = 0;
-                                        items.forEach((item) {
-                                          if (k.isNotEmpty &&
-                                              (item.child.data
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .contains(k.toLowerCase()))) {
-                                            ret.add(i);
-                                          }
-                                          i++;
-                                        });
-                                      });
-                                    }
-                                    if (keyword.isEmpty) {
-                                      ret = Iterable<int>.generate(items.length)
-                                          .toList();
-                                    }
-                                    return (ret);
-                                  },
                                 ),
                               );
                             },
