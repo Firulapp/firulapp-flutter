@@ -1,42 +1,85 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
-class ProfilePic extends StatelessWidget {
+import 'package:firulapp/provider/user.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart' as syspaths;
+import 'package:provider/provider.dart';
+
+class ProfilePic extends StatefulWidget {
   const ProfilePic({Key key}) : super(key: key);
+
+  @override
+  _ProfilePicState createState() => _ProfilePicState();
+}
+
+class _ProfilePicState extends State<ProfilePic> {
+  File _storedImage;
+  Future _initialImage;
+
+  @override
+  void initState() {
+    _initialImage = _initiateStoredImage();
+    super.initState();
+  }
+
+  Future _initiateStoredImage() async {
+    String base64 =
+        Provider.of<User>(context, listen: false).userData.profilePicture;
+    if (base64 == null) {
+      return;
+    }
+    Uint8List bytes = base64Decode(base64);
+    final tempPath = await syspaths.getTemporaryDirectory();
+    _storedImage = File('${tempPath.path}/profile.png');
+    await _storedImage.writeAsBytes(
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+    FileImage(_storedImage).evict();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 115,
-      width: 115,
-      child: Stack(
-        fit: StackFit.expand,
-        overflow: Overflow.visible,
-        children: [
-          CircleAvatar(
-            backgroundImage: AssetImage("assets/images/Profile Image.png"),
-          ),
-          Positioned(
-            right: -16,
-            bottom: 0,
-            child: SizedBox(
-              height: 46,
-              width: 46,
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                  side: BorderSide(color: Colors.transparent),
+        height: 150,
+        width: 150,
+        child: FutureBuilder(
+          future: _initialImage,
+          builder: (_, dataSnapshot) {
+            if (dataSnapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                width: 150.0,
+                height: 150.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/default-avatar.png"),
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center),
                 ),
-                color: Color(0xFFF5F6F9),
-                onPressed: () {
-                  //funcion para actulizar foto de perfil
-                },
-                child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+              );
+            } else {
+              if (dataSnapshot.error != null) {
+                return Center(
+                  child: Text('Algo salio mal'),
+                );
+              } else {
+                return Container(
+                  width: 150.0,
+                  height: 150.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: _storedImage != null
+                            ? FileImage(_storedImage)
+                            : AssetImage("assets/images/default-avatar.png"),
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center),
+                  ),
+                );
+              }
+            }
+          },
+        ));
   }
 }

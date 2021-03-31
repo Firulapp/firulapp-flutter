@@ -7,4 +7,5 @@ class Endpoints {
   static final logout = '$user/logout';
   static final species = '$param/species';
   static final update = '$user/update';
+  static final city = '/param/city';
 }

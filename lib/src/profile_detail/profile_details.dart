@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/city.dart';
 import '../../components/dialogs.dart';
 import '../../constants/constants.dart';
 import 'components/profile_photo.dart';
@@ -17,34 +21,50 @@ class MapScreenState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
+  File _pickedImage;
+  Future _citiesFuture;
+
+  Future _obtainCitiesFuture() {
+    return Provider.of<City>(context, listen: false).fetchCities();
+  }
+
+  void _selectImage(File pickedImage) {
+    _pickedImage = pickedImage;
+    Provider.of<User>(context, listen: false).userData.profilePicture =
+        base64Encode(_pickedImage.readAsBytesSync());
+  }
 
   @override
-  void initState() => super.initState();
+  void initState() {
+    _citiesFuture = _obtainCitiesFuture();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return new Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text("Informacion Personal"),
         ),
-        body: new ListView(
+        body: ListView(
           children: <Widget>[
             Column(
               children: <Widget>[
                 Container(
-                  height: 180,
-                  child: ProfilePhoto(),
+                  height: 200,
+                  child: ProfilePhoto(
+                      _selectImage, user.userData.profilePicture, _status),
                 ),
                 Container(
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: 25.0),
+                    padding: const EdgeInsets.only(bottom: 25.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                                 left: 25.0, right: 25.0, top: 25.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,7 +143,7 @@ class MapScreenState extends State<ProfilePage>
                           child: TextFormField(
                               initialValue: user.userData.userName,
                               decoration: InputDecoration(
-                                hintText: "Ingresa se usuario",
+                                hintText: "Ingresa su usuario",
                                 labelText: 'Usuario',
                                 labelStyle: defaultTextStyle(),
                               ),
@@ -150,17 +170,29 @@ class MapScreenState extends State<ProfilePage>
                         Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
-                          child: TextFormField(
-                            initialValue: user.userData.city.toString(),
-                            decoration: InputDecoration(
-                              hintText: "Ingresa tu Ciudad",
-                              labelText: 'Ciudad',
-                              labelStyle: defaultTextStyle(),
-                            ),
-                            enabled: !_status,
-                            autofocus: !_status,
-                            onChanged: (newValue) =>
-                                user.userData.city = int.parse(newValue),
+                          child: FutureBuilder(
+                            future: _citiesFuture,
+                            builder: (_, dataSnapshot) {
+                              return Consumer<City>(
+                                builder: (ctx, cityData, child) =>
+                                    DropdownButtonFormField(
+                                  items: cityData.cities
+                                      .map(
+                                        (city) => DropdownMenuItem(
+                                          value: city.id,
+                                          child: Text(city.name),
+                                        ),
+                                      )
+                                      .toList(),
+                                  value: user.userData.city,
+                                  onChanged: !_status
+                                      ? (newValue) =>
+                                          user.userData.city = newValue
+                                      : null,
+                                  hint: const Text("Ciudad"),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         Padding(
@@ -225,17 +257,17 @@ class MapScreenState extends State<ProfilePage>
 
   Widget _getActionButtons() {
     return Padding(
-      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+      padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
+              padding: const EdgeInsets.only(right: 10.0),
               child: Container(
                   child: RaisedButton(
-                child: const Text("Save"),
+                child: const Text("Guardar"),
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () {
@@ -264,7 +296,7 @@ class MapScreenState extends State<ProfilePage>
               padding: EdgeInsets.only(left: 10.0),
               child: Container(
                   child: RaisedButton(
-                child: const Text("Cancel"),
+                child: const Text("Cancelar"),
                 textColor: Colors.white,
                 color: Colors.red,
                 onPressed: () {

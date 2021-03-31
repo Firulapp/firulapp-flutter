@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/city.dart';
 import '../../home/home.dart';
 import '../../../provider/session.dart';
 import '../../../provider/user.dart';
@@ -73,6 +74,17 @@ class _BodyState extends State<Body> with ValidatorMixins {
   String _birthDate;
   final df = new DateFormat('dd-MM-yyyy');
   DateTime currentDate = DateTime.now();
+  Future _citiesFuture;
+
+  Future _obtainCitiesFuture() {
+    return Provider.of<City>(context, listen: false).fetchCities();
+  }
+
+  @override
+  void initState() {
+    _citiesFuture = _obtainCitiesFuture();
+    super.initState();
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
@@ -126,10 +138,25 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 TextInputType.number,
               ),
               SizedBox(height: getProportionateScreenHeight(25)),
-              buildCityFormField(
-                "Ciudad",
-                "Ingrese una ciudad",
-                TextInputType.number,
+              FutureBuilder(
+                future: _citiesFuture,
+                builder: (_, dataSnapshot) {
+                  return Consumer<City>(
+                    builder: (ctx, cityData, child) => DropdownButtonFormField(
+                      items: cityData.cities
+                          .map(
+                            (city) => DropdownMenuItem(
+                              value: city.id,
+                              child: Text(city.name),
+                            ),
+                          )
+                          .toList(),
+                      value: _city,
+                      onChanged: (newValue) => _city = newValue,
+                      hint: const Text("Ciudad"),
+                    ),
+                  );
+                },
               ),
               SizedBox(height: getProportionateScreenHeight(25)),
               Row(

@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import './provider/city.dart';
 import './provider/session.dart';
 import './src/theme.dart';
 import './provider/user.dart';
@@ -17,6 +18,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => Session(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => City(),
         ),
         ChangeNotifierProxyProvider<Session, User>(
           update: (context, session, user) => User(
