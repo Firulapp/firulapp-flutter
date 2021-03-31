@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/pets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -24,12 +25,25 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<Session, User>(
           update: (context, session, user) => User(
-            session.userSession,
             user == null ? {} : user.userData,
+            session.userSession,
           ),
           create: (ctx) => User(
-            UserSession(),
             UserData(),
+            UserSession(),
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, Pets>(
+          update: (context, user, pet) => Pets(
+            user,
+            pet == null ? {} : pet.userData,
+          ),
+          create: (ctx) => Pets(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            PetItem(),
           ),
         ),
         ChangeNotifierProvider(

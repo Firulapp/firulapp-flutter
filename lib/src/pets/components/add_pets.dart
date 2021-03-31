@@ -1,21 +1,24 @@
-// Flutter imports:
-import 'package:firulapp/components/extras.dart';
-import 'package:firulapp/provider/breeds.dart';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 import '../../../components/dialogs.dart';
-import '../../../provider/species.dart';
-import '../../../src/pets/components/pets-image.dart';
 import '../../../size_config.dart';
+import '../../../src/pets/components/pets-image.dart';
 import '../../../constants/constants.dart';
+import '../../../provider/species.dart';
+import '../../../provider/pets.dart';
 
 class AddPets extends StatefulWidget {
   static const routeName = "/pets/add";
-  const AddPets({Key key}) : super(key: key);
+  // final PetItem pet;
+  AddPets({
+    Key key,
+    // this.pet,
+  }) : super(key: key);
 
   MapScreenState createState() => MapScreenState();
 }
@@ -23,9 +26,27 @@ class AddPets extends StatefulWidget {
 class MapScreenState extends State<AddPets>
     with SingleTickerProviderStateMixin {
   bool _status = true;
+  Future _initialSpecies;
   final FocusNode myFocusNode = FocusNode();
+  Future<void> _getListSpecies() async {
+    try {
+      Provider.of<Species>(context, listen: false).getSpecies();
+    } catch (e) {
+      // Dialogs.info(
+      //   context,
+      //   title: 'ERROR',
+      //   content: e.response.data["message"],
+      // );
+      print(e);
+    }
+  }
+
   @override
-  void initState() => super.initState();
+  void initState() {
+    _initialSpecies = _getListSpecies();
+    super.initState();
+  }
+
   final df = new DateFormat('dd-MM-yyyy');
   DateTime currentDate = DateTime.now();
 
@@ -51,9 +72,6 @@ class MapScreenState extends State<AddPets>
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<Species>(context).getSpecie(context);
-    final params = Provider.of<Species>(context);
-    final listSpecies = params.items;
     final SizeConfig sizeConfig = SizeConfig();
     return new Scaffold(
         appBar: AppBar(
@@ -66,8 +84,8 @@ class MapScreenState extends State<AddPets>
                 Container(
                   height: sizeConfig.hp(20),
                   child: PetImage(
-                    onPressed: _pickImage,
-                  ),
+                      //onPressed: _pickImage,
+                      ),
                 ),
                 Container(
                   child: Padding(
@@ -115,6 +133,9 @@ class MapScreenState extends State<AddPets>
                               labelText: "Nombre",
                               labelStyle: defaultTextStyle(),
                             ),
+                            onChanged: (v) {
+                              _name = v;
+                            },
                             enabled: !_status,
                             autofocus: !_status,
                           ),
@@ -143,29 +164,36 @@ class MapScreenState extends State<AddPets>
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  SearchableDropdown(
-                                    hint: _speciesName == null
-                                        ? Text('Eliga una especie')
-                                        : null,
-                                    disabledHint: _speciesName != null
-                                        ? Text(listSpecies
-                                            .firstWhere((item) =>
-                                                item.name == _speciesName)
-                                            .name)
-                                        : null,
-                                    items: listSpecies
-                                        .map((e) => DropdownMenuItem(
-                                              value: e.name,
-                                              child: Text(e.name),
-                                            ))
-                                        .toList(),
-                                    onChanged: !_status
-                                        ? (v) => setState(() {
-                                              _speciesName = v;
-                                            })
-                                        : null,
-                                    value: _speciesName,
-                                  )
+                                  FutureBuilder(
+                                      future: _initialSpecies,
+                                      builder: (_, dataSnapshot) {
+                                        return Consumer<Species>(
+                                          builder: (ctx, listSpecies, _) =>
+                                              DropdownButton(
+                                            hint: _speciesId == null
+                                                ? Text('Eliga una especie')
+                                                : null,
+                                            disabledHint: _speciesId != null
+                                                ? Text(listSpecies.items
+                                                    .firstWhere((item) =>
+                                                        item.id == _speciesId)
+                                                    .name)
+                                                : null,
+                                            items: listSpecies.items
+                                                .map((e) => DropdownMenuItem(
+                                                      value: e.id,
+                                                      child: Text(e.name),
+                                                    ))
+                                                .toList(),
+                                            onChanged: !_status
+                                                ? (v) => setState(() {
+                                                      _speciesId = v;
+                                                    })
+                                                : null,
+                                            value: _speciesId,
+                                          ),
+                                        );
+                                      }),
                                 ],
                               )
                             ],
@@ -195,13 +223,13 @@ class MapScreenState extends State<AddPets>
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  SearchableDropdown(
-                                    hint: _race == null
+                                  DropdownButton(
+                                    hint: _raceID == null
                                         ? Text('Eliga una raza')
                                         : null,
-                                    disabledHint: _race != null
+                                    disabledHint: _raceID != null
                                         ? Text(_itemsRace.firstWhere((item) =>
-                                            item["value"] == _race)["text"])
+                                            item["value"] == _raceID)["text"])
                                         : null,
                                     items: _itemsRace
                                         .map((item) => DropdownMenuItem(
@@ -301,6 +329,9 @@ class MapScreenState extends State<AddPets>
                               labelText: "Color Primario",
                               labelStyle: defaultTextStyle(),
                             ),
+                            onChanged: (v) {
+                              _primaryColor = v;
+                            },
                             enabled: !_status,
                             autofocus: !_status,
                           ),
@@ -315,6 +346,9 @@ class MapScreenState extends State<AddPets>
                               labelText: "Color secundario",
                               labelStyle: defaultTextStyle(),
                             ),
+                            onChanged: (v) {
+                              _secondaryColor = v;
+                            },
                             enabled: !_status,
                             autofocus: !_status,
                           ),
@@ -329,6 +363,9 @@ class MapScreenState extends State<AddPets>
                               labelText: "Descripción",
                               labelStyle: defaultTextStyle(),
                             ),
+                            onChanged: (v) {
+                              _petDescription = v;
+                            },
                             enabled: !_status,
                             autofocus: !_status,
                           ),
@@ -403,11 +440,27 @@ class MapScreenState extends State<AddPets>
                 child: Text("Guardar"),
                 textColor: Colors.white,
                 color: Colors.green,
-                onPressed: () {
+                onPressed: () async {
+                  try {
+                    PetItem newPet = PetItem(
+                      name: _name,
+                      speciesId: _speciesId,
+                      breedId: _raceID,
+                      birthDate: _birthDate,
+                      age: _age,
+                      primaryColor: _primaryColor,
+                      description: _petDescription,
+                      secundaryColor: _secondaryColor,
+                    );
+                    Provider.of<Pets>(context, listen: false).setPet = newPet;
+                    print("Se guardo el puto perro");
+                    Provider.of<Pets>(context, listen: false).savePet();
+                  } catch (e) {
+                    print(e);
+                  }
                   setState(() {
                     _status = true;
                     FocusScope.of(context).requestFocus(FocusNode());
-                    //aqui deberia agregar la nueva mascota y mostrar popup de confirmacion
                   });
                 },
                 shape: RoundedRectangleBorder(
@@ -469,6 +522,7 @@ class MapScreenState extends State<AddPets>
     if (pickedDate != null && pickedDate != currentDate)
       setState(() {
         currentDate = pickedDate;
+        _birthDate = pickedDate;
       });
   }
 
@@ -489,13 +543,5 @@ class MapScreenState extends State<AddPets>
     }
     _age = age; // aqui deberia actualizar el objeto de la mascotas
     return age;
-  }
-
-  _pickImage() async {
-    final PickedFile file = await Extra.pickImage(false);
-    if (file != null) {
-      //guardar en providercorrespondiente
-      print("path ${file.path}");
-    }
   }
 }

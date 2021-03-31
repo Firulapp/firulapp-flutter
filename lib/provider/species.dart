@@ -39,7 +39,7 @@ class Species with ChangeNotifier {
 
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
-  Future<void> getSpecie(BuildContext context) async {
+  Future<void> getSpecies() async {
     try {
       final response = await _dio.get(Endpoints.species);
       final List<SpeciesItem> loadedSpecies = [];
@@ -55,12 +55,7 @@ class Species with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print(e);
-      Dialogs.info(
-        context,
-        title: 'Guardar Mascota',
-        content: 'Ocurrui un error, favor vuelta a intentar',
-      );
+      throw e;
     }
   }
 }

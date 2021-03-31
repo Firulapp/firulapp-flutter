@@ -56,7 +56,7 @@ class User with ChangeNotifier {
   UserData _userData;
   final UserSession session;
 
-  User(this.session, _userData);
+  User(_userData, this.session);
 
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
