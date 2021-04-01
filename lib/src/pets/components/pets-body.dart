@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-List _listings = new List();
+import 'add_pets.dart';
 
 class PetsBody extends StatefulWidget {
   PetsBody({Key key}) : super(key: key);
@@ -23,7 +23,7 @@ class _BodyState extends State<PetsBody> {
             icon: Icon(
               Icons.add,
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.pushNamed(context, AddPets.routeName),
           ),
           Expanded(
             child: ListView(
@@ -36,35 +36,35 @@ class _BodyState extends State<PetsBody> {
       ),
     ));
   }
-}
 
-List<Widget> _getListings() {
-  // <<<<< Note this change for the return type
-  List listings = List<Widget>();
+  List<Widget> _getListings() {
+    // <<<<< Note this change for the return type
+    List listings = List<Widget>();
 
-  listings.add(ListTile(
-    leading: CircleAvatar(
-      backgroundImage: NetworkImage(
-        'https://ar.zoetis.com/_locale-assets/mcm-portal-assets/publishingimages/especie/caninos_perro_img.png',
+    listings.add(ListTile(
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(
+          'https://ar.zoetis.com/_locale-assets/mcm-portal-assets/publishingimages/especie/caninos_perro_img.png',
+        ),
       ),
-    ),
-    title: Text('Firulains'),
-    onTap: () {},
-    trailing: Icon(Icons.keyboard_arrow_right),
-    contentPadding: EdgeInsets.symmetric(horizontal: 30),
-  ));
+      title: Text('Firulains'),
+      onTap: () {},
+      trailing: Icon(Icons.keyboard_arrow_right),
+      contentPadding: EdgeInsets.symmetric(horizontal: 30),
+    ));
 
-  listings.add(ListTile(
-    leading: CircleAvatar(
-      backgroundImage: NetworkImage(
-        'https://ar.zoetis.com/_locale-assets/mcm-portal-assets/publishingimages/especie/caninos_perro_img.png',
+    listings.add(ListTile(
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(
+          'https://ar.zoetis.com/_locale-assets/mcm-portal-assets/publishingimages/especie/caninos_perro_img.png',
+        ),
       ),
-    ),
-    title: Text('Perris'),
-    onTap: () {},
-    trailing: Icon(Icons.keyboard_arrow_right),
-    contentPadding: EdgeInsets.symmetric(horizontal: 30),
-  ));
+      title: Text('Perris'),
+      onTap: () {},
+      trailing: Icon(Icons.keyboard_arrow_right),
+      contentPadding: EdgeInsets.symmetric(horizontal: 30),
+    ));
 
-  return listings;
+    return listings;
+  }
 }
