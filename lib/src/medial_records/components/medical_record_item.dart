@@ -1,31 +1,35 @@
 import 'package:flutter/material.dart';
 
 class MedicalRecordItem extends StatelessWidget {
-  const MedicalRecordItem({
+  final Map _medicalRecords;
+  const MedicalRecordItem(
+    this._medicalRecords, {
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      elevation: 6,
+      margin: EdgeInsets.all(10),
+      elevation: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
-            "10/12/1997",
+            _medicalRecords["date"],
             style: Theme.of(context).textTheme.headline6,
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
           Text(
-            "Doctor: Richard",
+            "Veterinaria: ${_medicalRecords["organization"]}",
             style: const TextStyle(fontSize: 20.0),
           ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            'Descripción: dolor intestinal dasdfrasf gfda gfd gfd g fdg fdg fdgfdgfdg gfd gfd g',
-            style: const TextStyle(fontSize: 15.0),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Diagnóstico: ${_medicalRecords["diagnostic"]}',
+              style: const TextStyle(fontSize: 16.0),
+            ),
           ),
         ],
       ),
