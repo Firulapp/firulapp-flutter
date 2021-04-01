@@ -10,11 +10,16 @@ class MedicalRecordItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Colors.white70, width: 1),
+        borderRadius: BorderRadius.circular(10),
+      ),
       margin: EdgeInsets.all(10),
       elevation: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
           Text(
             _medicalRecords["date"],
             style: Theme.of(context).textTheme.headline6,

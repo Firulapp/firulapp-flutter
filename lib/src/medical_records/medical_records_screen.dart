@@ -5,7 +5,7 @@ import './components/medical_record_item.dart';
 class MedicalRecordsScreen extends StatelessWidget {
   static const routeName = "/medical_records";
 
-  List<Map> _medialRecords = [
+  final List<Map> _medialRecords = const [
     {
       "date": "10/01/2021",
       "organization": 'Dr. Brown',
