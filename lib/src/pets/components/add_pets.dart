@@ -80,7 +80,6 @@ class MapScreenState extends State<AddPets>
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
     final SizeConfig sizeConfig = SizeConfig();
     return new Scaffold(
         appBar: AppBar(

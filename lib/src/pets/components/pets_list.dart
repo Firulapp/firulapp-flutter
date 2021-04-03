@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,13 +38,14 @@ class _PetsListState extends State<PetsList> {
 
   List<Widget> _getListings({List<PetItem> lista}) {
     List listings = List<Widget>();
+    File _storedImage;
 
     lista.forEach((e) {
       listings.add(new ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(
-            'https://ar.zoetis.com/_locale-assets/mcm-portal-assets/publishingimages/especie/caninos_perro_img.png',
-          ),
+          backgroundImage: _storedImage != null
+              ? FileImage(_storedImage)
+              : AssetImage("assets/images/default-avatar.png"),
         ),
         title: Text(e.name),
         onTap: () {},
