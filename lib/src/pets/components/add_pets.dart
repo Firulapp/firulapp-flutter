@@ -15,11 +15,7 @@ import '../../../provider/pets.dart';
 
 class AddPets extends StatefulWidget {
   static const routeName = "/pets/add";
-  // final PetItem pet;
-  AddPets({
-    Key key,
-    // this.pet,
-  }) : super(key: key);
+  AddPets({Key key}) : super(key: key);
 
   MapScreenState createState() => MapScreenState();
 }
