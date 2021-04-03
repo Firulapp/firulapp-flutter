@@ -2,14 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/endpoints.dart';
-import 'session.dart';
 import 'user.dart';
 
 class PetItem with ChangeNotifier {
   int id;
+  int userId;
   int breedId;
   String name;
-  DateTime birthDate;
+  String birthDate;
   int age;
   String petSize;
   int city;
@@ -26,6 +26,7 @@ class PetItem with ChangeNotifier {
 
   PetItem({
     this.id,
+    this.userId,
     this.breedId,
     this.name,
     this.birthDate,
@@ -42,12 +43,34 @@ class PetItem with ChangeNotifier {
     this.createdAt,
     this.createdBy,
   });
+
+  //https://carlosamillan.medium.com/parseando-json-complejo-en-flutter-18d46c0eb045
+  factory PetItem.fromJson(Map<String, dynamic> parsedJson) {
+    return PetItem(
+      id: parsedJson["id"],
+      breedId: parsedJson["breedId"],
+      name: parsedJson["name"],
+      birthDate: parsedJson["birthDate"],
+      age: parsedJson["age"],
+      petSize: parsedJson["petSize"],
+      city: parsedJson["city"],
+      address: parsedJson["address"],
+      primaryColor: parsedJson["primaryColor"],
+      secondaryColor: parsedJson["secondaryColor"],
+      status: parsedJson["status"],
+      picture: parsedJson["picture"],
+      description: parsedJson["description"],
+      createdAt: parsedJson["createdAt"],
+      createdBy: parsedJson["createdBy"],
+    );
+  }
 }
 
 class Pets with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
   PetItem _petItem;
   final User userData;
+  List<PetItem> _items = [];
 
   Pets(this.userData, petItem);
 
@@ -56,7 +79,14 @@ class Pets with ChangeNotifier {
     notifyListeners();
   }
 
+  // Devuelve solo las mascotas con status True
+  List<PetItem> get enablePets => _items.where((e) => e.status).toList();
+  // devuelve todas las mascotas
+  List<PetItem> get items => [..._items];
+
   get petItem => _petItem;
+
+  // get listPets => _listPets;
 
   Future savePet() async {
     try {
@@ -68,7 +98,7 @@ class Pets with ChangeNotifier {
           "speciesId": _petItem.speciesId,
           "breedId": _petItem.breedId,
           "name": _petItem.name,
-          "birthDate": _petItem.birthDate.toIso8601String(),
+          "birthDate": _petItem.birthDate,
           "age": _petItem.age,
           "petSize": _petItem.petSize,
           "city": userData.userData.city,
@@ -117,6 +147,52 @@ class Pets with ChangeNotifier {
       notifyListeners();
     } catch (error) {
       throw error;
+    }
+  }
+
+  // Future<ListPets> fetchPetList() async {
+  //   try {
+  //     final response =
+  //         await this._dio.get('${Endpoints.pet}/user/${userData.session.id}');
+  //     final petResponse = response.data["list"];
+  //     ListPets list = new ListPets.fromJson(petResponse);
+  //     return list;
+  //   } catch (error) {
+  //     print(error);
+  //     throw error;
+  //   }
+  // }
+
+  Future<void> fetchPetList() async {
+    try {
+      final response =
+          await this._dio.get('${Endpoints.pet}/user/${userData.session.id}');
+      final List<PetItem> loadedPets = [];
+      if (_items.isEmpty) {
+        response.data['list'].forEach((pet) {
+          loadedPets.add(PetItem(
+            id: pet["id"],
+            breedId: pet["breedId"],
+            name: pet["name"],
+            birthDate: pet["birthDate"],
+            age: pet["age"],
+            petSize: pet["petSize"],
+            city: pet["city"],
+            address: pet["address"],
+            primaryColor: pet["primaryColor"],
+            secondaryColor: pet["secondaryColor"],
+            status: pet["status"],
+            picture: pet["picture"],
+            description: pet["description"],
+            createdAt: pet["createdAt"],
+            createdBy: pet["createdBy"],
+          ));
+        });
+        _items = loadedPets;
+        notifyListeners();
+      }
+    } catch (e) {
+      throw e;
     }
   }
 }

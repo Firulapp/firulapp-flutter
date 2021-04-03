@@ -455,7 +455,7 @@ class MapScreenState extends State<AddPets>
                       name: _name,
                       speciesId: _speciesId,
                       breedId: _raceID,
-                      birthDate: _birthDate,
+                      birthDate: _birthDate.toIso8601String(),
                       age: _age,
                       primaryColor: _primaryColor,
                       description: _petDescription,
