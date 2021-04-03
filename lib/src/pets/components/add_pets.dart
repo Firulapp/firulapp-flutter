@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firulapp/provider/user.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -27,8 +28,21 @@ class MapScreenState extends State<AddPets>
     with SingleTickerProviderStateMixin {
   bool _status = true;
   Future _initialSpecies;
-  File _pickedImage;
   PetItem newPet;
+
+  // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
+  String _name;
+  int _speciesId;
+  int _raceID;
+  DateTime _birthDate;
+  int _age;
+  String _primaryColor;
+  String _petDescription;
+  String _secondaryColor;
+  bool _petStatus = true;
+  File _petPicture;
+  String _petPictureBase64;
+
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
     try {
@@ -50,26 +64,14 @@ class MapScreenState extends State<AddPets>
   }
 
   void _selectImage(File pickedImage) {
-    _pickedImage = pickedImage;
-    Provider.of<User>(context, listen: false).userData.profilePicture =
-        base64Encode(_pickedImage.readAsBytesSync());
+    setState(() {
+      _petPicture = pickedImage;
+    });
+    _petPictureBase64 = base64Encode(pickedImage.readAsBytesSync());
   }
 
   final df = new DateFormat('dd-MM-yyyy');
   DateTime currentDate = DateTime.now();
-
-  // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
-  String _name;
-  String _speciesName;
-  int _speciesId;
-  String _race;
-  int _raceID;
-  DateTime _birthDate;
-  int _age;
-  String _primaryColor;
-  String _petDescription;
-  String _secondaryColor;
-  bool _petStatus;
 
   List<Map> _itemsRace = [
     {"value": 11, "text": 'Chiguagua'},
@@ -92,8 +94,10 @@ class MapScreenState extends State<AddPets>
                 Container(
                   height: sizeConfig.hp(20),
                   child: PetImage(
-                      //onPressed: _pickImage,
-                      ),
+                    _selectImage,
+                    _petPicture,
+                    _status,
+                  ),
                 ),
                 Container(
                   child: Padding(
@@ -459,6 +463,8 @@ class MapScreenState extends State<AddPets>
                       primaryColor: _primaryColor,
                       description: _petDescription,
                       secondaryColor: _secondaryColor,
+                      status: _petStatus,
+                      picture: _petPictureBase64,
                     );
                     Provider.of<Pets>(context, listen: false).petItem = newPet;
                     Provider.of<Pets>(context, listen: false).savePet();

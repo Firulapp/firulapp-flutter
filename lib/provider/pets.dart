@@ -105,8 +105,8 @@ class Pets with ChangeNotifier {
           "address": null, // fixed obtener este dato del usuario
           "primaryColor": _petItem.primaryColor,
           "secondaryColor": _petItem.secondaryColor,
-          "status": true,
-          "picture": null, // fixed debe enviar string base64
+          "status": _petItem.status,
+          "picture": _petItem.picture, // fixed debe enviar string base64
           "description": _petItem.description,
           "createdAt": null, //DateTime.now().toIso8601String(),
           "createdBy": userData.userData.id,
