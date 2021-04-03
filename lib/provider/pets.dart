@@ -15,11 +15,13 @@ class PetItem with ChangeNotifier {
   int city;
   String address;
   String primaryColor;
-  String secundaryColor;
+  String secondaryColor;
+  bool status;
   int speciesId;
   String picture;
   String description;
-  DateTime createdAt;
+  String createdAt;
+  int createdBy;
   //DateTime createdBy; //userId
 
   PetItem({
@@ -32,10 +34,13 @@ class PetItem with ChangeNotifier {
     this.city,
     this.address,
     this.primaryColor,
-    this.secundaryColor,
+    this.secondaryColor,
+    this.status,
     this.speciesId,
     this.picture,
     this.description,
+    this.createdAt,
+    this.createdBy,
   });
 }
 
@@ -46,12 +51,12 @@ class Pets with ChangeNotifier {
 
   Pets(this.userData, petItem);
 
-  set setPet(PetItem petItem) {
+  set petItem(PetItem petItem) {
     _petItem = petItem;
     notifyListeners();
   }
 
-  get getPet => _petItem;
+  get petItem => _petItem;
 
   Future savePet() async {
     try {
@@ -69,11 +74,11 @@ class Pets with ChangeNotifier {
           "city": userData.userData.city,
           "address": null, // fixed obtener este dato del usuario
           "primaryColor": _petItem.primaryColor,
-          "secondaryColor": _petItem.secundaryColor,
+          "secondaryColor": _petItem.secondaryColor,
           "status": true,
           "picture": null, // fixed debe enviar string base64
           "description": _petItem.description,
-          "createdAt": DateTime.now().toIso8601String(),
+          "createdAt": null, //DateTime.now().toIso8601String(),
           "createdBy": userData.userData.id,
           "modifiedAt": null,
           "modifiedBy": null
@@ -81,6 +86,34 @@ class Pets with ChangeNotifier {
       );
       print(response.data["dto"]);
 
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> getPetById() async {
+    try {
+      final response = await this._dio.get('${Endpoints.pet}/${_petItem.id}');
+      final petResponse = response.data["dto"];
+      var pet = PetItem(
+        id: petResponse["id"],
+        breedId: petResponse["breedId"],
+        name: petResponse["name"],
+        birthDate: petResponse["birthDate"],
+        age: petResponse["age"],
+        petSize: petResponse["petSize"],
+        city: petResponse["city"],
+        address: petResponse["address"],
+        primaryColor: petResponse["primaryColor"],
+        secondaryColor: petResponse["secondaryColor"],
+        status: petResponse["status"],
+        picture: petResponse["picture"],
+        description: petResponse["description"],
+        createdAt: petResponse["createdAt"],
+        createdBy: petResponse["createdBy"],
+      );
+      petItem = pet;
       notifyListeners();
     } catch (error) {
       throw error;

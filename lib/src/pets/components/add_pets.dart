@@ -1,13 +1,13 @@
-import 'dart:ffi';
-
+import 'dart:convert';
+import 'dart:io';
+import 'package:firulapp/provider/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 import '../../../components/dialogs.dart';
 import '../../../size_config.dart';
-import '../../../src/pets/components/pets-image.dart';
+import 'pets_image.dart';
 import '../../../constants/constants.dart';
 import '../../../provider/species.dart';
 import '../../../provider/pets.dart';
@@ -27,6 +27,8 @@ class MapScreenState extends State<AddPets>
     with SingleTickerProviderStateMixin {
   bool _status = true;
   Future _initialSpecies;
+  File _pickedImage;
+  PetItem newPet;
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
     try {
@@ -45,6 +47,12 @@ class MapScreenState extends State<AddPets>
   void initState() {
     _initialSpecies = _getListSpecies();
     super.initState();
+  }
+
+  void _selectImage(File pickedImage) {
+    _pickedImage = pickedImage;
+    Provider.of<User>(context, listen: false).userData.profilePicture =
+        base64Encode(_pickedImage.readAsBytesSync());
   }
 
   final df = new DateFormat('dd-MM-yyyy');
@@ -72,6 +80,7 @@ class MapScreenState extends State<AddPets>
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
     final SizeConfig sizeConfig = SizeConfig();
     return new Scaffold(
         appBar: AppBar(
@@ -442,7 +451,7 @@ class MapScreenState extends State<AddPets>
                 color: Colors.green,
                 onPressed: () async {
                   try {
-                    PetItem newPet = PetItem(
+                    newPet = PetItem(
                       name: _name,
                       speciesId: _speciesId,
                       breedId: _raceID,
@@ -450,12 +459,17 @@ class MapScreenState extends State<AddPets>
                       age: _age,
                       primaryColor: _primaryColor,
                       description: _petDescription,
-                      secundaryColor: _secondaryColor,
+                      secondaryColor: _secondaryColor,
                     );
-                    Provider.of<Pets>(context, listen: false).setPet = newPet;
-                    print("Se guardo el puto perro");
+                    Provider.of<Pets>(context, listen: false).petItem = newPet;
                     Provider.of<Pets>(context, listen: false).savePet();
+                    print("Se guardo la mascota");
                   } catch (e) {
+                    Dialogs.info(
+                      context,
+                      title: 'ERROR',
+                      content: e.response.data["message"],
+                    );
                     print(e);
                   }
                   setState(() {
