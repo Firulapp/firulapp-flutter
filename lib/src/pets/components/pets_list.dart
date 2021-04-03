@@ -55,11 +55,20 @@ class _PetsListState extends State<PetsList> {
 
   List<Widget> _getListings({List<PetItem> lista}) {
     List listings = List<Widget>();
-    lista.forEach((e) {
-      // String _base64 = e.picture;
-      // // File _storedImage;
-      // Uint8List bytes = base64Decode(_base64);
-      // File _storedImage = Image.memory(bytes);
+    lista.forEach((e) async {
+      String _base64 = e.picture;
+      File _storedImage;
+      if (_base64 == null) {
+        print("la masconta no tiene foto");
+      } else {
+        Uint8List bytes = base64Decode(_base64);
+        final tempPath = await syspaths.getTemporaryDirectory();
+        _storedImage = File('${tempPath.path}/${e.name}-profile.png');
+        _storedImage.writeAsBytes(
+            bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+        FileImage(_storedImage).evict();
+        print("si tiene foto");
+      }
       listings.add(new ListTile(
         leading: CircleAvatar(
           backgroundImage: _storedImage != null
