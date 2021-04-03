@@ -115,7 +115,6 @@ class Pets with ChangeNotifier {
         },
       );
       print(response.data["dto"]);
-
       notifyListeners();
     } catch (error) {
       throw error;
@@ -149,19 +148,6 @@ class Pets with ChangeNotifier {
       throw error;
     }
   }
-
-  // Future<ListPets> fetchPetList() async {
-  //   try {
-  //     final response =
-  //         await this._dio.get('${Endpoints.pet}/user/${userData.session.id}');
-  //     final petResponse = response.data["list"];
-  //     ListPets list = new ListPets.fromJson(petResponse);
-  //     return list;
-  //   } catch (error) {
-  //     print(error);
-  //     throw error;
-  //   }
-  // }
 
   Future<void> fetchPetList() async {
     try {

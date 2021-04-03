@@ -17,18 +17,23 @@ class PetsList extends StatefulWidget {
 
 class _PetsListState extends State<PetsList> {
   Future _petsFuture;
+  Directory tempPath;
 
   Future _obtainPetsFuture() {
     return Provider.of<Pets>(context, listen: false).fetchPetList();
   }
 
+  Future _obtainTempPath() async {
+    tempPath = await syspaths.getTemporaryDirectory();
+  }
+
   @override
   void initState() {
     _petsFuture = _obtainPetsFuture();
+    _obtainTempPath();
     super.initState();
   }
 
-  File _storedImage;
   @override
   Widget build(BuildContext context) {
     return Consumer<Pets>(
@@ -41,11 +46,13 @@ class _PetsListState extends State<PetsList> {
               children: const <Widget>[Center(child: Text("Loading..."))],
             );
           } else {
-            return Consumer<Pets>(
-              builder: (ctx, listPets, _) => ListView(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                children: _getListings(lista: listPets.items),
-              ),
+            return ListView.builder(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              itemCount: providerData.items.length,
+              itemBuilder: (context, i) {
+                print(providerData.items[i].name);
+                return _getListings(providerData.items[i]);
+              },
             );
           }
         },
@@ -53,37 +60,38 @@ class _PetsListState extends State<PetsList> {
     );
   }
 
-  List<Widget> _getListings({List<PetItem> lista}) {
-    List listings = List<Widget>();
-    lista.forEach((e) async {
-      String _base64 = e.picture;
-      File _storedImage;
-      if (_base64 == null) {
-        print("la masconta no tiene foto");
-      } else {
-        Uint8List bytes = base64Decode(_base64);
-        final tempPath = await syspaths.getTemporaryDirectory();
-        _storedImage = File('${tempPath.path}/${e.name}-profile.png');
-        _storedImage.writeAsBytes(
-            bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
-        FileImage(_storedImage).evict();
-        print("si tiene foto");
-      }
-      listings.add(new ListTile(
-        leading: CircleAvatar(
-          backgroundImage: _storedImage != null
-              ? FileImage(_storedImage)
-              : AssetImage("assets/images/default-avatar.png"),
-        ),
-        title: Text(e.name),
-        onTap: () {
-          print("me llamo = " + e.name);
-        },
-        trailing: Icon(Icons.keyboard_arrow_right),
-        contentPadding: EdgeInsets.symmetric(horizontal: 30),
-      ));
-    });
+  Widget _getListings(PetItem pet) {
+    File _petImage;
+    String _base64 = pet.picture;
+    String name = pet.name;
+    _petImage = _getFilePicture(_base64, name);
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: _petImage != null
+            ? FileImage(_petImage)
+            : AssetImage("assets/images/default-avatar.png"),
+      ),
+      title: Text("$name"),
+      onTap: () {
+        print("me llamo = ");
+      },
+      trailing: Icon(Icons.keyboard_arrow_right),
+      contentPadding: EdgeInsets.symmetric(horizontal: 30),
+    );
+  }
 
-    return listings;
+  File _getFilePicture(String _base64, String name) {
+    File _storedImage;
+    if (_base64 == null) {
+      print("la masconta no tiene foto");
+    } else {
+      Uint8List bytes = base64Decode(_base64);
+      _storedImage = File('${tempPath.path}/$name-profile.png');
+      _storedImage.writeAsBytes(
+          bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+      FileImage(_storedImage).evict();
+      print("si tiene foto");
+    }
+    return _storedImage;
   }
 }
