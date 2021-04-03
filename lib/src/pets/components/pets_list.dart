@@ -10,8 +10,6 @@ class PetsList extends StatefulWidget {
 }
 
 class _PetsListState extends State<PetsList> {
-  Future _initialPets;
-
   @override
   Widget build(BuildContext context) {
     return Consumer<Pets>(
@@ -28,7 +26,7 @@ class _PetsListState extends State<PetsList> {
           return Consumer<Pets>(
             builder: (ctx, listPets, _) => ListView(
               padding: EdgeInsets.symmetric(vertical: 20),
-              children: _getListings(listPets.items),
+              children: _getListings(lista: listPets.items),
             ),
           );
         },
@@ -36,32 +34,22 @@ class _PetsListState extends State<PetsList> {
     );
   }
 
-  List<Widget> _getListings(List<PetItem> lista) {
+  List<Widget> _getListings({List<PetItem> lista}) {
     List listings = List<Widget>();
 
-    // lista.map((e) => listings.add(ListTile(
-    //       leading: CircleAvatar(
-    //         backgroundImage: NetworkImage(
-    //           'https://ar.zoetis.com/_locale-assets/mcm-portal-assets/publishingimages/especie/caninos_perro_img.png',
-    //         ),
-    //       ),
-    //       title: Text(e.name),
-    //       onTap: () {},
-    //       trailing: Icon(Icons.keyboard_arrow_right),
-    //       contentPadding: EdgeInsets.symmetric(horizontal: 30),
-    //     )));
-
-    listings.add(ListTile(
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(
-          'https://ar.zoetis.com/_locale-assets/mcm-portal-assets/publishingimages/especie/caninos_perro_img.png',
+    lista.forEach((e) {
+      listings.add(new ListTile(
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(
+            'https://ar.zoetis.com/_locale-assets/mcm-portal-assets/publishingimages/especie/caninos_perro_img.png',
+          ),
         ),
-      ),
-      title: Text('Perris'),
-      onTap: () {},
-      trailing: Icon(Icons.keyboard_arrow_right),
-      contentPadding: EdgeInsets.symmetric(horizontal: 30),
-    ));
+        title: Text(e.name),
+        onTap: () {},
+        trailing: Icon(Icons.keyboard_arrow_right),
+        contentPadding: EdgeInsets.symmetric(horizontal: 30),
+      ));
+    });
 
     return listings;
   }
