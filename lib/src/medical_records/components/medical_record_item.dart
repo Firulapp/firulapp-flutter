@@ -21,7 +21,7 @@ class MedicalRecordItem extends StatelessWidget {
         children: <Widget>[
           const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
           Text(
-            _medicalRecords["date"],
+            "Consulta: ${_medicalRecords["date"]}",
             style: Theme.of(context).textTheme.headline6,
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
