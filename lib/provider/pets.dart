@@ -152,7 +152,7 @@ class Pets with ChangeNotifier {
   Future<void> fetchPetList() async {
     try {
       final response =
-          await this._dio.get('${Endpoints.pet}/user/${userData.session.id}');
+          await this._dio.get('${Endpoints.pet}/user/${userData.userData.id}');
       final List<PetItem> loadedPets = [];
       if (_items.isEmpty) {
         response.data['list'].forEach((pet) {
