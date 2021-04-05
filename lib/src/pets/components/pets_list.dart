@@ -73,7 +73,7 @@ class _PetsListState extends State<PetsList> {
       ),
       title: Text("$name"),
       onTap: () {
-        print("me llamo = ");
+        print("me llamo = $name");
       },
       trailing: Icon(Icons.keyboard_arrow_right),
       contentPadding: EdgeInsets.symmetric(horizontal: 30),

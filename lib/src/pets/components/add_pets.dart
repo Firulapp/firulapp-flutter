@@ -1,17 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:firulapp/provider/user.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../components/dialogs.dart';
 import '../../../size_config.dart';
-import 'pets_image.dart';
 import '../../../constants/constants.dart';
 import '../../../provider/species.dart';
 import '../../../provider/pets.dart';
+import 'pets_image.dart';
 
 class AddPets extends StatefulWidget {
   static const routeName = "/pets/add";
@@ -88,7 +86,7 @@ class MapScreenState extends State<AddPets>
             Column(
               children: <Widget>[
                 Container(
-                  height: sizeConfig.hp(20),
+                  height: sizeConfig.hp(22),
                   child: PetImage(
                     _selectImage,
                     _petPicture,
