@@ -528,10 +528,11 @@ class MapScreenState extends State<AddPets>
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
-        context: context,
-        initialDate: currentDate,
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2050));
+      context: context,
+      initialDate: currentDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
     if (pickedDate != null && pickedDate != currentDate)
       setState(() {
         currentDate = pickedDate;
