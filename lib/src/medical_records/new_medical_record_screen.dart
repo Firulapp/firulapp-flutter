@@ -3,8 +3,8 @@ import 'package:firulapp/components/input_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../mixins/validator_mixins.dart';
-import '../../../size_config.dart';
+import '../mixins/validator_mixins.dart';
+import '../../size_config.dart';
 
 class NewMedicalRecordScreen extends StatefulWidget {
   static const routeName = "/new_medical_records";
@@ -28,7 +28,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
     final DateTime pickedDate = await showDatePicker(
       context: context,
       initialDate: _medicalRecordDate,
-      firstDate: DateTime(1940),
+      firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
     if (pickedDate != null && pickedDate != _medicalRecordDate) {

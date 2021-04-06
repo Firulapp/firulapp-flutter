@@ -59,11 +59,14 @@ class MedicalRecordsScreen extends StatelessWidget {
                 Navigator.pushNamed(context, NewMedicalRecordScreen.routeName),
           ),
           Flexible(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return MedicalRecordItem(_medialRecords[index]);
-              },
-              itemCount: _medialRecords.length,
+            child: Container(
+              color: Color(0XFFFFFAF6),
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return MedicalRecordItem(_medialRecords[index]);
+                },
+                itemCount: _medialRecords.length,
+              ),
             ),
           ),
         ],
