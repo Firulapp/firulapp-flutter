@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../new_medical_record_screen.dart';
+import '../medical_record_form_screen.dart';
 
 class MedicalRecordItem extends StatelessWidget {
   final Map _medicalRecords;
