@@ -9,6 +9,7 @@ class InputText extends StatelessWidget {
   final bool obscureText;
   final int minLines;
   final int maxLines;
+  final String value;
   final CustomSurffixIcon suffixIcon;
   final void Function(String) validator;
   final void Function(String value) onChanged;
@@ -25,6 +26,7 @@ class InputText extends StatelessWidget {
     this.onSaved,
     this.minLines = 1,
     this.maxLines = 1,
+    this.value,
   }) : super(key: key);
 
   @override
@@ -42,6 +44,7 @@ class InputText extends StatelessWidget {
       onSaved: this.onSaved,
       minLines: this.minLines,
       maxLines: this.maxLines,
+      initialValue: this.value,
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './components/medical_record_item.dart';
-import 'components/new_medical_record_screen.dart';
+import 'new_medical_record_screen.dart';
 
 class MedicalRecordsScreen extends StatelessWidget {
   static const routeName = "/medical_records";

@@ -1,5 +1,6 @@
 import 'package:firulapp/components/default_button.dart';
 import 'package:firulapp/components/input_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -17,12 +18,13 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
   DateTime _medicalRecordDate = DateTime.now();
-  String _veterinary;
-  String _diagnostic;
-  String _treatment;
-  String _observations;
-  int _weight;
-  int _height;
+  String _observations = '';
+  String _veterinary = '';
+  String _diagnostic = '';
+  String _treatment = '';
+  bool _reminder = false;
+  int _weight = 0;
+  int _height = 0;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
@@ -39,6 +41,16 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
   }
 
   Widget build(BuildContext context) {
+    final id = ModalRoute.of(context).settings.arguments as String;
+    if (id != null) {
+      _observations = "dasdasd";
+      _veterinary = "dasdasd";
+      _diagnostic = "dasdasd";
+      _treatment = "dasdasd";
+      _reminder = false;
+      _weight = 12;
+      _height = 7;
+    }
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
@@ -120,6 +132,23 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                         ],
                       ),
                       SizedBox(height: getProportionateScreenHeight(25)),
+                      Row(
+                        children: [
+                          CupertinoSwitch(
+                            value: _reminder,
+                            onChanged: (value) {
+                              setState(() {
+                                _reminder = value;
+                              });
+                            },
+                          ),
+                          Text(
+                            "Recordatorio",
+                            style: TextStyle(fontSize: 20),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: getProportionateScreenHeight(25)),
                       DefaultButton(
                         text: "Guardar",
                         press: () {
@@ -147,6 +176,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
       hintText: hint,
       keyboardType: tipo,
       validator: validateTextNotNull,
+      value: _veterinary,
       onChanged: (newValue) => _veterinary = newValue,
     );
   }
@@ -159,6 +189,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
       keyboardType: tipo,
       maxLines: 10,
       validator: validateTextNotNull,
+      value: _diagnostic,
       onChanged: (newValue) => _diagnostic = newValue,
     );
   }
@@ -171,6 +202,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
       keyboardType: tipo,
       maxLines: 10,
       validator: validateTextNotNull,
+      value: _treatment,
       onChanged: (newValue) => _treatment = newValue,
     );
   }
@@ -183,6 +215,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
       keyboardType: tipo,
       maxLines: 10,
       validator: validateTextNotNull,
+      value: _observations,
       onChanged: (newValue) => _observations = newValue,
     );
   }
@@ -192,6 +225,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
       label: label,
       keyboardType: tipo,
       validator: validateTextNotNull,
+      value: _weight.toString(),
       onChanged: (newValue) => _weight = int.parse(newValue),
     );
   }
@@ -201,6 +235,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
       label: label,
       keyboardType: tipo,
       validator: validateTextNotNull,
+      value: _height.toString(),
       onChanged: (newValue) => _height = int.parse(newValue),
     );
   }
