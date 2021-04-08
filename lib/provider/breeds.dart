@@ -1,38 +1,58 @@
-class Breeds {
-  int breed;
+import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
-  static final Map<int, String> map = {
-    0: "zero",
-    1: "one",
-    2: "two",
-    3: "three",
-    4: "four",
-    5: "five",
-    6: "six",
-    7: "seven",
-    8: "eight",
-    9: "nine",
-    10: "ten",
-    11: "eleven",
-    12: "twelve",
-    13: "thirteen",
-    14: "fourteen",
-    15: "fifteen",
-  };
+import '../constants/endpoints.dart';
 
-  String get breedString {
-    return (map.containsKey(breed) ? map[breed] : "unknown");
+class BreedsItem {
+  final int id;
+  final String name;
+  final String description;
+  final bool status;
+
+  BreedsItem({
+    this.id,
+    this.name,
+    this.description,
+    this.status,
+  });
+
+  factory BreedsItem.fromJson(Map<String, dynamic> json) {
+    return BreedsItem(
+        id: json['id'],
+        name: json['name'],
+        description: json['description'],
+        status: json['status']);
+  }
+}
+
+class Breeds with ChangeNotifier {
+  List<BreedsItem> _items = [];
+
+  List<BreedsItem> get items => [..._items];
+
+  List<BreedsItem> get enableSpecie {
+    return _items.where((e) => e.status).toList();
   }
 
-  Breeds(this.breed);
+  final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
-  String toString() {
-    return ("$breed $breedString");
-  }
-
-  static List<Breeds> get list {
-    return (map.keys.map((num) {
-      return (Breeds(num));
-    })).toList();
+  Future<void> getBreeds() async {
+    try {
+      final response = await _dio.get(Endpoints.breeds);
+      final List<BreedsItem> loadedBreeds = [];
+      if (_items.isEmpty) {
+        response.data['list'].forEach((species) {
+          loadedBreeds.add(BreedsItem(
+              id: species['id'],
+              name: species['name'],
+              description: species['description'],
+              status: species['status']));
+        });
+        _items = loadedBreeds;
+        notifyListeners();
+      }
+    } catch (e) {
+      throw e;
+    }
   }
 }
