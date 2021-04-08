@@ -7,21 +7,27 @@ class InputText extends StatelessWidget {
   final TextInputType keyboardType;
   final String hintText;
   final bool obscureText;
+  final int minLines;
+  final int maxLines;
+  final String value;
   final CustomSurffixIcon suffixIcon;
   final void Function(String) validator;
   final void Function(String value) onChanged;
   final void Function(String value) onSaved;
-  const InputText(
-      {Key key,
-      this.label = '',
-      this.keyboardType = TextInputType.text,
-      this.hintText = '',
-      this.obscureText = false,
-      @optionalTypeArgs this.suffixIcon,
-      this.validator,
-      this.onChanged,
-      this.onSaved})
-      : super(key: key);
+  const InputText({
+    Key key,
+    this.label = '',
+    this.keyboardType = TextInputType.text,
+    this.hintText = '',
+    this.obscureText = false,
+    @optionalTypeArgs this.suffixIcon,
+    this.validator,
+    this.onChanged,
+    this.onSaved,
+    this.minLines = 1,
+    this.maxLines = 1,
+    this.value,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +42,9 @@ class InputText extends StatelessWidget {
       validator: this.validator,
       onChanged: this.onChanged,
       onSaved: this.onSaved,
+      minLines: this.minLines,
+      maxLines: this.maxLines,
+      initialValue: this.value,
     );
   }
 }
