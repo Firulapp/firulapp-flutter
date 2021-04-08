@@ -8,7 +8,7 @@ import './src/theme.dart';
 import './provider/user.dart';
 import './routes.dart';
 import './provider/species.dart';
-import 'src/home/home.dart';
+import './src/home/home.dart';
 
 void main() => runApp(MyApp());
 

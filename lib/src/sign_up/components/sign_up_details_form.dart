@@ -88,10 +88,11 @@ class _BodyState extends State<Body> with ValidatorMixins {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
-        context: context,
-        initialDate: currentDate,
-        firstDate: DateTime(1940),
-        lastDate: DateTime(2050));
+      context: context,
+      initialDate: currentDate,
+      firstDate: DateTime(1940),
+      lastDate: DateTime.now(),
+    );
     if (pickedDate != null && pickedDate != currentDate)
       setState(() {
         currentDate = pickedDate;
@@ -163,15 +164,9 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      RaisedButton(
-                        onPressed: () => _selectDate(context),
-                        child: Text("Fecha de nacimiento"),
-                      ),
-                    ],
+                  IconButton(
+                    icon: Icon(Icons.calendar_today_outlined),
+                    onPressed: () => _selectDate(context),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,

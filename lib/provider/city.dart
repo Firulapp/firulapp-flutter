@@ -35,6 +35,7 @@ class City with ChangeNotifier {
       _cities = loadedCities.toList();
       notifyListeners();
     } catch (error) {
+      print(error);
       throw error;
     }
   }
