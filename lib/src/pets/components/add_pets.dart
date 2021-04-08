@@ -1,24 +1,19 @@
-import 'dart:ffi';
-
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 import '../../../components/dialogs.dart';
 import '../../../size_config.dart';
-import '../../../src/pets/components/pets-image.dart';
 import '../../../constants/constants.dart';
 import '../../../provider/species.dart';
 import '../../../provider/pets.dart';
+import 'pets_image.dart';
 
 class AddPets extends StatefulWidget {
   static const routeName = "/pets/add";
-  // final PetItem pet;
-  AddPets({
-    Key key,
-    // this.pet,
-  }) : super(key: key);
+  AddPets({Key key}) : super(key: key);
 
   MapScreenState createState() => MapScreenState();
 }
@@ -27,6 +22,21 @@ class MapScreenState extends State<AddPets>
     with SingleTickerProviderStateMixin {
   bool _status = true;
   Future _initialSpecies;
+  PetItem newPet;
+
+  // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
+  String _name;
+  int _speciesId;
+  int _raceID;
+  DateTime _birthDate;
+  int _age;
+  String _primaryColor;
+  String _petDescription;
+  String _secondaryColor;
+  bool _petStatus = true;
+  File _petPicture;
+  String _petPictureBase64;
+
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
     try {
@@ -47,21 +57,15 @@ class MapScreenState extends State<AddPets>
     super.initState();
   }
 
+  void _selectImage(File pickedImage) {
+    setState(() {
+      _petPicture = pickedImage;
+    });
+    _petPictureBase64 = base64Encode(pickedImage.readAsBytesSync());
+  }
+
   final df = new DateFormat('dd-MM-yyyy');
   DateTime currentDate = DateTime.now();
-
-  // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
-  String _name;
-  String _speciesName;
-  int _speciesId;
-  String _race;
-  int _raceID;
-  DateTime _birthDate;
-  int _age;
-  String _primaryColor;
-  String _petDescription;
-  String _secondaryColor;
-  bool _petStatus;
 
   List<Map> _itemsRace = [
     {"value": 11, "text": 'Chiguagua'},
@@ -82,10 +86,12 @@ class MapScreenState extends State<AddPets>
             Column(
               children: <Widget>[
                 Container(
-                  height: sizeConfig.hp(20),
+                  height: sizeConfig.hp(22),
                   child: PetImage(
-                      //onPressed: _pickImage,
-                      ),
+                    _selectImage,
+                    _petPicture,
+                    _status,
+                  ),
                 ),
                 Container(
                   child: Padding(
@@ -442,20 +448,27 @@ class MapScreenState extends State<AddPets>
                 color: Colors.green,
                 onPressed: () async {
                   try {
-                    PetItem newPet = PetItem(
+                    newPet = PetItem(
                       name: _name,
                       speciesId: _speciesId,
                       breedId: _raceID,
-                      birthDate: _birthDate,
+                      birthDate: _birthDate.toIso8601String(),
                       age: _age,
                       primaryColor: _primaryColor,
                       description: _petDescription,
-                      secundaryColor: _secondaryColor,
+                      secondaryColor: _secondaryColor,
+                      status: _petStatus,
+                      picture: _petPictureBase64,
                     );
-                    Provider.of<Pets>(context, listen: false).setPet = newPet;
-                    print("Se guardo el puto perro");
+                    Provider.of<Pets>(context, listen: false).petItem = newPet;
                     Provider.of<Pets>(context, listen: false).savePet();
+                    print("Se guardo la mascota");
                   } catch (e) {
+                    Dialogs.info(
+                      context,
+                      title: 'ERROR',
+                      content: e.response.data["message"],
+                    );
                     print(e);
                   }
                   setState(() {
