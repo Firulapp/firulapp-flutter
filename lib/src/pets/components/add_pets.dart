@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firulapp/provider/breeds.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class MapScreenState extends State<AddPets>
     with SingleTickerProviderStateMixin {
   bool _status = true;
   Future _initialSpecies;
+  Future _initialBreeds;
   PetItem newPet;
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
@@ -51,9 +53,23 @@ class MapScreenState extends State<AddPets>
     }
   }
 
+  Future<void> _getListBreeds() async {
+    try {
+      Provider.of<Breeds>(context, listen: false).getBreeds();
+    } catch (e) {
+      // Dialogs.info(
+      //   context,
+      //   title: 'ERROR',
+      //   content: e.response.data["message"],
+      // );
+      print(e);
+    }
+  }
+
   @override
   void initState() {
     _initialSpecies = _getListSpecies();
+    _initialBreeds = _getListBreeds();
     super.initState();
   }
 
@@ -77,6 +93,22 @@ class MapScreenState extends State<AddPets>
   @override
   Widget build(BuildContext context) {
     final SizeConfig sizeConfig = SizeConfig();
+    final id = ModalRoute.of(context).settings.arguments as int;
+    final pet = Provider.of<Pets>(context, listen: true).getLocalPetById(id);
+    // print(pet != null ? pet : null);
+    if (pet != null) {
+      _name = pet.name;
+      _speciesId = pet.speciesId;
+      _raceID = pet.breedId;
+      // _birthDate = pet.birthDate hay que convertir a DataTime
+      _age = pet.age;
+      _primaryColor = pet.primaryColor;
+      _petDescription = pet.description;
+      _secondaryColor = pet.secondaryColor;
+      _petStatus = pet.status;
+      // _petPicture = pet.picture;
+      _petPictureBase64 = pet.picture;
+    }
     return new Scaffold(
         appBar: AppBar(
           title: Text("Agregar Mascota"),

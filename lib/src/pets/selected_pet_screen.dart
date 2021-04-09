@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../provider/pets.dart';
 import '../profile/components/profile_menu.dart';
 import '../profile/components/profile_pic.dart';
+import './components/add_pets.dart';
 
 class SelectedPetScreen extends StatelessWidget {
   static const routeName = "/selected-pet";
@@ -25,7 +26,8 @@ class SelectedPetScreen extends StatelessWidget {
             text: "Mi Mascota",
             icon: "assets/icons/User Icon.svg",
             press: () => {
-              //Navigator.pushNamed(context, ProfilePage.routeName),
+              Navigator.pushNamed(context, AddPets.routeName,
+                  arguments: pet.id),
               null
             },
           ),
