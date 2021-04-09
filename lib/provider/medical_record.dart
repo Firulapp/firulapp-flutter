@@ -1,23 +1,25 @@
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 
+import './pets.dart';
 import '../constants/endpoints.dart';
+import 'user.dart';
 
 class MedicalRecordItem {
-  final int id;
-  final int petId;
-  final String veterinary;
-  final String treatment;
-  final String observations;
-  final String diagnostic;
-  final bool treatmentReminder;
-  final int petWeight;
-  final int petHeight;
-  final String consultedAt;
-  final String createdAt;
-  final int createdBy;
-  final String modifiedAt;
-  final int modifiedBy;
+  int id;
+  int petId;
+  String veterinary;
+  String treatment;
+  String observations;
+  String diagnostic;
+  bool treatmentReminder;
+  int petWeight;
+  int petHeight;
+  String consultedAt;
+  String createdAt;
+  int createdBy;
+  String modifiedAt;
+  int modifiedBy;
 
   MedicalRecordItem({
     this.id,
@@ -39,7 +41,11 @@ class MedicalRecordItem {
 
 class MedicalRecord with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
+  PetItem _petItem;
+  final User user;
   List<MedicalRecordItem> _items = [];
+
+  MedicalRecord(this.user, _items);
 
   List<MedicalRecordItem> get items {
     return [..._items];
@@ -49,9 +55,18 @@ class MedicalRecord with ChangeNotifier {
     return _items.length;
   }
 
-  Future<void> fetchMedicalRecords(int petId) async {
+  void setPetItem(PetItem petItem) {
+    _petItem = petItem;
+  }
+
+  MedicalRecordItem getLocalMedicalRecordById(int id) {
+    return _items.firstWhere((med) => med.id == id);
+  }
+
+  Future<void> fetchMedicalRecords() async {
     try {
-      final response = await this._dio.get('${Endpoints.medicalRecord}/$petId');
+      final response =
+          await this._dio.get('${Endpoints.medicalRecord}/${_petItem.id}');
       final medicalRecords = response.data["list"];
       medicalRecords.forEach((medicalRecord) {
         _items.add(MedicalRecordItem(
@@ -66,7 +81,7 @@ class MedicalRecord with ChangeNotifier {
           petHeight: medicalRecord["petHeight"],
           consultedAt: medicalRecord["consultedAt"],
           createdAt: medicalRecord["createdAt"],
-          createdBy: medicalRecord["createdBy"],
+          createdBy: user.userData.id,
           modifiedAt: medicalRecord["modifiedAt"],
           modifiedBy: medicalRecord["modifiedBy"],
         ));
@@ -77,13 +92,28 @@ class MedicalRecord with ChangeNotifier {
     }
   }
 
-  Future<void> addMedicalRecord(MedicalRecordItem medialRecord) async {
+  Future<void> addMedicalRecord(MedicalRecordItem medicalRecord) async {
     try {
       await _dio.post(
         Endpoints.saveMedicalRecord,
-        data: medialRecord,
+        data: {
+          "id": medicalRecord.id,
+          "petId": _petItem.id,
+          "vet": medicalRecord.veterinary,
+          "treatment": medicalRecord.treatment,
+          "observations": medicalRecord.observations,
+          "diagnostic": medicalRecord.diagnostic,
+          "treatmentReminder": medicalRecord.treatmentReminder,
+          "petWeight": medicalRecord.petWeight,
+          "petHeight": medicalRecord.petHeight,
+          "consultedAt": medicalRecord.consultedAt,
+          "createdAt": medicalRecord.createdAt,
+          "createdBy": user.userData.id,
+          "modifiedAt": medicalRecord.modifiedAt,
+          "modifiedBy": medicalRecord.modifiedBy,
+        },
       );
-      _items.add(medialRecord);
+      _items.add(medicalRecord);
       notifyListeners();
     } catch (error) {
       throw error;

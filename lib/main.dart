@@ -47,11 +47,21 @@ class MyApp extends StatelessWidget {
             PetItem(),
           ),
         ),
-        ChangeNotifierProvider(
-          create: (_) => Species(),
+        ChangeNotifierProxyProvider<User, MedicalRecord>(
+          update: (context, user, med) => MedicalRecord(
+            user,
+            med == null ? {} : med.items,
+          ),
+          create: (ctx) => MedicalRecord(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
         ),
         ChangeNotifierProvider(
-          create: (_) => MedicalRecord(),
+          create: (_) => Species(),
         ),
       ],
       child: MaterialApp(
