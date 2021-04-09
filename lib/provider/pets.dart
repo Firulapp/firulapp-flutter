@@ -187,11 +187,12 @@ class Pets with ChangeNotifier {
 
   Future deletePet(int petId) async {
     try {
-      final response = await this._dio.delete(
+      await this._dio.delete(
         Endpoints.petDelete,
         data: {"id": petId},
       );
       _items.remove(getLocalPetById(petId));
+      notifyListeners();
     } catch (error) {
       print(error.toString());
       throw error.toString();

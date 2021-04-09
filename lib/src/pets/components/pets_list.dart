@@ -40,7 +40,7 @@ class _PetsListState extends State<PetsList> {
 
   @override
   Widget build(BuildContext context) {
-    _petsFuture = Provider.of<Pets>(context, listen: false).fetchPetList();
+    _petsFuture = Provider.of<Pets>(context, listen: true).fetchPetList();
     return Consumer<Pets>(
       builder: (context, providerData, _) => FutureBuilder(
         future: _petsFuture,
