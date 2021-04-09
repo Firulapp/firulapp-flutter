@@ -55,7 +55,6 @@ class _PetsListState extends State<PetsList> {
               padding: EdgeInsets.symmetric(vertical: 20),
               itemCount: providerData.items.length,
               itemBuilder: (context, i) {
-                print(providerData.items[i].name);
                 return _getListings(providerData.items[i]);
               },
             );
@@ -90,15 +89,12 @@ class _PetsListState extends State<PetsList> {
 
   File _getFilePicture(String _base64, String name) {
     File _storedImage;
-    if (_base64 == null) {
-      print("la masconta no tiene foto");
-    } else {
+    if (_base64 != null) {
       Uint8List bytes = base64Decode(_base64);
       _storedImage = File('${tempPath.path}/$name-profile.png');
       _storedImage.writeAsBytes(
           bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
       FileImage(_storedImage).evict();
-      print("si tiene foto");
     }
     return _storedImage;
   }
