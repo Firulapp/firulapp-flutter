@@ -84,9 +84,11 @@ class Pets with ChangeNotifier {
   // devuelve todas las mascotas
   List<PetItem> get items => [..._items];
 
-  get petItem => _petItem;
+  PetItem getLocalPetById(int id) {
+    return _items.firstWhere((pet) => pet.id == id);
+  }
 
-  // get listPets => _listPets;
+  get petItem => _petItem;
 
   Future savePet() async {
     try {

@@ -8,6 +8,8 @@ import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../selected_pet_screen.dart';
+
 class PetsList extends StatefulWidget {
   PetsList({Key key}) : super(key: key);
 
@@ -73,7 +75,10 @@ class _PetsListState extends State<PetsList> {
       ),
       title: Text("$name"),
       onTap: () {
-        print("me llamo = $name");
+        Navigator.of(context).pushNamed(
+          SelectedPetScreen.routeName,
+          arguments: pet.id,
+        );
       },
       trailing: Icon(Icons.keyboard_arrow_right),
       contentPadding: EdgeInsets.symmetric(horizontal: 30),
