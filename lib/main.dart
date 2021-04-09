@@ -9,6 +9,7 @@ import './provider/user.dart';
 import './routes.dart';
 import './provider/species.dart';
 import './src/home/home.dart';
+import './provider/medical_record.dart';
 
 void main() => runApp(MyApp());
 
@@ -48,6 +49,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => Species(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MedicalRecord(),
         ),
       ],
       child: MaterialApp(

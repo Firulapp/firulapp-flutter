@@ -1,43 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../provider/medical_record.dart' as medProvider;
 import './components/medical_record_item.dart';
 import 'medical_record_form_screen.dart';
 
 class MedicalRecordsScreen extends StatelessWidget {
   static const routeName = "/medical_records";
-
-  final List<Map> _medialRecords = const [
-    {
-      "date": "10/01/2021",
-      "organization": 'Dr. Brown',
-      "diagnostic": 'Dolor de pancita',
-    },
-    {
-      "date": "15/01/2021",
-      "organization": 'Dr. Brown',
-      "diagnostic": 'Infección en el oído',
-    },
-    {
-      "date": "18/01/2021",
-      "organization": 'Dr. Brown',
-      "diagnostic": 'Quemaduras de segundo grado en la pata frontal derecha',
-    },
-    {
-      "date": "25/01/2021",
-      "organization": 'Dr. Brown',
-      "diagnostic": 'Constipación casi fatal',
-    },
-    {
-      "date": "30/01/2021",
-      "organization": 'Dr. Brown',
-      "diagnostic": 'Depresión',
-    },
-    {
-      "date": "10/02/2021",
-      "organization": 'Dr. Brown',
-      "diagnostic": 'Muerte',
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +30,13 @@ class MedicalRecordsScreen extends StatelessWidget {
           Flexible(
             child: Container(
               color: Color(0XFFFFFAF6),
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return MedicalRecordItem(_medialRecords[index]);
-                },
-                itemCount: _medialRecords.length,
+              child: Consumer<medProvider.MedicalRecord>(
+                builder: (ctx, medicalRecord, child) => ListView.builder(
+                  itemBuilder: (context, index) {
+                    return MedicalRecordItem(medicalRecord.items[index]);
+                  },
+                  itemCount: medicalRecord.itemCount,
+                ),
               ),
             ),
           ),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../provider/medical_record.dart' as medProvider;
 import '../medical_record_form_screen.dart';
 
 class MedicalRecordItem extends StatelessWidget {
-  final Map _medicalRecords;
+  final medProvider.MedicalRecordItem _medicalRecords;
   const MedicalRecordItem(
     this._medicalRecords, {
     Key key,
@@ -24,18 +25,18 @@ class MedicalRecordItem extends StatelessWidget {
           children: <Widget>[
             const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
             Text(
-              "Consulta: ${_medicalRecords["date"]}",
+              "Consulta: ${_medicalRecords.consultedAt}",
               style: Theme.of(context).textTheme.headline6,
             ),
             const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
             Text(
-              "Veterinaria: ${_medicalRecords["organization"]}",
+              "Veterinaria: ${_medicalRecords.veterinary}",
               style: const TextStyle(fontSize: 20.0),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Diagnóstico: ${_medicalRecords["diagnostic"]}',
+                'Diagnóstico: ${_medicalRecords.diagnostic}',
                 style: const TextStyle(fontSize: 16.0),
               ),
             ),
@@ -45,7 +46,7 @@ class MedicalRecordItem extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           NewMedicalRecordScreen.routeName,
-          arguments: "1",
+          arguments: _medicalRecords.id,
         );
       },
     );
