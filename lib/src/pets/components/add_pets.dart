@@ -25,31 +25,34 @@ class MapScreenState extends State<AddPets>
   Future _initialSpecies;
   Future _initialBreeds;
   PetItem newPet;
+  PetItem pet;
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
+  int _petId;
   String _name;
   int _speciesId;
-  int _raceID;
+  int _breedId;
   DateTime _birthDate;
   int _age;
+  String _petSize;
   String _primaryColor;
   String _petDescription;
   String _secondaryColor;
   bool _petStatus = true;
   File _petPicture;
   String _petPictureBase64;
+  String _createdAt;
 
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
     try {
       Provider.of<Species>(context, listen: false).getSpecies();
     } catch (e) {
-      // Dialogs.info(
-      //   context,
-      //   title: 'ERROR',
-      //   content: e.response.data["message"],
-      // );
-      print(e);
+      Dialogs.info(
+        context,
+        title: 'ERROR',
+        content: e.toString(),
+      );
     }
   }
 
@@ -57,12 +60,11 @@ class MapScreenState extends State<AddPets>
     try {
       Provider.of<Breeds>(context, listen: false).getBreeds();
     } catch (e) {
-      // Dialogs.info(
-      //   context,
-      //   title: 'ERROR',
-      //   content: e.response.data["message"],
-      // );
-      print(e);
+      Dialogs.info(
+        context,
+        title: 'ERROR',
+        content: e.toString(),
+      );
     }
   }
 
@@ -94,20 +96,25 @@ class MapScreenState extends State<AddPets>
   Widget build(BuildContext context) {
     final SizeConfig sizeConfig = SizeConfig();
     final id = ModalRoute.of(context).settings.arguments as int;
-    final pet = Provider.of<Pets>(context, listen: true).getLocalPetById(id);
-    // print(pet != null ? pet : null);
+    if (id != null) {
+      pet = Provider.of<Pets>(context, listen: true).getLocalPetById(id);
+    }
     if (pet != null) {
+      _petId = pet.id;
       _name = pet.name;
       _speciesId = pet.speciesId;
-      _raceID = pet.breedId;
-      // _birthDate = pet.birthDate hay que convertir a DataTime
+      _breedId = pet.breedId;
+      _birthDate = DateTime.parse(pet.birthDate);
+      currentDate = _birthDate;
       _age = pet.age;
+      _petSize = pet.petSize;
       _primaryColor = pet.primaryColor;
       _petDescription = pet.description;
       _secondaryColor = pet.secondaryColor;
       _petStatus = pet.status;
       // _petPicture = pet.picture;
       _petPictureBase64 = pet.picture;
+      _createdAt = pet.createdAt;
     }
     return new Scaffold(
         appBar: AppBar(
@@ -262,12 +269,12 @@ class MapScreenState extends State<AddPets>
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   DropdownButton(
-                                    hint: _raceID == null
+                                    hint: _breedId == null
                                         ? Text('Eliga una raza')
                                         : null,
-                                    disabledHint: _raceID != null
+                                    disabledHint: _breedId != null
                                         ? Text(_itemsRace.firstWhere((item) =>
-                                            item["value"] == _raceID)["text"])
+                                            item["value"] == _breedId)["text"])
                                         : null,
                                     items: _itemsRace
                                         .map((item) => DropdownMenuItem(
@@ -277,10 +284,10 @@ class MapScreenState extends State<AddPets>
                                         .toList(),
                                     onChanged: !_status
                                         ? (v) => setState(() {
-                                              _raceID = v;
+                                              _breedId = v;
                                             })
                                         : null,
-                                    value: _raceID,
+                                    value: _breedId,
                                   ),
                                 ],
                               )
@@ -483,7 +490,7 @@ class MapScreenState extends State<AddPets>
                     newPet = PetItem(
                       name: _name,
                       speciesId: _speciesId,
-                      breedId: _raceID,
+                      breedId: _breedId,
                       birthDate: _birthDate.toIso8601String(),
                       age: _age,
                       primaryColor: _primaryColor,
@@ -491,6 +498,7 @@ class MapScreenState extends State<AddPets>
                       secondaryColor: _secondaryColor,
                       status: _petStatus,
                       picture: _petPictureBase64,
+                      createdAt: _createdAt,
                     );
                     Provider.of<Pets>(context, listen: false).petItem = newPet;
                     Provider.of<Pets>(context, listen: false).savePet();

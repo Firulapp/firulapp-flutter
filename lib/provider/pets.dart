@@ -95,7 +95,7 @@ class Pets with ChangeNotifier {
       final response = await this._dio.post(
         Endpoints.petSave,
         data: {
-          "id": null,
+          "id": _petItem.id != null ? _petItem.id : null,
           "userId": userData.userData.id,
           "speciesId": _petItem.speciesId,
           "breedId": _petItem.breedId,
@@ -110,7 +110,7 @@ class Pets with ChangeNotifier {
           "status": _petItem.status,
           "picture": _petItem.picture, // fixed debe enviar string base64
           "description": _petItem.description,
-          "createdAt": null, //DateTime.now().toIso8601String(),
+          "createdAt": _petItem.createdAt != null ? _petItem.createdAt : null,
           "createdBy": userData.userData.id,
           "modifiedAt": null,
           "modifiedBy": null
@@ -119,6 +119,7 @@ class Pets with ChangeNotifier {
       print(response.data["dto"]);
       notifyListeners();
     } catch (error) {
+      print(error.toString());
       throw error;
     }
   }
