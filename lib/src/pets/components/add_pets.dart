@@ -85,13 +85,6 @@ class MapScreenState extends State<AddPets>
   final df = new DateFormat('dd-MM-yyyy');
   DateTime currentDate = DateTime.now();
 
-  List<Map> _itemsRace = [
-    {"value": 11, "text": 'Chiguagua'},
-    {"value": 27, "text": 'Putbull'},
-    {"value": 31, "text": 'Pastor Aleman'},
-    {"value": 32, "text": 'Mestizo'},
-  ];
-
   @override
   Widget build(BuildContext context) {
     final SizeConfig sizeConfig = SizeConfig();
@@ -268,27 +261,36 @@ class MapScreenState extends State<AddPets>
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  DropdownButton(
-                                    hint: _breedId == null
-                                        ? Text('Eliga una raza')
-                                        : null,
-                                    disabledHint: _breedId != null
-                                        ? Text(_itemsRace.firstWhere((item) =>
-                                            item["value"] == _breedId)["text"])
-                                        : null,
-                                    items: _itemsRace
-                                        .map((item) => DropdownMenuItem(
-                                              value: item["value"],
-                                              child: Text(item["text"]),
-                                            ))
-                                        .toList(),
-                                    onChanged: !_status
-                                        ? (v) => setState(() {
-                                              _breedId = v;
-                                            })
-                                        : null,
-                                    value: _breedId,
-                                  ),
+                                  FutureBuilder(
+                                      future: _initialBreeds,
+                                      builder: (_, dataSnapshot) {
+                                        return Consumer<Breeds>(
+                                          builder: (ctx, listBreeds, _) =>
+                                              DropdownButton(
+                                            hint: _breedId == null
+                                                ? Text('Eliga una raza')
+                                                : null,
+                                            disabledHint: _speciesId != null
+                                                ? Text(listBreeds.items
+                                                    .firstWhere((item) =>
+                                                        item.id == _breedId)
+                                                    .name)
+                                                : null,
+                                            items: listBreeds.items
+                                                .map((e) => DropdownMenuItem(
+                                                      value: e.id,
+                                                      child: Text(e.name),
+                                                    ))
+                                                .toList(),
+                                            onChanged: !_status
+                                                ? (v) => setState(() {
+                                                      _breedId = v;
+                                                    })
+                                                : null,
+                                            value: _breedId,
+                                          ),
+                                        );
+                                      }),
                                 ],
                               )
                             ],
