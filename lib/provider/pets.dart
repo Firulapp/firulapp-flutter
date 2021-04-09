@@ -184,4 +184,17 @@ class Pets with ChangeNotifier {
       throw e;
     }
   }
+
+  Future deletePet(int petId) async {
+    try {
+      final response = await this._dio.delete(
+        Endpoints.petDelete,
+        data: {"id": petId},
+      );
+      _items.remove(getLocalPetById(petId));
+    } catch (error) {
+      print(error.toString());
+      throw error.toString();
+    }
+  }
 }

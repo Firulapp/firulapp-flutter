@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:firulapp/provider/breeds.dart';
+import 'package:firulapp/src/pets/components/pets_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -92,6 +93,7 @@ class MapScreenState extends State<AddPets>
     if (id != null) {
       pet = Provider.of<Pets>(context, listen: true).getLocalPetById(id);
     }
+    print(pet);
     if (pet != null) {
       _petId = pet.id;
       _name = pet.name;
@@ -270,7 +272,7 @@ class MapScreenState extends State<AddPets>
                                             hint: _breedId == null
                                                 ? Text('Eliga una raza')
                                                 : null,
-                                            disabledHint: _speciesId != null
+                                            disabledHint: _breedId != null
                                                 ? Text(listBreeds.items
                                                     .firstWhere((item) =>
                                                         item.id == _breedId)
@@ -456,10 +458,12 @@ class MapScreenState extends State<AddPets>
                 textColor: Colors.white,
                 color: Colors.red,
                 onPressed: () {
-                  SelectDialog().alertDialog(context,
-                      title: 'AVISO',
-                      content:
-                          'Está seguro que desa borrar el perfil de la mascota?');
+                  // SelectDialog().alertDialog(context,
+                  //     title: 'AVISO',
+                  //     content:
+                  //         'Está seguro que desa borrar el perfil de la mascota?');
+                  Provider.of<Pets>(context, listen: false).deletePet(_petId);
+                  Navigator.pop(context);
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0)),
@@ -490,6 +494,7 @@ class MapScreenState extends State<AddPets>
                 onPressed: () async {
                   try {
                     newPet = PetItem(
+                      id: _petId,
                       name: _name,
                       speciesId: _speciesId,
                       breedId: _breedId,

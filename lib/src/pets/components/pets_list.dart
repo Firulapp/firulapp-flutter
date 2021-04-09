@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:firulapp/src/pets/components/add_pets.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
 
 import 'package:firulapp/provider/pets.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../selected_pet_screen.dart';
 
 class PetsList extends StatefulWidget {
+  static const routeName = "/pets/list";
   PetsList({Key key}) : super(key: key);
 
   @override
@@ -21,9 +23,9 @@ class _PetsListState extends State<PetsList> {
   Future _petsFuture;
   Directory tempPath;
 
-  Future _obtainPetsFuture() {
-    return Provider.of<Pets>(context, listen: false).fetchPetList();
-  }
+  // Future _obtainPetsFuture() {
+  //   return Provider.of<Pets>(context, listen: false).fetchPetList();
+  // }
 
   Future _obtainTempPath() async {
     tempPath = await syspaths.getTemporaryDirectory();
@@ -31,13 +33,14 @@ class _PetsListState extends State<PetsList> {
 
   @override
   void initState() {
-    _petsFuture = _obtainPetsFuture();
+    // _petsFuture = _obtainPetsFuture();
     _obtainTempPath();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    _petsFuture = Provider.of<Pets>(context, listen: false).fetchPetList();
     return Consumer<Pets>(
       builder: (context, providerData, _) => FutureBuilder(
         future: _petsFuture,
@@ -76,7 +79,7 @@ class _PetsListState extends State<PetsList> {
       title: Text("$name"),
       onTap: () {
         Navigator.of(context).pushNamed(
-          SelectedPetScreen.routeName,
+          AddPets.routeName,
           arguments: pet.id,
         );
       },
