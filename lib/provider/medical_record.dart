@@ -111,6 +111,36 @@ class MedicalRecord with ChangeNotifier {
     }
   }
 
+  Future<void> delete(MedicalRecordItem medicalRecord) async {
+    try {
+      await _dio.delete(
+        Endpoints.deleteMedicalRecord,
+        data: {
+          "id": medicalRecord.id,
+          "petId": _petItem.id,
+          "vet": medicalRecord.veterinary,
+          "treatment": medicalRecord.treatment,
+          "observations": medicalRecord.observations,
+          "diagnostic": medicalRecord.diagnostic,
+          "treatmentReminder": medicalRecord.treatmentReminder,
+          "petWeight": medicalRecord.petWeight,
+          "petHeight": medicalRecord.petHeight,
+          "consultedAt": medicalRecord.consultedAt,
+          "createdAt": medicalRecord.createdAt,
+          "createdBy": user.userData.id,
+          "modifiedAt": medicalRecord.modifiedAt,
+          "modifiedBy": medicalRecord.modifiedBy,
+        },
+      );
+      _items.remove(
+        medicalRecord,
+      );
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   MedicalRecordItem mapJsonToEntity(dynamic json) {
     return MedicalRecordItem(
       id: json["id"],

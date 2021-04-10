@@ -1,3 +1,4 @@
+import 'package:firulapp/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -157,6 +158,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                             SizedBox(height: getProportionateScreenHeight(25)),
                             DefaultButton(
                               text: "Guardar",
+                              color: kPrimaryColor,
                               press: () async {
                                 final isOK = _formKey.currentState.validate();
                                 if (isOK) {
@@ -182,6 +184,36 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 }
                               },
                             ),
+                            SizedBox(height: getProportionateScreenHeight(25)),
+                            DefaultButton(
+                              text: "Borrar",
+                              color: Colors.white,
+                              press: () async {
+                                final isOK = _formKey.currentState.validate();
+                                if (isOK) {
+                                  try {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                    await Provider.of<MedicalRecord>(
+                                      context,
+                                      listen: false,
+                                    ).delete(_medicalRecord);
+                                    Navigator.pop(context);
+                                  } catch (error) {
+                                    Dialogs.info(
+                                      context,
+                                      title: 'ERROR',
+                                      content: error.response.data["message"],
+                                    );
+                                  }
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                }
+                              },
+                            ),
+                            SizedBox(height: getProportionateScreenHeight(25)),
                           ],
                         ),
                       ),
