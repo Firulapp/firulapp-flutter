@@ -2,6 +2,7 @@ import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../constants/constants.dart';
 import '../../provider/medical_record.dart' as medProvider;
 import './components/medical_record_item.dart';
 import 'medical_record_form_screen.dart';
@@ -29,13 +30,9 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
   @override
   Widget build(BuildContext context) {
     final pet = ModalRoute.of(context).settings.arguments as PetItem;
-    Provider.of<medProvider.MedicalRecord>(
-      context,
-      listen: false,
-    ).setPetItem(pet);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Fichas Médicas"),
+        title: Text("Fichas Médicas de ${pet.name}"),
       ),
       body: Column(
         children: [
@@ -52,7 +49,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
           ),
           Flexible(
             child: Container(
-              color: Color(0XFFFFFAF6),
+              color: lightBackgroundColor,
               child: FutureBuilder(
                 future: _medicalRecordsFuture,
                 builder: (_, dataSnapshot) {
@@ -69,7 +66,8 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
                             ListView.builder(
                           itemBuilder: (context, index) {
                             return MedicalRecordItem(
-                                medicalRecord.items[index]);
+                              medicalRecord.items[index],
+                            );
                           },
                           itemCount: medicalRecord.itemCount,
                         ),

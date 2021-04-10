@@ -14,5 +14,6 @@ class Endpoints {
   static final petDelete = '$pet/delete';
   static final petByUser = '$pet/user';
   static final medicalRecord = '$pet/medical/record';
+  static final medicalRecordByPet = '$pet/medical/record/pet';
   static final saveMedicalRecord = '$medicalRecord/save';
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/medical_record.dart';
 import '../medical_records/medical_records_screen.dart';
 import '../../provider/pets.dart';
 import '../profile/components/profile_menu.dart';
@@ -34,6 +35,10 @@ class SelectedPetScreen extends StatelessWidget {
             text: "Fichas Médicas",
             icon: "assets/icons/Bell.svg",
             press: () {
+              Provider.of<MedicalRecord>(
+                context,
+                listen: false,
+              ).setPetItem(pet);
               Navigator.pushNamed(
                 context,
                 MedicalRecordsScreen.routeName,

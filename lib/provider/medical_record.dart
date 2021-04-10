@@ -65,26 +65,14 @@ class MedicalRecord with ChangeNotifier {
 
   Future<void> fetchMedicalRecords() async {
     try {
+      _items = [];
       final response =
-          await this._dio.get('${Endpoints.medicalRecord}/${_petItem.id}');
+          await this._dio.get('${Endpoints.medicalRecordByPet}/${_petItem.id}');
       final medicalRecords = response.data["list"];
       medicalRecords.forEach((medicalRecord) {
-        _items.add(MedicalRecordItem(
-          id: medicalRecord["id"],
-          petId: medicalRecord["petId"],
-          veterinary: medicalRecord["vet"],
-          treatment: medicalRecord["treatment"],
-          observations: medicalRecord["observations"],
-          diagnostic: medicalRecord["diagnostic"],
-          treatmentReminder: medicalRecord["treatmentReminder"],
-          petWeight: medicalRecord["petWeight"],
-          petHeight: medicalRecord["petHeight"],
-          consultedAt: medicalRecord["consultedAt"],
-          createdAt: medicalRecord["createdAt"],
-          createdBy: user.userData.id,
-          modifiedAt: medicalRecord["modifiedAt"],
-          modifiedBy: medicalRecord["modifiedBy"],
-        ));
+        _items.add(
+          mapJsonToEntity(medicalRecord),
+        );
       });
       notifyListeners();
     } catch (error) {
@@ -92,9 +80,9 @@ class MedicalRecord with ChangeNotifier {
     }
   }
 
-  Future<void> addMedicalRecord(MedicalRecordItem medicalRecord) async {
+  Future<void> saveMedicalRecord(MedicalRecordItem medicalRecord) async {
     try {
-      await _dio.post(
+      final response = await _dio.post(
         Endpoints.saveMedicalRecord,
         data: {
           "id": medicalRecord.id,
@@ -113,10 +101,32 @@ class MedicalRecord with ChangeNotifier {
           "modifiedBy": medicalRecord.modifiedBy,
         },
       );
-      _items.add(medicalRecord);
+      final medicalRecordResponse = response.data["dto"];
+      _items.add(
+        mapJsonToEntity(medicalRecordResponse),
+      );
       notifyListeners();
     } catch (error) {
       throw error;
     }
+  }
+
+  MedicalRecordItem mapJsonToEntity(dynamic json) {
+    return MedicalRecordItem(
+      id: json["id"],
+      petId: json["petId"],
+      veterinary: json["vet"],
+      treatment: json["treatment"],
+      observations: json["observations"],
+      diagnostic: json["diagnostic"],
+      treatmentReminder: json["treatmentReminder"],
+      petWeight: json["petWeight"],
+      petHeight: json["petHeight"],
+      consultedAt: json["consultedAt"],
+      createdAt: json["createdAt"],
+      createdBy: user.userData.id,
+      modifiedAt: json["modifiedAt"],
+      modifiedBy: json["modifiedBy"],
+    );
   }
 }

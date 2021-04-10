@@ -165,7 +165,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                     await Provider.of<MedicalRecord>(
                                       context,
                                       listen: false,
-                                    ).addMedicalRecord(_medicalRecord);
+                                    ).saveMedicalRecord(_medicalRecord);
                                     Navigator.pop(context);
                                   } catch (error) {
                                     Dialogs.info(

@@ -156,7 +156,7 @@ class MapScreenState extends State<ProfilePage>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                              initialValue: user.userData.birthDate.toString(),
+                              initialValue: user.userData.birthDate,
                               decoration: InputDecoration(
                                 hintText: "Ingresa tu fecha de nacimiento",
                                 labelText: 'Fecha de nacimiento',
