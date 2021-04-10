@@ -40,13 +40,15 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
   }
 
   Widget build(BuildContext context) {
-    _medicalRecord.consultedAt = _medicalRecordDate.toIso8601String();
     final id = ModalRoute.of(context).settings.arguments as int;
     if (id != null) {
       _medicalRecord = Provider.of<MedicalRecord>(
         context,
         listen: false,
       ).getLocalMedicalRecordById(id);
+      _medicalRecordDate = DateTime.parse(_medicalRecord.consultedAt);
+    } else {
+      _medicalRecord.consultedAt = _medicalRecordDate.toIso8601String();
     }
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
