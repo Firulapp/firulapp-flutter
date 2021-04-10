@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../provider/pets.dart';
 import '../profile/components/profile_menu.dart';
-import '../profile/components/profile_pic.dart';
+import 'components/pet_pic.dart';
 import './components/add_pets.dart';
 
 class SelectedPetScreen extends StatelessWidget {
@@ -20,7 +20,7 @@ class SelectedPetScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(children: [
-          ProfilePic(),
+          PetPic(pet),
           SizedBox(height: 20),
           ProfileMenu(
             text: "Mi Mascota",
