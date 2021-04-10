@@ -25,7 +25,7 @@ class SelectedPetScreen extends StatelessWidget {
           SizedBox(height: 20),
           ProfileMenu(
             text: "Mi Mascota",
-            icon: "assets/icons/User Icon.svg",
+            icon: "assets/icons/dog.svg",
             press: () => {
               //Navigator.pushNamed(context, ProfilePage.routeName),
               null
@@ -33,7 +33,7 @@ class SelectedPetScreen extends StatelessWidget {
           ),
           ProfileMenu(
             text: "Fichas Médicas",
-            icon: "assets/icons/Bell.svg",
+            icon: "assets/icons/medical-check.svg",
             press: () {
               Provider.of<MedicalRecord>(
                 context,
@@ -48,7 +48,7 @@ class SelectedPetScreen extends StatelessWidget {
           ),
           ProfileMenu(
             text: "Libreta de Vacunación",
-            icon: "assets/icons/Settings.svg",
+            icon: "assets/icons/syringe.svg",
             press: () {},
           ),
         ]),
