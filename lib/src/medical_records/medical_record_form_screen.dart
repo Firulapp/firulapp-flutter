@@ -184,36 +184,51 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 }
                               },
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
-                            DefaultButton(
-                              text: "Borrar",
-                              color: Colors.white,
-                              press: () async {
-                                final isOK = _formKey.currentState.validate();
-                                if (isOK) {
-                                  try {
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
-                                    await Provider.of<MedicalRecord>(
-                                      context,
-                                      listen: false,
-                                    ).delete(_medicalRecord);
-                                    Navigator.pop(context);
-                                  } catch (error) {
-                                    Dialogs.info(
-                                      context,
-                                      title: 'ERROR',
-                                      content: error.response.data["message"],
-                                    );
-                                  }
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                }
-                              },
-                            ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            id != null
+                                ? Column(
+                                    children: [
+                                      SizedBox(
+                                          height:
+                                              getProportionateScreenHeight(25)),
+                                      DefaultButton(
+                                        text: "Borrar",
+                                        color: Colors.white,
+                                        press: () async {
+                                          final isOK =
+                                              _formKey.currentState.validate();
+                                          if (isOK) {
+                                            try {
+                                              setState(() {
+                                                _isLoading = true;
+                                              });
+                                              await Provider.of<MedicalRecord>(
+                                                context,
+                                                listen: false,
+                                              ).delete(_medicalRecord);
+                                              Navigator.pop(context);
+                                            } catch (error) {
+                                              Dialogs.info(
+                                                context,
+                                                title: 'ERROR',
+                                                content: error
+                                                    .response.data["message"],
+                                              );
+                                            }
+                                            setState(() {
+                                              _isLoading = false;
+                                            });
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height:
+                                            getProportionateScreenHeight(25),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(
+                                    height: getProportionateScreenHeight(25),
+                                  ),
                           ],
                         ),
                       ),
