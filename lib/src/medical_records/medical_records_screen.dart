@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
 import '../../provider/medical_record.dart' as medProvider;
+import '../../size_config.dart';
 import './components/medical_record_item.dart';
 import 'medical_record_form_screen.dart';
 
@@ -29,6 +30,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final SizeConfig sizeConfig = SizeConfig();
     final pet = ModalRoute.of(context).settings.arguments as PetItem;
     return Scaffold(
       appBar: AppBar(
@@ -62,15 +64,47 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
                       );
                     } else {
                       return Consumer<medProvider.MedicalRecord>(
-                        builder: (ctx, medicalRecord, child) =>
-                            ListView.builder(
-                          itemBuilder: (context, index) {
-                            return MedicalRecordItem(
-                              medicalRecord.items[index],
+                        builder: (ctx, medicalRecord, child) {
+                          if (medicalRecord.itemCount != 0) {
+                            return ListView.builder(
+                              itemBuilder: (context, index) {
+                                return MedicalRecordItem(
+                                  medicalRecord.items[index],
+                                );
+                              },
+                              itemCount: medicalRecord.itemCount,
                             );
-                          },
-                          itemCount: medicalRecord.itemCount,
-                        ),
+                          } else {
+                            return Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 150.0,
+                                    height: 150.0,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                          "assets/images/empty.png",
+                                        ),
+                                        fit: BoxFit.cover,
+                                        alignment: Alignment.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    'Sin Fichas Médicas :(',
+                                    style: TextStyle(
+                                      fontSize: sizeConfig.hp(4),
+                                      color: kPrimaryColor,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       );
                     }
                   }
