@@ -191,6 +191,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
               SizedBox(height: getProportionateScreenHeight(25)),
               DefaultButton(
                 text: "Registrar",
+                color: kPrimaryColor,
                 press: () async {
                   setState(() {
                     _isLoading = true;
