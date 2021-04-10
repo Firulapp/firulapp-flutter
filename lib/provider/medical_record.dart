@@ -102,9 +102,12 @@ class MedicalRecord with ChangeNotifier {
         },
       );
       final medicalRecordResponse = response.data["dto"];
-      _items.add(
-        mapJsonToEntity(medicalRecordResponse),
-      );
+      if (_items.contains(medicalRecord)) {
+        _items[_items.indexWhere((element) => element.id == medicalRecord.id)] =
+            mapJsonToEntity(medicalRecordResponse);
+      } else {
+        _items.add(mapJsonToEntity(medicalRecordResponse));
+      }
       notifyListeners();
     } catch (error) {
       throw error;
