@@ -5,7 +5,7 @@ import '../../provider/medical_record.dart';
 import '../medical_records/medical_records_screen.dart';
 import '../../provider/pets.dart';
 import '../profile/components/profile_menu.dart';
-import '../profile/components/profile_pic.dart';
+import 'components/pet_pic.dart';
 
 class SelectedPetScreen extends StatelessWidget {
   static const routeName = "/selected-pet";
@@ -21,7 +21,7 @@ class SelectedPetScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(children: [
-          ProfilePic(),
+          PetPic(pet),
           SizedBox(height: 20),
           ProfileMenu(
             text: "Mi Mascota",
