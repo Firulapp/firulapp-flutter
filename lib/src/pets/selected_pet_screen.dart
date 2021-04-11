@@ -26,7 +26,8 @@ class SelectedPetScreen extends StatelessWidget {
             text: "Mi Mascota",
             icon: "assets/icons/User Icon.svg",
             press: () => {
-              Navigator.pushNamed(context, AddPets.routeName, arguments: pet),
+              Navigator.pushNamed(context, AddPets.routeName,
+                  arguments: pet.id),
               null
             },
           ),

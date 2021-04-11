@@ -27,6 +27,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   Future _initialBreeds;
   PetItem newPet;
   PetItem _pet = new PetItem();
+  bool setPet = true;
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
   int _speciesId;
@@ -106,9 +107,10 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   @override
   Widget build(BuildContext context) {
     final SizeConfig sizeConfig = SizeConfig();
-    final pet = ModalRoute.of(context).settings.arguments as PetItem;
-    if (pet.id != null) {
-      _pet = pet;
+    final id = ModalRoute.of(context).settings.arguments as int;
+    if (id != null && setPet) {
+      _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
+      setPet = false;
     }
     return new Scaffold(
         appBar: AppBar(
@@ -321,7 +323,6 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         hint: "Ingrese una description",
                         tipo: TextInputType.multiline,
                       ),
-                      pet.id != null ? _getDeletePetButton() : Container(),
                       !_status ? _getActionButtons() : Container(),
                     ],
                   ),
@@ -392,8 +393,8 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                     newPet = PetItem(
                       id: _pet.id,
                       name: _pet.name,
-                      speciesId: _speciesId,
-                      breedId: _breedId,
+                      speciesId: _pet.speciesId,
+                      breedId: _pet.breedId,
                       birthDate: _birthDate.toIso8601String(),
                       age: _age,
                       primaryColor: _pet.primaryColor,
