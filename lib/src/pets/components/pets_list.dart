@@ -2,13 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:firulapp/src/pets/components/add_pets.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
-
-import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/pets.dart';
 import '../selected_pet_screen.dart';
 
 class PetsList extends StatefulWidget {
@@ -69,21 +67,34 @@ class _PetsListState extends State<PetsList> {
     String _base64 = pet.picture;
     String name = pet.name;
     _petImage = _getFilePicture(_base64, name);
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: _petImage != null
-            ? FileImage(_petImage)
-            : AssetImage("assets/images/default-avatar.png"),
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      elevation: 6,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: _petImage != null
+              ? FileImage(_petImage)
+              : AssetImage("assets/images/default-avatar.png"),
+        ),
+        title: Text(
+          "$name",
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        onTap: () {
+          Navigator.of(context).pushNamed(
+            SelectedPetScreen.routeName,
+            arguments: pet.id,
+          );
+        },
+        trailing: IconButton(
+          icon: Image.asset(
+            "assets/images/delete.png",
+          ),
+          onPressed: () =>
+              Provider.of<Pets>(context, listen: false).deletePet(pet.id),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 30),
       ),
-      title: Text("$name"),
-      onTap: () {
-        Navigator.of(context).pushNamed(
-          SelectedPetScreen.routeName,
-          arguments: pet.id,
-        );
-      },
-      trailing: Icon(Icons.keyboard_arrow_right),
-      contentPadding: EdgeInsets.symmetric(horizontal: 30),
     );
   }
 
