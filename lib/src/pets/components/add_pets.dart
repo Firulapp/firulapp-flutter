@@ -33,7 +33,7 @@ class MapScreenState extends State<AddPets>
   String _name;
   int _speciesId;
   int _breedId;
-  DateTime _birthDate;
+  DateTime _birthDate = DateTime.now();
   int _age;
   String _petSize;
   String _primaryColor;
@@ -43,7 +43,6 @@ class MapScreenState extends State<AddPets>
   File _petPicture;
   String _petPictureBase64;
   String _createdAt;
-
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
     try {
@@ -69,6 +68,34 @@ class MapScreenState extends State<AddPets>
     }
   }
 
+  void _setPetData() async {
+    try {
+      PetItem pet = Provider.of<Pets>(context, listen: true).petItem;
+      setState(() {
+        _petId = pet.id;
+        _name = pet.name;
+        _speciesId = pet.speciesId;
+        _breedId = pet.breedId;
+        _birthDate = DateTime.parse(pet.birthDate);
+        _age = pet.age;
+        _petSize = pet.petSize;
+        _primaryColor = pet.primaryColor;
+        _petDescription = pet.description;
+        _secondaryColor = pet.secondaryColor;
+        _petStatus = pet.status;
+        // _petPicture = pet.picture;
+        _petPictureBase64 = pet.picture;
+        _createdAt = pet.createdAt;
+      });
+    } catch (e) {
+      Dialogs.info(
+        context,
+        title: 'ERROR',
+        content: e.toString(),
+      );
+    }
+  }
+
   @override
   void initState() {
     _initialSpecies = _getListSpecies();
@@ -84,33 +111,16 @@ class MapScreenState extends State<AddPets>
   }
 
   final df = new DateFormat('dd-MM-yyyy');
-  DateTime currentDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     final SizeConfig sizeConfig = SizeConfig();
     final id = ModalRoute.of(context).settings.arguments as int;
-    if (id != null) {
-      pet = Provider.of<Pets>(context, listen: true).getLocalPetById(id);
+    if (id != null && pet == null) {
+      // pet = Provider.of<Pets>(context, listen: true).getLocalPetById(id);
+      _setPetData();
     }
     print(pet);
-    if (pet != null) {
-      _petId = pet.id;
-      _name = pet.name;
-      _speciesId = pet.speciesId;
-      _breedId = pet.breedId;
-      _birthDate = DateTime.parse(pet.birthDate);
-      currentDate = _birthDate;
-      _age = pet.age;
-      _petSize = pet.petSize;
-      _primaryColor = pet.primaryColor;
-      _petDescription = pet.description;
-      _secondaryColor = pet.secondaryColor;
-      _petStatus = pet.status;
-      // _petPicture = pet.picture;
-      _petPictureBase64 = pet.picture;
-      _createdAt = pet.createdAt;
-    }
     return new Scaffold(
         appBar: AppBar(
           title: Text("Agregar Mascota"),
@@ -320,7 +330,7 @@ class MapScreenState extends State<AddPets>
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Text(
-                                    df.format(currentDate),
+                                    df.format(_birthDate),
                                     style: TextStyle(
                                       fontSize: 23,
                                       fontWeight: FontWeight.bold,
@@ -356,7 +366,7 @@ class MapScreenState extends State<AddPets>
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Text(
-                                    (calculateAge(currentDate).toString() +
+                                    (calculateAge(_birthDate).toString() +
                                         " Años"),
                                     style: TextStyle(
                                       fontSize: 23,
@@ -576,13 +586,12 @@ class MapScreenState extends State<AddPets>
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
       context: context,
-      initialDate: currentDate,
+      initialDate: _birthDate,
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
-    if (pickedDate != null && pickedDate != currentDate)
+    if (pickedDate != null && pickedDate != _birthDate)
       setState(() {
-        currentDate = pickedDate;
         _birthDate = pickedDate;
       });
   }
