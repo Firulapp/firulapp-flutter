@@ -331,7 +331,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         hint: "Ingrese una description",
                         tipo: TextInputType.multiline,
                       ),
-                        _status ? _getDeletePetButton() : Container(),
+                      id != null ? _getDeletePetButton() : Container(),
                       !_status ? _getActionButtons() : Container(),
                     ],
                   ),
