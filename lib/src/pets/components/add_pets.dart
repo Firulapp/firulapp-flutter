@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firulapp/components/input_text.dart';
 import 'package:firulapp/provider/breeds.dart';
-import 'package:firulapp/src/pets/components/pets_list.dart';
+import 'package:firulapp/src/mixins/validator_mixins.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -20,13 +21,12 @@ class AddPets extends StatefulWidget {
   MapScreenState createState() => MapScreenState();
 }
 
-class MapScreenState extends State<AddPets>
-    with SingleTickerProviderStateMixin {
+class MapScreenState extends State<AddPets> with ValidatorMixins {
   bool _status = true;
   Future _initialSpecies;
   Future _initialBreeds;
   PetItem newPet;
-  PetItem pet;
+  PetItem _pet = new PetItem();
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
   int _petId;
@@ -116,16 +116,16 @@ class MapScreenState extends State<AddPets>
   Widget build(BuildContext context) {
     final SizeConfig sizeConfig = SizeConfig();
     final id = ModalRoute.of(context).settings.arguments as int;
-    if (id != null && pet == null) {
-      // pet = Provider.of<Pets>(context, listen: true).getLocalPetById(id);
-      _setPetData();
+    if (id != null && _pet == null) {
+      _pet = Provider.of<Pets>(context, listen: true).getLocalPetById(id);
+      // _setPetData();
     }
-    print(pet);
     return new Scaffold(
         appBar: AppBar(
           title: Text("Agregar Mascota"),
         ),
-        body: new ListView(
+        body: ListView(
+          padding: EdgeInsets.only(left: 35.0, right: 25.0),
           children: <Widget>[
             Column(
               children: <Widget>[
@@ -137,302 +137,203 @@ class MapScreenState extends State<AddPets>
                     _status,
                   ),
                 ),
+                SizedBox(height: getProportionateScreenHeight(25)),
                 Container(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 25.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.only(
-                                left: 25.0, right: 25.0, top: 25.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    const Text(
-                                      'Datos de mascota',
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(top: 25.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  const Text(
+                                    'Datos de mascota',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ],
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  _status ? _getEditIcon() : Container(),
+                                ],
+                              )
+                            ],
+                          )),
+                      SizedBox(height: getProportionateScreenHeight(25)),
+                      buildNameFormField(
+                        label: "Nombre de mascota",
+                        hint: "Ingrese un nombre",
+                        tipo: TextInputType.text,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 25.0),
+                        child: FutureBuilder(
+                            future: _initialSpecies,
+                            builder: (_, dataSnapshot) {
+                              return Consumer<Species>(
+                                builder: (ctx, listSpecies, _) =>
+                                    DropdownButton(
+                                  hint: _speciesId == null
+                                      ? Text('Elija una especie')
+                                      : null,
+                                  disabledHint: _pet.speciesId != null
+                                      ? Text(listSpecies.items
+                                          .firstWhere((item) =>
+                                              item.id == _pet.speciesId)
+                                          .name)
+                                      : null,
+                                  items: listSpecies.items
+                                      .map((e) => DropdownMenuItem(
+                                            value: e.id,
+                                            child: Text(e.name),
+                                          ))
+                                      .toList(),
+                                  onChanged: !_status
+                                      ? (v) => setState(() {
+                                            _pet.speciesId = v;
+                                          })
+                                      : null,
+                                  value: _pet.speciesId,
+                                  isExpanded: true,
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    _status ? _getEditIcon() : Container(),
-                                  ],
-                                )
+                              );
+                            }),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 25.0),
+                        child: FutureBuilder(
+                          future: _initialBreeds,
+                          builder: (_, dataSnapshot) {
+                            return Consumer<Breeds>(
+                              builder: (ctx, listBreeds, _) => DropdownButton(
+                                hint: _breedId == null
+                                    ? Text('Eliga una raza')
+                                    : null,
+                                disabledHint: _pet.breedId != null
+                                    ? Text(listBreeds.items
+                                        .firstWhere(
+                                            (item) => item.id == _pet.breedId)
+                                        .name)
+                                    : null,
+                                items: listBreeds.items
+                                    .map((e) => DropdownMenuItem(
+                                          value: e.id,
+                                          child: Text(e.name),
+                                        ))
+                                    .toList(),
+                                onChanged: !_status
+                                    ? (v) => setState(() {
+                                          _pet.breedId = v;
+                                        })
+                                    : null,
+                                value: _pet.breedId,
+                                isExpanded: true,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                RaisedButton(
+                                  onPressed: () => _selectDate(context),
+                                  child: Text('Fecha de Nacimiento'),
+                                ),
                               ],
-                            )),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: TextFormField(
-                            initialValue: _name,
-                            decoration: InputDecoration(
-                              hintText: "Ingresa su nombre",
-                              labelText: "Nombre",
-                              labelStyle: defaultTextStyle(),
                             ),
-                            onChanged: (v) {
-                              _name = v;
-                            },
-                            enabled: !_status,
-                            autofocus: !_status,
-                          ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  df.format(_birthDate),
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 35.0, right: 25.0, top: 25.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  const Text(
-                                    'Especie',
-                                    style: TextStyle(
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const Text(
+                                  'Edad',
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  FutureBuilder(
-                                      future: _initialSpecies,
-                                      builder: (_, dataSnapshot) {
-                                        return Consumer<Species>(
-                                          builder: (ctx, listSpecies, _) =>
-                                              DropdownButton(
-                                            hint: _speciesId == null
-                                                ? Text('Eliga una especie')
-                                                : null,
-                                            disabledHint: _speciesId != null
-                                                ? Text(listSpecies.items
-                                                    .firstWhere((item) =>
-                                                        item.id == _speciesId)
-                                                    .name)
-                                                : null,
-                                            items: listSpecies.items
-                                                .map((e) => DropdownMenuItem(
-                                                      value: e.id,
-                                                      child: Text(e.name),
-                                                    ))
-                                                .toList(),
-                                            onChanged: !_status
-                                                ? (v) => setState(() {
-                                                      _speciesId = v;
-                                                    })
-                                                : null,
-                                            value: _speciesId,
-                                          ),
-                                        );
-                                      }),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 35.0, right: 25.0, top: 25.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  const Text(
-                                    'Raza',
-                                    style: TextStyle(
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  FutureBuilder(
-                                      future: _initialBreeds,
-                                      builder: (_, dataSnapshot) {
-                                        return Consumer<Breeds>(
-                                          builder: (ctx, listBreeds, _) =>
-                                              DropdownButton(
-                                            hint: _breedId == null
-                                                ? Text('Eliga una raza')
-                                                : null,
-                                            disabledHint: _breedId != null
-                                                ? Text(listBreeds.items
-                                                    .firstWhere((item) =>
-                                                        item.id == _breedId)
-                                                    .name)
-                                                : null,
-                                            items: listBreeds.items
-                                                .map((e) => DropdownMenuItem(
-                                                      value: e.id,
-                                                      child: Text(e.name),
-                                                    ))
-                                                .toList(),
-                                            onChanged: !_status
-                                                ? (v) => setState(() {
-                                                      _breedId = v;
-                                                    })
-                                                : null,
-                                            value: _breedId,
-                                          ),
-                                        );
-                                      }),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 35.0, right: 25.0, top: 25.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  RaisedButton(
-                                    onPressed: () => _selectDate(context),
-                                    child: Text('Fecha de Nacimiento'),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    df.format(_birthDate),
-                                    style: TextStyle(
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 35.0, right: 25.0, top: 25.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  const Text(
-                                    'Edad',
-                                    style: TextStyle(
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    (calculateAge(_birthDate).toString() +
-                                        " Años"),
-                                    style: TextStyle(
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: TextFormField(
-                            initialValue: _primaryColor,
-                            decoration: InputDecoration(
-                              hintText: "Ingrese un color",
-                              labelText: "Color Primario",
-                              labelStyle: defaultTextStyle(),
+                                ),
+                              ],
                             ),
-                            onChanged: (v) {
-                              _primaryColor = v;
-                            },
-                            enabled: !_status,
-                            autofocus: !_status,
-                          ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  (calculateAge(_birthDate).toString() +
+                                      " Años"),
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: TextFormField(
-                            initialValue: _secondaryColor,
-                            decoration: InputDecoration(
-                              hintText: "Ingrese un color",
-                              labelText: "Color secundario",
-                              labelStyle: defaultTextStyle(),
-                            ),
-                            onChanged: (v) {
-                              _secondaryColor = v;
-                            },
-                            enabled: !_status,
-                            autofocus: !_status,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: TextFormField(
-                            initialValue: _petDescription,
-                            decoration: InputDecoration(
-                              hintText: "Ingrese una description",
-                              labelText: "Descripción",
-                              labelStyle: defaultTextStyle(),
-                            ),
-                            onChanged: (v) {
-                              _petDescription = v;
-                            },
-                            enabled: !_status,
-                            autofocus: !_status,
-                          ),
-                        ),
+                      ),
+                      SizedBox(height: getProportionateScreenHeight(25)),
+                      buildPrimaryColorFormField(
+                        label: "Color primario",
+                        hint: "Ingrese un color",
+                        tipo: TextInputType.text,
+                      ),
+                      SizedBox(height: getProportionateScreenHeight(25)),
+                      buildSecondaryColorFormField(
+                        label: "Color secundario",
+                        hint: "Ingrese un color",
+                        tipo: TextInputType.text,
+                      ),
+                      SizedBox(height: getProportionateScreenHeight(25)),
+                      buildDescriptionFormField(
+                        label: "Descripción",
+                        hint: "Ingrese una description",
+                        tipo: TextInputType.multiline,
+                      ),
                         _status ? _getDeletePetButton() : Container(),
-                        !_status ? _getActionButtons() : Container(),
-                      ],
-                    ),
+                      !_status ? _getActionButtons() : Container(),
+                    ],
                   ),
                 )
               ],
@@ -448,22 +349,18 @@ class MapScreenState extends State<AddPets>
     super.dispose();
   }
 
-  TextStyle defaultTextStyle() {
-    return TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
-  }
-
   Widget _getDeletePetButton() {
     return Padding(
-      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+      padding: EdgeInsets.only(top: 45.0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Container(
-                  child: RaisedButton(
+              child: Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: Container(
+              child: RaisedButton(
                 child: Text("Borrar Mascota"),
                 textColor: Colors.white,
                 color: Colors.red,
@@ -477,10 +374,9 @@ class MapScreenState extends State<AddPets>
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0)),
-              )),
+              ),
             ),
-            flex: 2,
-          ),
+          )),
         ],
       ),
     );
@@ -488,7 +384,7 @@ class MapScreenState extends State<AddPets>
 
   Widget _getActionButtons() {
     return Padding(
-      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
+      padding: EdgeInsets.only(top: 45.0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -504,18 +400,18 @@ class MapScreenState extends State<AddPets>
                 onPressed: () async {
                   try {
                     newPet = PetItem(
-                      id: _petId,
-                      name: _name,
+                      id: _pet.id,
+                      name: _pet.name,
                       speciesId: _speciesId,
                       breedId: _breedId,
                       birthDate: _birthDate.toIso8601String(),
                       age: _age,
-                      primaryColor: _primaryColor,
-                      description: _petDescription,
-                      secondaryColor: _secondaryColor,
+                      primaryColor: _pet.primaryColor,
+                      secondaryColor: _pet.secondaryColor,
+                      description: _pet.description,
                       status: _petStatus,
                       picture: _petPictureBase64,
-                      createdAt: _createdAt,
+                      createdAt: _pet.createdAt,
                     );
                     Provider.of<Pets>(context, listen: false).petItem = newPet;
                     Provider.of<Pets>(context, listen: false).savePet();
@@ -613,5 +509,61 @@ class MapScreenState extends State<AddPets>
     }
     _age = age; // aqui deberia actualizar el objeto de la mascotas
     return age;
+  }
+
+  Widget buildNameFormField({String label, String hint, TextInputType tipo}) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      validator: validateTextNotNull,
+      keyboardType: tipo,
+      maxLines: 10,
+      value: _pet.name,
+      onChanged: (newValue) => _pet.name = newValue,
+      enabled: !_status,
+      autofocus: !_status,
+    );
+  }
+
+  Widget buildPrimaryColorFormField(
+      {String label, String hint, TextInputType tipo}) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      maxLines: 10,
+      value: _pet.primaryColor,
+      onChanged: (newValue) => _pet.primaryColor = newValue,
+      enabled: !_status,
+      autofocus: !_status,
+    );
+  }
+
+  Widget buildSecondaryColorFormField(
+      {String label, String hint, TextInputType tipo}) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      maxLines: 10,
+      value: _pet.secondaryColor,
+      onChanged: (newValue) => _pet.secondaryColor = newValue,
+      enabled: !_status,
+      autofocus: !_status,
+    );
+  }
+
+  Widget buildDescriptionFormField(
+      {String label, String hint, TextInputType tipo}) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      maxLines: 100,
+      value: _pet.description,
+      onChanged: (newValue) => _pet.description = newValue,
+      enabled: !_status,
+      autofocus: !_status,
+    );
   }
 }
