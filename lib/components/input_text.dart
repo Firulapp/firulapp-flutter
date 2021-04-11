@@ -14,6 +14,8 @@ class InputText extends StatelessWidget {
   final void Function(String) validator;
   final void Function(String value) onChanged;
   final void Function(String value) onSaved;
+  final bool enabled;
+  final bool autofocus;
   const InputText({
     Key key,
     this.label = '',
@@ -27,6 +29,8 @@ class InputText extends StatelessWidget {
     this.minLines = 1,
     this.maxLines = 1,
     this.value,
+    this.enabled = true,
+    this.autofocus = false,
   }) : super(key: key);
 
   @override
@@ -45,6 +49,8 @@ class InputText extends StatelessWidget {
       minLines: this.minLines,
       maxLines: this.maxLines,
       initialValue: this.value,
+      enabled: this.enabled,
+      autofocus: this.autofocus,
     );
   }
 }
