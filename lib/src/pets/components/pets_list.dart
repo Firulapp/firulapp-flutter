@@ -78,7 +78,7 @@ class _PetsListState extends State<PetsList> {
       title: Text("$name"),
       onTap: () {
         Navigator.of(context).pushNamed(
-          AddPets.routeName,
+          SelectedPetScreen.routeName,
           arguments: pet.id,
         );
       },

@@ -29,20 +29,13 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   PetItem _pet = new PetItem();
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
-  int _petId;
-  String _name;
   int _speciesId;
   int _breedId;
   DateTime _birthDate = DateTime.now();
   int _age;
-  String _petSize;
-  String _primaryColor;
-  String _petDescription;
-  String _secondaryColor;
   bool _petStatus = true;
   File _petPicture;
   String _petPictureBase64;
-  String _createdAt;
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
     try {
@@ -71,22 +64,20 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   void _setPetData() async {
     try {
       PetItem pet = Provider.of<Pets>(context, listen: true).petItem;
-      setState(() {
-        _petId = pet.id;
-        _name = pet.name;
-        _speciesId = pet.speciesId;
-        _breedId = pet.breedId;
-        _birthDate = DateTime.parse(pet.birthDate);
-        _age = pet.age;
-        _petSize = pet.petSize;
-        _primaryColor = pet.primaryColor;
-        _petDescription = pet.description;
-        _secondaryColor = pet.secondaryColor;
-        _petStatus = pet.status;
-        // _petPicture = pet.picture;
-        _petPictureBase64 = pet.picture;
-        _createdAt = pet.createdAt;
-      });
+      _pet = new PetItem(
+        id: pet.id,
+        name: pet.name,
+        speciesId: pet.speciesId,
+        breedId: pet.breedId,
+        birthDate: pet.birthDate,
+        age: pet.age,
+        primaryColor: pet.primaryColor,
+        secondaryColor: pet.secondaryColor,
+        description: pet.description,
+        status: pet.status,
+        picture: pet.picture,
+        createdAt: pet.createdAt,
+      );
     } catch (e) {
       Dialogs.info(
         context,
@@ -115,10 +106,9 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   @override
   Widget build(BuildContext context) {
     final SizeConfig sizeConfig = SizeConfig();
-    final id = ModalRoute.of(context).settings.arguments as int;
-    if (id != null && _pet == null) {
-      _pet = Provider.of<Pets>(context, listen: true).getLocalPetById(id);
-      // _setPetData();
+    final pet = ModalRoute.of(context).settings.arguments as PetItem;
+    if (pet.id != null) {
+      _pet = pet;
     }
     return new Scaffold(
         appBar: AppBar(
@@ -331,7 +321,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         hint: "Ingrese una description",
                         tipo: TextInputType.multiline,
                       ),
-                      id != null ? _getDeletePetButton() : Container(),
+                      pet.id != null ? _getDeletePetButton() : Container(),
                       !_status ? _getActionButtons() : Container(),
                     ],
                   ),
@@ -369,7 +359,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                   //     title: 'AVISO',
                   //     content:
                   //         'Está seguro que desa borrar el perfil de la mascota?');
-                  Provider.of<Pets>(context, listen: false).deletePet(_petId);
+                  Provider.of<Pets>(context, listen: false).deletePet(_pet.id);
                   Navigator.pop(context);
                 },
                 shape: RoundedRectangleBorder(
