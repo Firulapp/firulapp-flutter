@@ -320,6 +320,8 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         ),
                       ),
                       SizedBox(height: getProportionateScreenHeight(25)),
+                      buildDropdown(['PEQUEÑO', 'MEDIANO', 'GRANDE']),
+                      SizedBox(height: getProportionateScreenHeight(25)),
                       buildPrimaryColorFormField(
                         label: "Color primario",
                         hint: "Ingrese un color",
@@ -378,6 +380,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                       breedId: _pet.breedId,
                       birthDate: _birthDate.toIso8601String(),
                       age: _age,
+                      petSize: _pet.petSize,
                       primaryColor: _pet.primaryColor,
                       secondaryColor: _pet.secondaryColor,
                       description: _pet.description,
@@ -536,6 +539,28 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
       value: _pet.description,
       onChanged: (newValue) => _pet.description = newValue,
       enabled: !_status,
+      autofocus: !_status,
+    );
+  }
+
+  DropdownButtonFormField buildDropdown(List<String> listsOptions) {
+    List<DropdownMenuItem> _typeOptions = [];
+    listsOptions.forEach((type) {
+      _typeOptions.add(
+        DropdownMenuItem(
+          child: Text(type),
+          value: type,
+        ),
+      );
+    });
+    return DropdownButtonFormField(
+      items: _typeOptions,
+      onChanged: !_status ? (v) => _pet.petSize = v : null,
+      hint: const Text("Tamaño"),
+      disabledHint: _pet.petSize != null
+          ? Text(listsOptions.firstWhere((item) => item == _pet.petSize))
+          : null,
+      value: _pet.petSize,
       autofocus: !_status,
     );
   }
