@@ -79,6 +79,11 @@ class Pets with ChangeNotifier {
     notifyListeners();
   }
 
+  set items(List<PetItem> list) {
+    _items = list;
+    notifyListeners();
+  }
+
   // Devuelve solo las mascotas con status True
   List<PetItem> get enablePets => _items.where((e) => e.status).toList();
   // devuelve todas las mascotas
@@ -117,6 +122,7 @@ class Pets with ChangeNotifier {
         },
       );
       print(response.data["dto"]);
+      items.add(PetItem.fromJson(response.data["dto"]));
       notifyListeners();
     } catch (error) {
       print(error.toString());
@@ -177,7 +183,7 @@ class Pets with ChangeNotifier {
             createdBy: pet["createdBy"],
           ));
         });
-        _items = loadedPets;
+        items = loadedPets;
         notifyListeners();
       }
     } catch (e) {

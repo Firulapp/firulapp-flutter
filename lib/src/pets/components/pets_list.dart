@@ -21,9 +21,9 @@ class _PetsListState extends State<PetsList> {
   Future _petsFuture;
   Directory tempPath;
 
-  // Future _obtainPetsFuture() {
-  //   return Provider.of<Pets>(context, listen: false).fetchPetList();
-  // }
+  Future _obtainPetsFuture() {
+    return Provider.of<Pets>(context, listen: false).fetchPetList();
+  }
 
   Future _obtainTempPath() async {
     tempPath = await syspaths.getTemporaryDirectory();
@@ -31,7 +31,7 @@ class _PetsListState extends State<PetsList> {
 
   @override
   void initState() {
-    // _petsFuture = _obtainPetsFuture();
+    _petsFuture = _obtainPetsFuture();
     _obtainTempPath();
     super.initState();
   }

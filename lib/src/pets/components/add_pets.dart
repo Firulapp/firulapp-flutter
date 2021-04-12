@@ -174,33 +174,40 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         child: FutureBuilder(
                             future: _initialSpecies,
                             builder: (_, dataSnapshot) {
-                              return Consumer<Species>(
-                                builder: (ctx, listSpecies, _) =>
-                                    DropdownButton(
-                                  hint: _speciesId == null
-                                      ? Text('Elija una especie')
-                                      : null,
-                                  disabledHint: _pet.speciesId != null
-                                      ? Text(listSpecies.items
-                                          .firstWhere((item) =>
-                                              item.id == _pet.speciesId)
-                                          .name)
-                                      : null,
-                                  items: listSpecies.items
-                                      .map((e) => DropdownMenuItem(
-                                            value: e.id,
-                                            child: Text(e.name),
-                                          ))
-                                      .toList(),
-                                  onChanged: !_status
-                                      ? (v) => setState(() {
-                                            _pet.speciesId = v;
-                                          })
-                                      : null,
-                                  value: _pet.speciesId,
-                                  isExpanded: true,
-                                ),
-                              );
+                              if (dataSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: Text("Loading..."),
+                                );
+                              } else {
+                                return Consumer<Species>(
+                                  builder: (ctx, listSpecies, _) =>
+                                      DropdownButton(
+                                    hint: _speciesId == null
+                                        ? Text('Elija una especie')
+                                        : null,
+                                    disabledHint: _pet.speciesId != null
+                                        ? Text(listSpecies.items
+                                            .firstWhere((item) =>
+                                                item.id == _pet.speciesId)
+                                            .name)
+                                        : null,
+                                    items: listSpecies.items
+                                        .map((e) => DropdownMenuItem(
+                                              value: e.id,
+                                              child: Text(e.name),
+                                            ))
+                                        .toList(),
+                                    onChanged: !_status
+                                        ? (v) => setState(() {
+                                              _pet.speciesId = v;
+                                            })
+                                        : null,
+                                    value: _pet.speciesId,
+                                    isExpanded: true,
+                                  ),
+                                );
+                              }
                             }),
                       ),
                       Padding(
@@ -208,32 +215,39 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         child: FutureBuilder(
                           future: _initialBreeds,
                           builder: (_, dataSnapshot) {
-                            return Consumer<Breeds>(
-                              builder: (ctx, listBreeds, _) => DropdownButton(
-                                hint: _breedId == null
-                                    ? Text('Eliga una raza')
-                                    : null,
-                                disabledHint: _pet.breedId != null
-                                    ? Text(listBreeds.items
-                                        .firstWhere(
-                                            (item) => item.id == _pet.breedId)
-                                        .name)
-                                    : null,
-                                items: listBreeds.items
-                                    .map((e) => DropdownMenuItem(
-                                          value: e.id,
-                                          child: Text(e.name),
-                                        ))
-                                    .toList(),
-                                onChanged: !_status
-                                    ? (v) => setState(() {
-                                          _pet.breedId = v;
-                                        })
-                                    : null,
-                                value: _pet.breedId,
-                                isExpanded: true,
-                              ),
-                            );
+                            if (dataSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: Text("Loading..."),
+                              );
+                            } else {
+                              return Consumer<Breeds>(
+                                builder: (ctx, listBreeds, _) => DropdownButton(
+                                  hint: _breedId == null
+                                      ? Text('Eliga una raza')
+                                      : null,
+                                  disabledHint: _pet.breedId != null
+                                      ? Text(listBreeds.items
+                                          .firstWhere(
+                                              (item) => item.id == _pet.breedId)
+                                          .name)
+                                      : null,
+                                  items: listBreeds.items
+                                      .map((e) => DropdownMenuItem(
+                                            value: e.id,
+                                            child: Text(e.name),
+                                          ))
+                                      .toList(),
+                                  onChanged: !_status
+                                      ? (v) => setState(() {
+                                            _pet.breedId = v;
+                                          })
+                                      : null,
+                                  value: _pet.breedId,
+                                  isExpanded: true,
+                                ),
+                              );
+                            }
                           },
                         ),
                       ),
@@ -340,39 +354,6 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
     super.dispose();
   }
 
-  Widget _getDeletePetButton() {
-    return Padding(
-      padding: EdgeInsets.only(top: 45.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-              child: Padding(
-            padding: EdgeInsets.only(left: 10.0),
-            child: Container(
-              child: RaisedButton(
-                child: Text("Borrar Mascota"),
-                textColor: Colors.white,
-                color: Colors.red,
-                onPressed: () {
-                  // SelectDialog().alertDialog(context,
-                  //     title: 'AVISO',
-                  //     content:
-                  //         'Está seguro que desa borrar el perfil de la mascota?');
-                  Provider.of<Pets>(context, listen: false).deletePet(_pet.id);
-                  Navigator.pop(context);
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-              ),
-            ),
-          )),
-        ],
-      ),
-    );
-  }
-
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(top: 45.0),
@@ -407,6 +388,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                     Provider.of<Pets>(context, listen: false).petItem = newPet;
                     Provider.of<Pets>(context, listen: false).savePet();
                     print("Se guardo la mascota");
+                    Navigator.pop(context);
                   } catch (e) {
                     Dialogs.info(
                       context,
