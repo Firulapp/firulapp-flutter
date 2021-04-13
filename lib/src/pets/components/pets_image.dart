@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,7 @@ import '../../../size_config.dart';
 
 class PetImage extends StatefulWidget {
   final Function onSelectImage;
-  final File petPicture;
+  final String petPicture;
   final bool status;
   PetImage(
     this.onSelectImage,
@@ -23,7 +25,28 @@ class PetImage extends StatefulWidget {
 }
 
 class _PetImageState extends State<PetImage> {
-  File formImage;
+  File _storedImage;
+  Future _initialImage;
+
+  @override
+  void initState() {
+    _initialImage = _initiateStoredImage();
+    super.initState();
+  }
+
+  Future _initiateStoredImage() async {
+    String base64 = widget.petPicture;
+    if (base64 == null) {
+      return;
+    }
+    Uint8List bytes = base64Decode(base64);
+    final tempPath = await syspaths.getTemporaryDirectory();
+    _storedImage = File('${tempPath.path}/petProfile.png');
+    await _storedImage.writeAsBytes(
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+    FileImage(_storedImage).evict();
+  }
+
   @override
   Widget build(BuildContext context) {
     final SizeConfig sizeConfig = SizeConfig();
@@ -38,43 +61,71 @@ class _PetImageState extends State<PetImage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    width: sizeConfig.wp(38),
-                    height: sizeConfig.hp(17),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: formImage != null
-                              ? FileImage(formImage)
-                              : AssetImage("assets/images/default-avatar.png"),
-                          fit: BoxFit.cover,
-                          alignment: Alignment.center),
-                    ),
+                  FutureBuilder(
+                    future: _initialImage,
+                    builder: (_, dataSnapshot) {
+                      if (dataSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Container(
+                          width: sizeConfig.wp(38),
+                          height: sizeConfig.hp(17),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "assets/images/default-avatar.png"),
+                                fit: BoxFit.cover,
+                                alignment: Alignment.center),
+                          ),
+                        );
+                      } else {
+                        if (dataSnapshot.error != null) {
+                          return Center(
+                            child: Text('Algo salio mal'),
+                          );
+                        } else {
+                          return Container(
+                            width: 150.0,
+                            height: 150.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: _storedImage != null
+                                      ? FileImage(_storedImage)
+                                      : AssetImage(
+                                          "assets/images/default-avatar.png"),
+                                  fit: BoxFit.cover,
+                                  alignment: Alignment.center),
+                            ),
+                          );
+                        }
+                      }
+                    },
                   ),
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(
-                    top: sizeConfig.hp(10), right: sizeConfig.dp(12)),
+                padding: const EdgeInsets.only(top: 90.0, right: 100.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CupertinoButton(
-                        child: Container(
-                          child: CircleAvatar(
-                            backgroundColor: kPrimaryColor,
-                            radius: sizeConfig.dp(2.5),
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                            ),
+                      child: Container(
+                        child: CircleAvatar(
+                          backgroundColor: kPrimaryColor,
+                          radius: 25.0,
+                          child: Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
                           ),
                         ),
-                        onPressed: () {
-                          if (!widget.status) {
-                            _showPicker(context);
-                          }
-                        }),
+                      ),
+                      onPressed: () {
+                        if (!widget.status) {
+                          _showPicker(context);
+                        }
+                      },
+                    )
                   ],
                 ),
               ),
@@ -97,7 +148,7 @@ class _PetImageState extends State<PetImage> {
     }
     setState(() {
       if (pickedFile != null) {
-        formImage = imageFile;
+        _storedImage = imageFile;
       }
     });
     final tempPath = await syspaths.getTemporaryDirectory();

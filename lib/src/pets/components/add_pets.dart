@@ -35,8 +35,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   DateTime _birthDate = DateTime.now();
   int _age;
   bool _petStatus = true;
-  File _petPicture;
-  String _petPictureBase64;
+
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
     try {
@@ -50,35 +49,9 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
     }
   }
 
-  Future<void> _getListBreeds() async {
+  Future<void> _getListBreeds(int idSpecies) async {
     try {
-      Provider.of<Breeds>(context, listen: false).getBreeds();
-    } catch (e) {
-      Dialogs.info(
-        context,
-        title: 'ERROR',
-        content: e.toString(),
-      );
-    }
-  }
-
-  void _setPetData() async {
-    try {
-      PetItem pet = Provider.of<Pets>(context, listen: true).petItem;
-      _pet = new PetItem(
-        id: pet.id,
-        name: pet.name,
-        speciesId: pet.speciesId,
-        breedId: pet.breedId,
-        birthDate: pet.birthDate,
-        age: pet.age,
-        primaryColor: pet.primaryColor,
-        secondaryColor: pet.secondaryColor,
-        description: pet.description,
-        status: pet.status,
-        picture: pet.picture,
-        createdAt: pet.createdAt,
-      );
+      Provider.of<Breeds>(context, listen: false).getBreeds(idSpecies);
     } catch (e) {
       Dialogs.info(
         context,
@@ -91,22 +64,13 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   @override
   void initState() {
     _initialSpecies = _getListSpecies();
-    _initialBreeds = _getListBreeds();
     super.initState();
-  }
-
-  void _selectImage(File pickedImage) {
-    setState(() {
-      _petPicture = pickedImage;
-    });
-    _petPictureBase64 = base64Encode(pickedImage.readAsBytesSync());
   }
 
   final df = new DateFormat('dd-MM-yyyy');
 
   @override
   Widget build(BuildContext context) {
-    final SizeConfig sizeConfig = SizeConfig();
     final id = ModalRoute.of(context).settings.arguments as int;
     if (id != null && setPet) {
       _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
@@ -122,10 +86,9 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
             Column(
               children: <Widget>[
                 Container(
-                  height: sizeConfig.hp(22),
                   child: PetImage(
                     _selectImage,
-                    _petPicture,
+                    _pet.picture,
                     _status,
                   ),
                 ),
@@ -201,6 +164,8 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                     onChanged: !_status
                                         ? (v) => setState(() {
                                               _pet.speciesId = v;
+                                              _initialBreeds =
+                                                  _getListBreeds(v);
                                             })
                                         : null,
                                     value: _pet.speciesId,
@@ -351,6 +316,10 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
     super.dispose();
   }
 
+  void _selectImage(File pickedImage) {
+    _pet.picture = base64Encode(pickedImage.readAsBytesSync());
+  }
+
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(top: 45.0),
@@ -380,7 +349,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                       secondaryColor: _pet.secondaryColor,
                       description: _pet.description,
                       status: _petStatus,
-                      picture: _petPictureBase64,
+                      picture: _pet.picture,
                       createdAt: _pet.createdAt,
                     );
                     Provider.of<Pets>(context, listen: false).petItem = newPet;

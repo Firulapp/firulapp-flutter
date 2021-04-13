@@ -36,9 +36,9 @@ class Breeds with ChangeNotifier {
 
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
-  Future<void> getBreeds() async {
+  Future<void> getBreeds(int idSpecies) async {
     try {
-      final response = await _dio.get(Endpoints.breeds);
+      final response = await _dio.get("${Endpoints.breeds}/$idSpecies");
       final List<BreedsItem> loadedBreeds = [];
       if (_items.isEmpty) {
         response.data['list'].forEach((species) {
