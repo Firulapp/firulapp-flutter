@@ -186,32 +186,39 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                 child: Text("Loading..."),
                               );
                             } else {
-                              return Consumer<Breeds>(
-                                builder: (ctx, listBreeds, _) => DropdownButton(
-                                  hint: _breedId == null
-                                      ? Text('Eliga una raza')
-                                      : null,
-                                  disabledHint: _pet.breedId != null
-                                      ? Text(listBreeds.items
-                                          .firstWhere(
-                                              (item) => item.id == _pet.breedId)
-                                          .name)
-                                      : null,
-                                  items: listBreeds.items
-                                      .map((e) => DropdownMenuItem(
-                                            value: e.id,
-                                            child: Text(e.name),
-                                          ))
-                                      .toList(),
-                                  onChanged: !_status
-                                      ? (v) => setState(() {
-                                            _pet.breedId = v;
-                                          })
-                                      : null,
-                                  value: _pet.breedId,
-                                  isExpanded: true,
-                                ),
-                              );
+                              if (dataSnapshot.error != null) {
+                                return Center(
+                                  child: Text('Algo salio mal'),
+                                );
+                              } else {
+                                return Consumer<Breeds>(
+                                  builder: (ctx, listBreeds, _) =>
+                                      DropdownButton(
+                                    hint: _breedId == null
+                                        ? Text('Eliga una raza')
+                                        : null,
+                                    disabledHint: _pet.breedId != null
+                                        ? Text(listBreeds.items
+                                            .firstWhere((item) =>
+                                                item.id == _pet.breedId)
+                                            .name)
+                                        : null,
+                                    items: listBreeds.items
+                                        .map((e) => DropdownMenuItem(
+                                              value: e.id,
+                                              child: Text(e.name),
+                                            ))
+                                        .toList(),
+                                    onChanged: !_status
+                                        ? (v) => setState(() {
+                                              _pet.breedId = v;
+                                            })
+                                        : null,
+                                    value: _pet.breedId,
+                                    isExpanded: true,
+                                  ),
+                                );
+                              }
                             }
                           },
                         ),
