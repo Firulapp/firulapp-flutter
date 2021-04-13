@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:firulapp/components/dialogs.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -101,8 +102,18 @@ class _PetsListState extends State<PetsList> {
               icon: Image.asset(
                 "assets/images/delete.png",
               ),
-              onPressed: () =>
-                  Provider.of<Pets>(context, listen: false).deletePet(pet.id),
+              onPressed: () async {
+                final response = await Dialogs.alert(
+                  context,
+                  "¿Estás seguro que desea eliminar la mascota $name?",
+                  "Se eliminarán todos los datos de la mascota",
+                  "Cancelar",
+                  "Aceptar",
+                );
+                if (response) {
+                  Provider.of<Pets>(context, listen: false).deletePet(pet.id);
+                }
+              },
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 30),
           ),
