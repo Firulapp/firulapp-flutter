@@ -253,34 +253,29 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 25.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                RaisedButton(
-                                  onPressed: () => _selectDate(context),
-                                  child: Text('Fecha de Nacimiento'),
+                        child: GestureDetector(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Text(
+                                df.format(_birthDate),
+                                style: TextStyle(
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text(
-                                  df.format(_birthDate),
-                                  style: TextStyle(
-                                    fontSize: 23,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.calendar_today_outlined),
+                                onPressed: () => _selectDate(context),
+                                iconSize: 40,
+                                color: kPrimaryColor,
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            _selectDate(context);
+                          },
                         ),
                       ),
                       Padding(
