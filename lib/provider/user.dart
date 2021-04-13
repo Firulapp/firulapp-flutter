@@ -56,7 +56,7 @@ class User with ChangeNotifier {
   UserData _userData;
   final UserSession session;
 
-  User(this.session, _userData);
+  User(_userData, this.session);
 
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
@@ -101,7 +101,7 @@ class User with ChangeNotifier {
   Future<void> saveUser() async {
     try {
       await this._dio.post(
-        '${Endpoints.update}',
+        '${Endpoints.updateUser}',
         data: {
           "id": userData.id,
           "userId": userData.userId,

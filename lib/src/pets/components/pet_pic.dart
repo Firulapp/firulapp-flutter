@@ -2,19 +2,19 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:firulapp/provider/user.dart';
+import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
-import 'package:provider/provider.dart';
 
-class ProfilePic extends StatefulWidget {
-  const ProfilePic({Key key}) : super(key: key);
+class PetPic extends StatefulWidget {
+  final PetItem pet;
+  const PetPic(this.pet, {Key key}) : super(key: key);
 
   @override
-  _ProfilePicState createState() => _ProfilePicState();
+  _PetPicState createState() => _PetPicState();
 }
 
-class _ProfilePicState extends State<ProfilePic> {
+class _PetPicState extends State<PetPic> {
   File _storedImage;
   Future _initialImage;
 
@@ -25,14 +25,13 @@ class _ProfilePicState extends State<ProfilePic> {
   }
 
   Future _initiateStoredImage() async {
-    String base64 =
-        Provider.of<User>(context, listen: false).userData.profilePicture;
+    String base64 = widget.pet.picture;
     if (base64 == null) {
       return;
     }
     Uint8List bytes = base64Decode(base64);
     final tempPath = await syspaths.getTemporaryDirectory();
-    _storedImage = File('${tempPath.path}/profile.png');
+    _storedImage = File('${tempPath.path}/petProfile.png');
     await _storedImage.writeAsBytes(
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
     FileImage(_storedImage).evict();

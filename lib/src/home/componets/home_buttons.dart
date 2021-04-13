@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../size_config.dart';
-import '../../pets/pets_scream.dart';
+import '../../pets/pets_screen.dart';
 import '../../../constants/constants.dart';
 
 class HomeButtons extends StatelessWidget {
@@ -15,14 +15,15 @@ class HomeButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-            padding: EdgeInsets.only(bottom: sizeConfig.wp(9)),
-            child: Text(
-              'Firulapp',
-              style: TextStyle(
-                fontSize: sizeConfig.hp(4),
-                color: kSecondaryColor,
-              ),
-            )),
+          padding: EdgeInsets.only(bottom: sizeConfig.wp(9)),
+          child: Text(
+            'Firulapp',
+            style: TextStyle(
+              fontSize: sizeConfig.hp(4),
+              color: kSecondaryColor,
+            ),
+          ),
+        ),
         RawMaterialButton(
           onPressed: () => {Navigator.pushNamed(context, PetsScreen.routeName)},
           elevation: _elevation,

@@ -93,8 +93,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               title: const Text('Cerrar Sesion'),
               onTap: () async {
                 try {
-                  await Provider.of<Session>(context, listen: false)
-                      .logOut(context);
+                  await Provider.of<Session>(context, listen: false).logOut();
                   Navigator.pushNamedAndRemoveUntil(
                       context, SignInScreen.routeName, (_) => false);
                 } catch (error) {

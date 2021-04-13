@@ -100,7 +100,7 @@ class Session extends ChangeNotifier {
     }
   }
 
-  Future<void> logOut(BuildContext context) async {
+  Future<void> logOut() async {
     try {
       // muestra barra de carga
       await this._dio.post(
@@ -126,7 +126,7 @@ class Session extends ChangeNotifier {
     await this._storage.write(key: deviceKey, value: _userSession.deviceId);
   }
 
-  Future getSession() async {
+  Future<UserSession> getSession() async {
     final String sessionValue = await this._storage.read(key: sessionKey);
     final String userValue = await this._storage.read(key: userKey);
     final String deviceValue = await this._storage.read(key: deviceKey);
@@ -140,5 +140,6 @@ class Session extends ChangeNotifier {
     } else {
       _userSession = null;
     }
+    return _userSession;
   }
 }

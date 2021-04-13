@@ -8,6 +8,7 @@ import '../../../components/default_button.dart';
 import '../../../components/input_text.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../size_config.dart';
+import '../../../constants/constants.dart';
 import '../../mixins/validator_mixins.dart';
 
 class SingFrom extends StatefulWidget {
@@ -70,6 +71,7 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
                 DefaultButton(
                   text: "Iniciar Sesión",
                   press: _submit,
+                  color: kPrimaryColor,
                 ),
               ],
             ),

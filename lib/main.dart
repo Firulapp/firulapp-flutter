@@ -1,3 +1,5 @@
+import 'package:firulapp/provider/breeds.dart';
+import 'package:firulapp/provider/pets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +8,9 @@ import './provider/session.dart';
 import './src/theme.dart';
 import './provider/user.dart';
 import './routes.dart';
-import 'src/home/home.dart';
+import './provider/species.dart';
+import './src/home/home.dart';
+import './provider/medical_record.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,13 +27,45 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<Session, User>(
           update: (context, session, user) => User(
-            session.userSession,
             user == null ? {} : user.userData,
+            session.userSession,
           ),
           create: (ctx) => User(
-            UserSession(),
             UserData(),
+            UserSession(),
           ),
+        ),
+        ChangeNotifierProxyProvider<User, Pets>(
+          update: (context, user, pet) => Pets(
+            user,
+            pet == null ? {} : pet.userData,
+          ),
+          create: (ctx) => Pets(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            PetItem(),
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, MedicalRecord>(
+          update: (context, user, med) => MedicalRecord(
+            user,
+            med == null ? {} : med.items,
+          ),
+          create: (ctx) => MedicalRecord(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Species(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Breeds(),
         ),
       ],
       child: MaterialApp(

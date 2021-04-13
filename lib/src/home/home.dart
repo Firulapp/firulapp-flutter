@@ -66,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
                 ),
               ],
             ),
-            endDrawer: HomeDrawer());
+            endDrawer: HomeDrawer(),
+          );
   }
 }
