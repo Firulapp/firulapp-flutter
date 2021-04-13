@@ -48,6 +48,7 @@ class PetItem with ChangeNotifier {
   factory PetItem.fromJson(Map<String, dynamic> parsedJson) {
     return PetItem(
       id: parsedJson["id"],
+      speciesId: parsedJson["speciesId"],
       breedId: parsedJson["breedId"],
       name: parsedJson["name"],
       birthDate: parsedJson["birthDate"],
@@ -172,6 +173,7 @@ class Pets with ChangeNotifier {
           loadedPets.add(PetItem(
             id: pet["id"],
             breedId: pet["breedId"],
+            speciesId: pet["speciesId"],
             name: pet["name"],
             birthDate: pet["birthDate"],
             age: pet["age"],
