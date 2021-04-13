@@ -27,7 +27,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   Future _initialBreeds;
   PetItem newPet;
   PetItem _pet = new PetItem();
-  bool setPet = true;
+  var isInit = true;
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
   int _speciesId;
@@ -67,15 +67,21 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    final id = ModalRoute.of(context).settings.arguments as int;
+    if (id != null && isInit) {
+      _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
+      _initialBreeds = _getListBreeds(_pet.speciesId);
+      isInit = false;
+    }
+    super.didChangeDependencies();
+  }
+
   final df = new DateFormat('dd-MM-yyyy');
 
   @override
   Widget build(BuildContext context) {
-    final id = ModalRoute.of(context).settings.arguments as int;
-    if (id != null && setPet) {
-      _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
-      setPet = false;
-    }
     return new Scaffold(
         appBar: AppBar(
           title: Text("Agregar Mascota"),
