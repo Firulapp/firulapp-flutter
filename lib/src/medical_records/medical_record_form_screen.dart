@@ -79,7 +79,8 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                             Row(
                               children: [
                                 Text(
-                                  DateFormat.yMMMd().format(_medicalRecordDate),
+                                  DateFormat('dd-MM-yyyy')
+                                      .format(_medicalRecordDate),
                                   style: TextStyle(
                                     fontSize: 23,
                                     fontWeight: FontWeight.bold,
