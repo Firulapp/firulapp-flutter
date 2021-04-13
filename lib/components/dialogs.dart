@@ -19,6 +19,32 @@ class Dialogs {
       ),
     );
   }
+
+  static alert(
+    BuildContext context,
+    String title,
+    String content,
+    String cancelActionText,
+    String defaultActionText,
+  ) {
+    return showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text(cancelActionText),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          CupertinoDialogAction(
+            child: Text(defaultActionText),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class ProgressDialog {
@@ -41,40 +67,5 @@ class ProgressDialog {
 
   void dismiss() {
     Navigator.pop(context);
-  }
-}
-
-class SelectDialog {
-  // FIX pendiente, deberia retornar tru o false dependiendo de lo que elija
-  bool alertDialog(BuildContext context, {String title, String content}) {
-    bool valueFromDialog = true;
-    print(title);
-    print(content);
-    showDialog(
-      context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: title != null ? Text(title) : null,
-        content: content != null ? Text(content) : null,
-        actions: <Widget>[
-          CupertinoDialogAction(
-            child: Text('YES'),
-            onPressed: () {
-              valueFromDialog = true;
-              Navigator.pop(context);
-            },
-          ),
-          CupertinoDialogAction(
-            child: Text('NO'),
-            onPressed: () {
-              valueFromDialog = false;
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-    ).then((valueFromDialog) {
-      print(valueFromDialog);
-    });
-    return valueFromDialog;
   }
 }

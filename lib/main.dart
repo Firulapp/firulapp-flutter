@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/breeds.dart';
 import 'package:firulapp/provider/pets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => Species(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Breeds(),
         ),
       ],
       child: MaterialApp(

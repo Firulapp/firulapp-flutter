@@ -79,6 +79,11 @@ class Pets with ChangeNotifier {
     notifyListeners();
   }
 
+  set items(List<PetItem> list) {
+    _items = list;
+    notifyListeners();
+  }
+
   // Devuelve solo las mascotas con status True
   List<PetItem> get enablePets => _items.where((e) => e.status).toList();
   // devuelve todas las mascotas
@@ -95,7 +100,7 @@ class Pets with ChangeNotifier {
       final response = await this._dio.post(
         Endpoints.petSave,
         data: {
-          "id": null,
+          "id": _petItem.id != null ? _petItem.id : null,
           "userId": userData.userData.id,
           "speciesId": _petItem.speciesId,
           "breedId": _petItem.breedId,
@@ -110,15 +115,16 @@ class Pets with ChangeNotifier {
           "status": _petItem.status,
           "picture": _petItem.picture, // fixed debe enviar string base64
           "description": _petItem.description,
-          "createdAt": null, //DateTime.now().toIso8601String(),
+          "createdAt": _petItem.createdAt != null ? _petItem.createdAt : null,
           "createdBy": userData.userData.id,
           "modifiedAt": null,
           "modifiedBy": null
         },
       );
-      print(response.data["dto"]);
+      _items.add(PetItem.fromJson(response.data["dto"]));
       notifyListeners();
     } catch (error) {
+      print(error.toString());
       throw error;
     }
   }
@@ -176,11 +182,25 @@ class Pets with ChangeNotifier {
             createdBy: pet["createdBy"],
           ));
         });
-        _items = loadedPets;
+        items = loadedPets;
         notifyListeners();
       }
     } catch (e) {
       throw e;
+    }
+  }
+
+  Future deletePet(int petId) async {
+    try {
+      await this._dio.delete(
+        Endpoints.petDelete,
+        data: {"id": petId},
+      );
+      _items.remove(getLocalPetById(petId));
+      notifyListeners();
+    } catch (error) {
+      print(error.toString());
+      throw error.toString();
     }
   }
 }
