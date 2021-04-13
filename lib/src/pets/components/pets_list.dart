@@ -47,7 +47,9 @@ class _PetsListState extends State<PetsList> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return ListView(
               padding: EdgeInsets.symmetric(vertical: 20),
-              children: const <Widget>[Center(child: Text("Loading..."))],
+              children: const <Widget>[
+                Center(child: CircularProgressIndicator())
+              ],
             );
           } else {
             return ListView.builder(
