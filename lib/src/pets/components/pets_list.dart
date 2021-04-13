@@ -50,7 +50,6 @@ class _PetsListState extends State<PetsList> {
             );
           } else {
             return ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: 20),
               itemCount: providerData.items.length,
               itemBuilder: (context, i) {
                 return _getListings(providerData.items[i]);
@@ -67,33 +66,47 @@ class _PetsListState extends State<PetsList> {
     String _base64 = pet.picture;
     String name = pet.name;
     _petImage = _getFilePicture(_base64, name);
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      elevation: 6,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: _petImage != null
-              ? FileImage(_petImage)
-              : AssetImage("assets/images/default-avatar.png"),
+    return Container(
+      height: 100,
+      child: Card(
+        margin: EdgeInsets.symmetric(
+          horizontal: 30,
+          vertical: 10,
         ),
-        title: Text(
-          "$name",
-          style: Theme.of(context).textTheme.headline6,
-        ),
-        onTap: () {
-          Navigator.of(context).pushNamed(
-            SelectedPetScreen.routeName,
-            arguments: pet.id,
-          );
-        },
-        trailing: IconButton(
-          icon: Image.asset(
-            "assets/images/delete.png",
+        elevation: 6,
+        child: Center(
+          child: ListTile(
+            leading: CircleAvatar(
+              minRadius: 20,
+              maxRadius: 30,
+              backgroundImage: _petImage != null
+                  ? FileImage(
+                      _petImage,
+                    )
+                  : AssetImage(
+                      "assets/images/default-avatar.png",
+                    ),
+            ),
+            title: Text(
+              "$name",
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            onTap: () {
+              Navigator.of(context).pushNamed(
+                SelectedPetScreen.routeName,
+                arguments: pet.id,
+              );
+            },
+            trailing: IconButton(
+              icon: Image.asset(
+                "assets/images/delete.png",
+              ),
+              onPressed: () =>
+                  Provider.of<Pets>(context, listen: false).deletePet(pet.id),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 30),
           ),
-          onPressed: () =>
-              Provider.of<Pets>(context, listen: false).deletePet(pet.id),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 30),
       ),
     );
   }
