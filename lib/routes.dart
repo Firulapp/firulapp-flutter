@@ -23,7 +23,7 @@ final Map<String, WidgetBuilder> routes = {
   SignUpScreen.routeName: (context) => SignUpScreen(),
   SignUpDetailsForm.routeName: (context) => SignUpDetailsForm(),
   AddPets.routeName: (context) => AddPets(),
-  PetsList.routeName: (context) => PetsList()
+  PetsList.routeName: (context) => PetsList(),
   MedicalRecordsScreen.routeName: (context) => MedicalRecordsScreen(),
   NewMedicalRecordScreen.routeName: (context) => NewMedicalRecordScreen(),
 };
