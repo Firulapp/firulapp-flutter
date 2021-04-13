@@ -121,8 +121,7 @@ class Pets with ChangeNotifier {
           "modifiedBy": null
         },
       );
-      print(response.data["dto"]);
-      items.add(PetItem.fromJson(response.data["dto"]));
+      _items.add(PetItem.fromJson(response.data["dto"]));
       notifyListeners();
     } catch (error) {
       print(error.toString());
