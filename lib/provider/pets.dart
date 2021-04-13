@@ -121,7 +121,12 @@ class Pets with ChangeNotifier {
           "modifiedBy": null
         },
       );
-      _items.add(PetItem.fromJson(response.data["dto"]));
+      if (_items.contains(_petItem)) {
+        _items[_items.indexWhere((element) => element.id == _petItem.id)] =
+            PetItem.fromJson(response.data["dto"]);
+      } else {
+        _items.add(PetItem.fromJson(response.data["dto"]));
+      }
       notifyListeners();
     } catch (error) {
       print(error.toString());
