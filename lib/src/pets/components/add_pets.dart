@@ -51,6 +51,8 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
 
   Future<void> _getListBreeds(int idSpecies) async {
     try {
+      final List<BreedsItem> items = [];
+      Provider.of<Breeds>(context, listen: false).items = items;
       Provider.of<Breeds>(context, listen: false).getBreeds(idSpecies);
     } catch (e) {
       Dialogs.info(
@@ -169,9 +171,12 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                         .toList(),
                                     onChanged: !_status
                                         ? (v) => setState(() {
+                                              if (_pet.speciesId != v) {
+                                                _pet.breedId = null;
+                                                _initialBreeds =
+                                                    _getListBreeds(v);
+                                              }
                                               _pet.speciesId = v;
-                                              _initialBreeds =
-                                                  _getListBreeds(v);
                                             })
                                         : null,
                                     value: _pet.speciesId,

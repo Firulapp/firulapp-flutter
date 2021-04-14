@@ -34,11 +34,22 @@ class Breeds with ChangeNotifier {
     return _items.where((e) => e.status).toList();
   }
 
+  set items(List<BreedsItem> list) {
+    _items = list;
+    notifyListeners();
+  }
+
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
   Future<void> getBreeds(int idSpecies) async {
+    var url = "";
+    if (idSpecies != null) {
+      url = "${Endpoints.breeds}/$idSpecies";
+    } else {
+      url = "${Endpoints.breeds}";
+    }
     try {
-      final response = await _dio.get("${Endpoints.breeds}/$idSpecies");
+      final response = await _dio.get("$url");
       final List<BreedsItem> loadedBreeds = [];
       response.data['list'].forEach((species) {
         loadedBreeds.add(BreedsItem(
