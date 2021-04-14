@@ -55,7 +55,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Agregar Ficha Médica"),
+        title: const Text("Agregar Consula Médica"),
       ),
       body: _isLoading
           ? Center(
