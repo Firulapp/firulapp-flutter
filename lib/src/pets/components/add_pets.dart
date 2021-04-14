@@ -151,7 +151,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                               } else {
                                 return Consumer<Species>(
                                   builder: (ctx, listSpecies, _) =>
-                                      DropdownButton(
+                                      DropdownButtonFormField(
                                     hint: _speciesId == null
                                         ? Text('Elija una especie')
                                         : null,
@@ -199,8 +199,8 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                               } else {
                                 return Consumer<Breeds>(
                                   builder: (ctx, listBreeds, _) =>
-                                      DropdownButton(
-                                    hint: _breedId == null
+                                      DropdownButtonFormField(
+                                    hint: _pet.breedId == null
                                         ? Text('Eliga una raza')
                                         : null,
                                     disabledHint: _pet.breedId != null

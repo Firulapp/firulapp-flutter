@@ -40,17 +40,15 @@ class Breeds with ChangeNotifier {
     try {
       final response = await _dio.get("${Endpoints.breeds}/$idSpecies");
       final List<BreedsItem> loadedBreeds = [];
-      if (_items.isEmpty) {
-        response.data['list'].forEach((species) {
-          loadedBreeds.add(BreedsItem(
-              id: species['id'],
-              name: species['name'],
-              description: species['description'],
-              status: species['status']));
-        });
-        _items = loadedBreeds;
-        notifyListeners();
-      }
+      response.data['list'].forEach((species) {
+        loadedBreeds.add(BreedsItem(
+            id: species['id'],
+            name: species['name'],
+            description: species['description'],
+            status: species['status']));
+      });
+      _items = loadedBreeds;
+      notifyListeners();
     } catch (e) {
       throw e;
     }
