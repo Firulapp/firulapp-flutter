@@ -76,12 +76,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                                                        buildNameFormField(
-                              "Nombre de la Vacuna",
-                              "Ingrese el nombre de la vacuna",
-                              TextInputType.name,
-                            ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+
                                 Text(
                                   "",
                                   style: TextStyle(
@@ -106,6 +101,12 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                               ],
                             ),
                             SizedBox(height: getProportionateScreenHeight(25)),
+                                                                                    buildNameFormField(
+                              "Nombre de la Vacuna",
+                              "Ingrese el nombre de la vacuna",
+                              TextInputType.name,
+                            ),
+                            SizedBox(height: getProportionateScreenHeight(25)),
                             buildVeterinaryFormField(
                               "Veterinaria",
                               "Ingrese el nombre de la veterinaria",
@@ -117,7 +118,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                               "Ingrese observaciones sobre el diagnostico",
                               TextInputType.multiline,
                             ),
-                                                        SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(height: getProportionateScreenHeight(25)),
                             Row(
                               children: [
                                 CupertinoSwitch(
@@ -148,10 +149,10 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                     setState(() {
                                       _isLoading = true;
                                     });
-                                    /*await Provider.of<VaccinationRecord>(
+                                    await Provider.of<VaccinationRecord>(
                                       context,
                                       listen: false,
-                                    ).save(_vaccinationRecord);*/
+                                    ).save(_vaccinationRecord);
                                     Navigator.pop(context);
                                   } catch (error) {
                                     Dialogs.info(
@@ -183,10 +184,10 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                               setState(() {
                                                 _isLoading = true;
                                               });
-                                              /*await Provider.of<VaccinationRecord>(
+                                              await Provider.of<VaccinationRecord>(
                                                 context,
                                                 listen: false,
-                                              ).delete(_vaccinationRecord);*/
+                                              ).delete(_vaccinationRecord);
                                               Navigator.pop(context);
                                             } catch (error) {
                                               Dialogs.info(

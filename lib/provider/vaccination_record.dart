@@ -89,4 +89,62 @@ class VaccinationRecord with ChangeNotifier {
       modifiedBy: json["modifiedBy"],
     );
   }
+
+  Future<void> save(VaccinationRecordItem vaccine) async {
+    try {
+      final response = await _dio.post(
+        Endpoints.saveVaccinationRecord,
+        data: {
+          "id": vaccine.id,
+          "petId": _petItem.id,
+          "vet": vaccine.veterinary,
+          "observation": vaccine.observation,
+          "vaccine": vaccine.vaccine,
+          "vaccinationDate": vaccine.vaccinationDate,
+          "reminders" : vaccine.reminders,
+          "createdAt": vaccine.createdAt,
+          "createdBy": user.userData.id,
+          "modifiedAt": vaccine.modifiedAt,
+          "modifiedBy": vaccine.modifiedBy,
+        },
+      );
+      final vaccineResponse = response.data["dto"];
+      if (_items.contains(vaccine)) {
+        _items[_items.indexWhere((element) => element.id == vaccine.id)] =
+            mapJsonToEntity(vaccineResponse);
+      } else {
+        _items.add(mapJsonToEntity(vaccineResponse));
+      }
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> delete(VaccinationRecordItem vaccine) async {
+    try {
+      await _dio.delete(
+        Endpoints.deleteVaccinationRecord,
+        data: {
+          "id": vaccine.id,
+          "petId": _petItem.id,
+          "vet": vaccine.veterinary,
+          "observation": vaccine.observation,
+          "vaccine": vaccine.vaccine,
+          "vaccinationDate": vaccine.vaccinationDate,
+          "reminders" : vaccine.reminders,
+          "createdAt": vaccine.createdAt,
+          "createdBy": user.userData.id,
+          "modifiedAt": vaccine.modifiedAt,
+          "modifiedBy": vaccine.modifiedBy,
+        },
+      );
+      _items.remove(
+        vaccine,
+      );
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
 }
