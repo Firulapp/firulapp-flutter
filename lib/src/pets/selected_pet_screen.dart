@@ -5,7 +5,7 @@ import '../../provider/medical_record.dart';
 import '../medical_records/medical_records_screen.dart';
 import '../../provider/pets.dart';
 import '../profile/components/profile_menu.dart';
-import 'components/pet_pic.dart';
+import './components/pet_pic.dart';
 import './components/add_pets.dart';
 
 class SelectedPetScreen extends StatelessWidget {

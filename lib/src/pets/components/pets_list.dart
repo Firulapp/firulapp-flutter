@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:firulapp/components/dialogs.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../components/dialogs.dart';
 import '../../../provider/pets.dart';
 import '../selected_pet_screen.dart';
 
@@ -39,28 +39,27 @@ class _PetsListState extends State<PetsList> {
 
   @override
   Widget build(BuildContext context) {
-    _petsFuture = Provider.of<Pets>(context, listen: true).fetchPetList();
-    return Consumer<Pets>(
-      builder: (context, providerData, _) => FutureBuilder(
-        future: _petsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return ListView(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              children: const <Widget>[
-                Center(child: CircularProgressIndicator())
-              ],
-            );
-          } else {
-            return ListView.builder(
+    return FutureBuilder(
+      future: _petsFuture,
+      builder: (_, dataSnapshot) {
+        if (dataSnapshot.connectionState == ConnectionState.waiting) {
+          return ListView(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            children: const <Widget>[
+              Center(child: CircularProgressIndicator())
+            ],
+          );
+        } else {
+          return Consumer<Pets>(
+            builder: (context, providerData, _) => ListView.builder(
               itemCount: providerData.items.length,
               itemBuilder: (context, i) {
                 return _getListings(providerData.items[i]);
               },
-            );
-          }
-        },
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 
