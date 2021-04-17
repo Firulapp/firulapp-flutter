@@ -178,9 +178,6 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                         text: "Borrar",
                                         color: Colors.white,
                                         press: () async {
-                                          setState(() {
-                                            _isLoading = true;
-                                          });
                                           final response = await Dialogs.alert(
                                             context,
                                             "¿Estás seguro que desea eliminar?",
@@ -189,6 +186,9 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                             "Aceptar",
                                           );
                                           if (response) {
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
                                             try {
                                               await Provider.of<
                                                   VaccinationRecord>(
