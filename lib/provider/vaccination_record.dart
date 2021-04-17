@@ -105,8 +105,8 @@ class VaccinationRecord with ChangeNotifier {
           "reminders": vaccine.reminders,
           "createdAt": vaccine.createdAt,
           "createdBy": user.userData.id,
-          "modifiedAt": vaccine.modifiedAt,
-          "modifiedBy": vaccine.modifiedBy,
+          "modifiedAt": vaccine.createdAt,
+          "modifiedBy": user.userData.id,
         },
       );
       final vaccineResponse = response.data["dto"];
@@ -136,8 +136,8 @@ class VaccinationRecord with ChangeNotifier {
           "reminders": vaccine.reminders,
           "createdAt": vaccine.createdAt,
           "createdBy": user.userData.id,
-          "modifiedAt": vaccine.modifiedAt,
-          "modifiedBy": vaccine.modifiedBy,
+          "modifiedAt": vaccine.createdAt,
+          "modifiedBy": user.userData.id,
         },
       );
       _items.remove(
