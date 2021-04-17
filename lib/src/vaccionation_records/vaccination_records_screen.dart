@@ -1,7 +1,8 @@
-import 'package:firulapp/provider/pets.dart';
+import 'package:firulapp/src/vaccionation_records/vaccination_records_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/pets.dart';
 import '../../constants/constants.dart';
 import '../../provider/vaccination_record.dart' as vaxProvider;
 import '../../size_config.dart';
@@ -34,19 +35,20 @@ class _VaccinationRecordsScreenState extends State<VaccinationRecordsScreen> {
     final pet = ModalRoute.of(context).settings.arguments as PetItem;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Fichas Médicas de ${pet.name}"),
+        title: Text("Libreta de Vacunación de ${pet.name}"),
       ),
       body: Column(
         children: [
           TextButton.icon(
             label: Text(
-              'Agregar Ficha Médica',
+              'Agregar Libreta de Vacunación',
               style: const TextStyle(fontSize: 20.0),
             ),
             icon: Icon(
               Icons.add,
             ),
-            onPressed: () => null,
+            onPressed: () => Navigator.pushNamed(
+                context, NewVaccinationRecordScreen.routeName),
           ),
           Flexible(
             child: Container(

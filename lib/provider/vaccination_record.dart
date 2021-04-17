@@ -60,8 +60,9 @@ class VaccinationRecord with ChangeNotifier {
   Future<void> fetchVaccinationRecords() async {
     try {
       _items = [];
-      final response =
-          await this._dio.get('${Endpoints.vaccinationRecord}/${_petItem.id}');
+      final response = await this
+          ._dio
+          .get('${Endpoints.vaccinationRecordByPet}/${_petItem.id}');
       final vaccinationRecords = response.data["list"];
       vaccinationRecords.forEach((vaccinationRecord) {
         _items.add(
@@ -101,7 +102,7 @@ class VaccinationRecord with ChangeNotifier {
           "observation": vaccine.observation,
           "vaccine": vaccine.vaccine,
           "vaccinationDate": vaccine.vaccinationDate,
-          "reminders" : vaccine.reminders,
+          "reminders": vaccine.reminders,
           "createdAt": vaccine.createdAt,
           "createdBy": user.userData.id,
           "modifiedAt": vaccine.modifiedAt,
@@ -132,7 +133,7 @@ class VaccinationRecord with ChangeNotifier {
           "observation": vaccine.observation,
           "vaccine": vaccine.vaccine,
           "vaccinationDate": vaccine.vaccinationDate,
-          "reminders" : vaccine.reminders,
+          "reminders": vaccine.reminders,
           "createdAt": vaccine.createdAt,
           "createdBy": user.userData.id,
           "modifiedAt": vaccine.modifiedAt,

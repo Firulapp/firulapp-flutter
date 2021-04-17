@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../provider/vaccination_record.dart' as vaxProvider;
+import '../vaccination_records_form_screen.dart';
 
 class VaccinationRecordItem extends StatelessWidget {
   final vaxProvider.VaccinationRecordItem _vaxRecords;
@@ -43,10 +44,10 @@ class VaccinationRecordItem extends StatelessWidget {
         ),
       ),
       onTap: () {
-        /*Navigator.of(context).pushNamed(
-          NewMedicalRecordScreen.routeName,
+        Navigator.of(context).pushNamed(
+          NewVaccinationRecordScreen.routeName,
           arguments: _vaxRecords.id,
-        );*/
+        );
       },
     );
   }
