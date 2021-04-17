@@ -198,7 +198,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                           final response = await Dialogs.alert(
                                             context,
                                             "¿Estás seguro que desea eliminar?",
-                                            "Se borrará el registro de esta vacuna",
+                                            "Se borrará el registro de la consulta médica",
                                             "Cancelar",
                                             "Aceptar",
                                           );
