@@ -195,13 +195,18 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                         text: "Borrar",
                                         color: Colors.white,
                                         press: () async {
-                                          final isOK =
-                                              _formKey.currentState.validate();
-                                          if (isOK) {
+                                          final response = await Dialogs.alert(
+                                            context,
+                                            "¿Estás seguro que desea eliminar?",
+                                            "Se borrará el registro de esta vacuna",
+                                            "Cancelar",
+                                            "Aceptar",
+                                          );
+                                          setState(() {
+                                            _isLoading = true;
+                                          });
+                                          if (response) {
                                             try {
-                                              setState(() {
-                                                _isLoading = true;
-                                              });
                                               await Provider.of<MedicalRecord>(
                                                 context,
                                                 listen: false,
