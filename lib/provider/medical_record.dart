@@ -97,8 +97,8 @@ class MedicalRecord with ChangeNotifier {
           "consultedAt": medicalRecord.consultedAt,
           "createdAt": medicalRecord.createdAt,
           "createdBy": user.userData.id,
-          "modifiedAt": medicalRecord.modifiedAt,
-          "modifiedBy": medicalRecord.modifiedBy,
+          "modifiedAt": medicalRecord.createdAt,
+          "modifiedBy": user.userData.id,
         },
       );
       final medicalRecordResponse = response.data["dto"];
@@ -131,8 +131,8 @@ class MedicalRecord with ChangeNotifier {
           "consultedAt": medicalRecord.consultedAt,
           "createdAt": medicalRecord.createdAt,
           "createdBy": user.userData.id,
-          "modifiedAt": medicalRecord.modifiedAt,
-          "modifiedBy": medicalRecord.modifiedBy,
+          "modifiedAt": medicalRecord.createdAt,
+          "modifiedBy": user.userData.id,
         },
       );
       _items.remove(
@@ -159,7 +159,7 @@ class MedicalRecord with ChangeNotifier {
       createdAt: json["createdAt"],
       createdBy: user.userData.id,
       modifiedAt: json["modifiedAt"],
-      modifiedBy: json["modifiedBy"],
+      modifiedBy: user.userData.id,
     );
   }
 }
