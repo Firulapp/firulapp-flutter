@@ -48,6 +48,7 @@ class PetItem with ChangeNotifier {
   factory PetItem.fromJson(Map<String, dynamic> parsedJson) {
     return PetItem(
       id: parsedJson["id"],
+      speciesId: parsedJson["speciesId"],
       breedId: parsedJson["breedId"],
       name: parsedJson["name"],
       birthDate: parsedJson["birthDate"],
@@ -109,11 +110,11 @@ class Pets with ChangeNotifier {
           "age": _petItem.age,
           "petSize": _petItem.petSize,
           "city": userData.userData.city,
-          "address": null, // fixed obtener este dato del usuario
+          "address": null, //TODO: direccion del usuario
           "primaryColor": _petItem.primaryColor,
           "secondaryColor": _petItem.secondaryColor,
           "status": _petItem.status,
-          "picture": _petItem.picture, // fixed debe enviar string base64
+          "picture": _petItem.picture,
           "description": _petItem.description,
           "createdAt": _petItem.createdAt != null ? _petItem.createdAt : null,
           "createdBy": userData.userData.id,
@@ -121,7 +122,12 @@ class Pets with ChangeNotifier {
           "modifiedBy": null
         },
       );
-      _items.add(PetItem.fromJson(response.data["dto"]));
+      if (_items.contains(_petItem)) {
+        _items[_items.indexWhere((element) => element.id == _petItem.id)] =
+            PetItem.fromJson(response.data["dto"]);
+      } else {
+        _items.add(PetItem.fromJson(response.data["dto"]));
+      }
       notifyListeners();
     } catch (error) {
       print(error.toString());
@@ -167,6 +173,7 @@ class Pets with ChangeNotifier {
           loadedPets.add(PetItem(
             id: pet["id"],
             breedId: pet["breedId"],
+            speciesId: pet["speciesId"],
             name: pet["name"],
             birthDate: pet["birthDate"],
             age: pet["age"],

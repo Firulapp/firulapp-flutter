@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
+
+import '../../../provider/pets.dart';
 
 class PetPic extends StatefulWidget {
   final PetItem pet;

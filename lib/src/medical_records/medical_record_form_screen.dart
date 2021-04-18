@@ -55,7 +55,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Agregar Ficha Médica"),
+        title: const Text("Agregar Consula Médica"),
       ),
       body: _isLoading
           ? Center(
@@ -195,13 +195,18 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                         text: "Borrar",
                                         color: Colors.white,
                                         press: () async {
-                                          final isOK =
-                                              _formKey.currentState.validate();
-                                          if (isOK) {
+                                          final response = await Dialogs.alert(
+                                            context,
+                                            "¿Estás seguro que desea eliminar?",
+                                            "Se borrará el registro de la consulta médica",
+                                            "Cancelar",
+                                            "Aceptar",
+                                          );
+                                          setState(() {
+                                            _isLoading = true;
+                                          });
+                                          if (response) {
                                             try {
-                                              setState(() {
-                                                _isLoading = true;
-                                              });
                                               await Provider.of<MedicalRecord>(
                                                 context,
                                                 listen: false,

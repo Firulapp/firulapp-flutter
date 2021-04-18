@@ -1,18 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:firulapp/components/input_text.dart';
-import 'package:firulapp/provider/breeds.dart';
-import 'package:firulapp/src/mixins/validator_mixins.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../components/input_text.dart';
+import '../../../provider/breeds.dart';
+import '../../mixins/validator_mixins.dart';
 import '../../../components/dialogs.dart';
 import '../../../size_config.dart';
 import '../../../constants/constants.dart';
 import '../../../provider/species.dart';
 import '../../../provider/pets.dart';
-import 'pets_image.dart';
+import './pets_image.dart';
 
 class AddPets extends StatefulWidget {
   static const routeName = "/pets/add";
@@ -27,16 +28,14 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   Future _initialBreeds;
   PetItem newPet;
   PetItem _pet = new PetItem();
-  bool setPet = true;
+  var isInit = true;
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
   int _speciesId;
-  int _breedId;
   DateTime _birthDate = DateTime.now();
   int _age;
   bool _petStatus = true;
-  File _petPicture;
-  String _petPictureBase64;
+
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
     try {
@@ -50,35 +49,11 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
     }
   }
 
-  Future<void> _getListBreeds() async {
+  Future<void> _getListBreeds(int idSpecies) async {
     try {
-      Provider.of<Breeds>(context, listen: false).getBreeds();
-    } catch (e) {
-      Dialogs.info(
-        context,
-        title: 'ERROR',
-        content: e.toString(),
-      );
-    }
-  }
-
-  void _setPetData() async {
-    try {
-      PetItem pet = Provider.of<Pets>(context, listen: true).petItem;
-      _pet = new PetItem(
-        id: pet.id,
-        name: pet.name,
-        speciesId: pet.speciesId,
-        breedId: pet.breedId,
-        birthDate: pet.birthDate,
-        age: pet.age,
-        primaryColor: pet.primaryColor,
-        secondaryColor: pet.secondaryColor,
-        description: pet.description,
-        status: pet.status,
-        picture: pet.picture,
-        createdAt: pet.createdAt,
-      );
+      final List<BreedsItem> items = [];
+      Provider.of<Breeds>(context, listen: false).items = items;
+      Provider.of<Breeds>(context, listen: false).getBreeds(idSpecies);
     } catch (e) {
       Dialogs.info(
         context,
@@ -91,41 +66,37 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   @override
   void initState() {
     _initialSpecies = _getListSpecies();
-    _initialBreeds = _getListBreeds();
     super.initState();
   }
 
-  void _selectImage(File pickedImage) {
-    setState(() {
-      _petPicture = pickedImage;
-    });
-    _petPictureBase64 = base64Encode(pickedImage.readAsBytesSync());
+  @override
+  void didChangeDependencies() {
+    final id = ModalRoute.of(context).settings.arguments as int;
+    if (id != null && isInit) {
+      _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
+      _initialBreeds = _getListBreeds(_pet.speciesId);
+      isInit = false;
+    }
+    super.didChangeDependencies();
   }
 
   final df = new DateFormat('dd-MM-yyyy');
 
   @override
   Widget build(BuildContext context) {
-    final SizeConfig sizeConfig = SizeConfig();
-    final id = ModalRoute.of(context).settings.arguments as int;
-    if (id != null && setPet) {
-      _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
-      setPet = false;
-    }
     return new Scaffold(
         appBar: AppBar(
           title: Text("Agregar Mascota"),
         ),
         body: ListView(
-          padding: EdgeInsets.only(left: 35.0, right: 25.0),
+          padding: const EdgeInsets.only(left: 35.0, right: 25.0),
           children: <Widget>[
             Column(
               children: <Widget>[
                 Container(
-                  height: sizeConfig.hp(22),
                   child: PetImage(
                     _selectImage,
-                    _petPicture,
+                    _pet.picture,
                     _status,
                   ),
                 ),
@@ -136,7 +107,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.only(top: 25.0),
+                          padding: const EdgeInsets.only(top: 25.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             mainAxisSize: MainAxisSize.max,
@@ -170,7 +141,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         tipo: TextInputType.text,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.only(top: 25.0),
                         child: FutureBuilder(
                             future: _initialSpecies,
                             builder: (_, dataSnapshot) {
@@ -182,7 +153,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                               } else {
                                 return Consumer<Species>(
                                   builder: (ctx, listSpecies, _) =>
-                                      DropdownButton(
+                                      DropdownButtonFormField(
                                     hint: _speciesId == null
                                         ? Text('Elija una especie')
                                         : null,
@@ -200,6 +171,11 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                         .toList(),
                                     onChanged: !_status
                                         ? (v) => setState(() {
+                                              if (_pet.speciesId != v) {
+                                                _pet.breedId = null;
+                                                _initialBreeds =
+                                                    _getListBreeds(v);
+                                              }
                                               _pet.speciesId = v;
                                             })
                                         : null,
@@ -211,7 +187,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                             }),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.only(top: 25.0),
                         child: FutureBuilder(
                           future: _initialBreeds,
                           builder: (_, dataSnapshot) {
@@ -221,38 +197,45 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                 child: Text("Loading..."),
                               );
                             } else {
-                              return Consumer<Breeds>(
-                                builder: (ctx, listBreeds, _) => DropdownButton(
-                                  hint: _breedId == null
-                                      ? Text('Eliga una raza')
-                                      : null,
-                                  disabledHint: _pet.breedId != null
-                                      ? Text(listBreeds.items
-                                          .firstWhere(
-                                              (item) => item.id == _pet.breedId)
-                                          .name)
-                                      : null,
-                                  items: listBreeds.items
-                                      .map((e) => DropdownMenuItem(
-                                            value: e.id,
-                                            child: Text(e.name),
-                                          ))
-                                      .toList(),
-                                  onChanged: !_status
-                                      ? (v) => setState(() {
-                                            _pet.breedId = v;
-                                          })
-                                      : null,
-                                  value: _pet.breedId,
-                                  isExpanded: true,
-                                ),
-                              );
+                              if (dataSnapshot.error != null) {
+                                return Center(
+                                  child: Text('Algo salio mal'),
+                                );
+                              } else {
+                                return Consumer<Breeds>(
+                                  builder: (ctx, listBreeds, _) =>
+                                      DropdownButtonFormField(
+                                    hint: _pet.breedId == null
+                                        ? Text('Eliga una raza')
+                                        : null,
+                                    disabledHint: _pet.breedId != null
+                                        ? Text(listBreeds.items
+                                            .firstWhere((item) =>
+                                                item.id == _pet.breedId)
+                                            .name)
+                                        : null,
+                                    items: listBreeds.items
+                                        .map((e) => DropdownMenuItem(
+                                              value: e.id,
+                                              child: Text(e.name),
+                                            ))
+                                        .toList(),
+                                    onChanged: !_status
+                                        ? (v) => setState(() {
+                                              _pet.breedId = v;
+                                            })
+                                        : null,
+                                    value: _pet.breedId,
+                                    isExpanded: true,
+                                  ),
+                                );
+                              }
                             }
                           },
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.only(top: 25.0),
                         child: GestureDetector(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -279,7 +262,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.only(top: 25.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           mainAxisSize: MainAxisSize.max,
@@ -351,16 +334,20 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
     super.dispose();
   }
 
+  void _selectImage(File pickedImage) {
+    _pet.picture = base64Encode(pickedImage.readAsBytesSync());
+  }
+
   Widget _getActionButtons() {
     return Padding(
-      padding: EdgeInsets.only(top: 45.0),
+      padding: const EdgeInsets.only(top: 45.0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
+              padding: const EdgeInsets.only(right: 10.0),
               child: Container(
                   child: RaisedButton(
                 child: Text("Guardar"),
@@ -380,7 +367,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                       secondaryColor: _pet.secondaryColor,
                       description: _pet.description,
                       status: _petStatus,
-                      picture: _petPictureBase64,
+                      picture: _pet.picture,
                       createdAt: _pet.createdAt,
                     );
                     Provider.of<Pets>(context, listen: false).petItem = newPet;
@@ -408,7 +395,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(left: 10.0),
+              padding: const EdgeInsets.only(left: 10.0),
               child: Container(
                   child: RaisedButton(
                 child: Text("Cancelar"),

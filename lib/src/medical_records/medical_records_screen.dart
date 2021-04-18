@@ -34,13 +34,13 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
     final pet = ModalRoute.of(context).settings.arguments as PetItem;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Fichas Médicas de ${pet.name}"),
+        title: Text("Ficha Médica de ${pet.name}"),
       ),
       body: Column(
         children: [
           TextButton.icon(
             label: Text(
-              'Agregar Ficha Médica',
+              'Agregar Consulta Médica',
               style: const TextStyle(fontSize: 20.0),
             ),
             icon: Icon(
