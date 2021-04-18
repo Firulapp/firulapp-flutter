@@ -54,7 +54,6 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
     } else {
       _vaccinationRecord.vaccinationDate =
           _vaccinationRecordDate.toIso8601String();
-      _vaccinationRecord.reminders = false;
     }
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
@@ -126,7 +125,9 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                             Row(
                               children: [
                                 CupertinoSwitch(
-                                  value: _vaccinationRecord.reminders,
+                                  value: _vaccinationRecord.reminders == null
+                                      ? false
+                                      : _vaccinationRecord.reminders,
                                   onChanged: (value) {
                                     setState(() {
                                       _vaccinationRecord.reminders = value;
