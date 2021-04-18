@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/city.dart';
@@ -23,6 +24,24 @@ class MapScreenState extends State<ProfilePage>
   final FocusNode myFocusNode = FocusNode();
   File _pickedImage;
   Future _citiesFuture;
+  String _birthDate;
+  final df = new DateFormat('dd-MM-yyyy');
+  DateTime _date = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _date,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+    if (pickedDate != null && pickedDate != _date) {
+      setState(() {
+        _date = pickedDate;
+        _birthDate = _date.toIso8601String();
+      });
+    }
+  }
 
   Future _obtainCitiesFuture() {
     return Provider.of<City>(context, listen: false).fetchCities();
@@ -155,17 +174,26 @@ class MapScreenState extends State<ProfilePage>
                         Padding(
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
-                          child: TextFormField(
-                              initialValue: user.userData.birthDate.toString(),
-                              decoration: InputDecoration(
-                                hintText: "Ingresa tu fecha de nacimiento",
-                                labelText: 'Fecha de nacimiento',
-                                labelStyle: defaultTextStyle(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                DateFormat('dd-MM-yyyy').format(_date),
+                                style: TextStyle(
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              enabled: !_status,
-                              autofocus: !_status,
-                              onChanged: (newValue) =>
-                                  user.userData.birthDate = newValue),
+                              IconButton(
+                                icon: Icon(Icons.calendar_today_outlined),
+                                onPressed: () {
+                                  _selectDate(context);
+                                  user.userData.birthDate = _birthDate;
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(

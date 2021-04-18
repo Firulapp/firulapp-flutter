@@ -9,7 +9,8 @@ import './src/theme.dart';
 import './provider/user.dart';
 import './routes.dart';
 import './provider/species.dart';
-import 'src/home/home.dart';
+import './src/home/home.dart';
+import './provider/medical_record.dart';
 
 void main() => runApp(MyApp());
 
@@ -45,6 +46,19 @@ class MyApp extends StatelessWidget {
               UserSession(),
             ),
             PetItem(),
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, MedicalRecord>(
+          update: (context, user, med) => MedicalRecord(
+            user,
+            med == null ? {} : med.items,
+          ),
+          create: (ctx) => MedicalRecord(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
           ),
         ),
         ChangeNotifierProvider(

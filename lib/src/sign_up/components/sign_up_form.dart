@@ -34,6 +34,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidatorMixins {
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Continue",
+            color: kPrimaryColor,
             press: () {
               final isOK = _formKey.currentState.validate();
               if (isOK) {

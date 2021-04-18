@@ -110,11 +110,11 @@ class Pets with ChangeNotifier {
           "age": _petItem.age,
           "petSize": _petItem.petSize,
           "city": userData.userData.city,
-          "address": null, // fixed obtener este dato del usuario
+          "address": null, //TODO: direccion del usuario
           "primaryColor": _petItem.primaryColor,
           "secondaryColor": _petItem.secondaryColor,
           "status": _petItem.status,
-          "picture": _petItem.picture, // fixed debe enviar string base64
+          "picture": _petItem.picture,
           "description": _petItem.description,
           "createdAt": _petItem.createdAt != null ? _petItem.createdAt : null,
           "createdBy": userData.userData.id,

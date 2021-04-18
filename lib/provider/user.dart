@@ -101,7 +101,7 @@ class User with ChangeNotifier {
   Future<void> saveUser() async {
     try {
       await this._dio.post(
-        '${Endpoints.update}',
+        '${Endpoints.updateUser}',
         data: {
           "id": userData.id,
           "userId": userData.userId,

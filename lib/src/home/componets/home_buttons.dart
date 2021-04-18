@@ -15,14 +15,15 @@ class HomeButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-            padding: EdgeInsets.only(bottom: sizeConfig.wp(9)),
-            child: Text(
-              'Firulapp',
-              style: TextStyle(
-                fontSize: sizeConfig.hp(4),
-                color: kSecondaryColor,
-              ),
-            )),
+          padding: EdgeInsets.only(bottom: sizeConfig.wp(9)),
+          child: Text(
+            'Firulapp',
+            style: TextStyle(
+              fontSize: sizeConfig.hp(4),
+              color: kSecondaryColor,
+            ),
+          ),
+        ),
         RawMaterialButton(
           onPressed: () => {Navigator.pushNamed(context, PetsScreen.routeName)},
           elevation: _elevation,

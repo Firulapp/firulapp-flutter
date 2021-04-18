@@ -10,6 +10,8 @@ import './src/pets/selected_pet_screen.dart';
 import './src/sign_up/sign_up_screen.dart';
 import './src/pets/components/add_pets.dart';
 import './src/pets/components/pets_list.dart';
+import './src/medical_records/medical_records_screen.dart';
+import 'src/medical_records/medical_record_form_screen.dart';
 
 final Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => HomeScreen(),
@@ -21,5 +23,7 @@ final Map<String, WidgetBuilder> routes = {
   SignUpScreen.routeName: (context) => SignUpScreen(),
   SignUpDetailsForm.routeName: (context) => SignUpDetailsForm(),
   AddPets.routeName: (context) => AddPets(),
-  PetsList.routeName: (context) => PetsList()
+  PetsList.routeName: (context) => PetsList(),
+  MedicalRecordsScreen.routeName: (context) => MedicalRecordsScreen(),
+  NewMedicalRecordScreen.routeName: (context) => NewMedicalRecordScreen(),
 };

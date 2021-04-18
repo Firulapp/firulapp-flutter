@@ -1,18 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:firulapp/components/input_text.dart';
-import 'package:firulapp/provider/breeds.dart';
-import 'package:firulapp/src/mixins/validator_mixins.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../components/input_text.dart';
+import '../../../provider/breeds.dart';
+import '../../mixins/validator_mixins.dart';
 import '../../../components/dialogs.dart';
 import '../../../size_config.dart';
 import '../../../constants/constants.dart';
 import '../../../provider/species.dart';
 import '../../../provider/pets.dart';
-import 'pets_image.dart';
+import './pets_image.dart';
 
 class AddPets extends StatefulWidget {
   static const routeName = "/pets/add";
@@ -31,7 +32,6 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
   int _speciesId;
-  int _breedId;
   DateTime _birthDate = DateTime.now();
   int _age;
   bool _petStatus = true;
@@ -89,7 +89,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
           title: Text("Agregar Mascota"),
         ),
         body: ListView(
-          padding: EdgeInsets.only(left: 35.0, right: 25.0),
+          padding: const EdgeInsets.only(left: 35.0, right: 25.0),
           children: <Widget>[
             Column(
               children: <Widget>[
@@ -107,7 +107,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.only(top: 25.0),
+                          padding: const EdgeInsets.only(top: 25.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             mainAxisSize: MainAxisSize.max,
@@ -141,7 +141,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         tipo: TextInputType.text,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.only(top: 25.0),
                         child: FutureBuilder(
                             future: _initialSpecies,
                             builder: (_, dataSnapshot) {
@@ -187,7 +187,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                             }),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.only(top: 25.0),
                         child: FutureBuilder(
                           future: _initialBreeds,
                           builder: (_, dataSnapshot) {
@@ -235,7 +235,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.only(top: 25.0),
                         child: GestureDetector(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -262,7 +262,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0),
+                        padding: const EdgeInsets.only(top: 25.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           mainAxisSize: MainAxisSize.max,
@@ -340,14 +340,14 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
 
   Widget _getActionButtons() {
     return Padding(
-      padding: EdgeInsets.only(top: 45.0),
+      padding: const EdgeInsets.only(top: 45.0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
+              padding: const EdgeInsets.only(right: 10.0),
               child: Container(
                   child: RaisedButton(
                 child: Text("Guardar"),
@@ -395,7 +395,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(left: 10.0),
+              padding: const EdgeInsets.only(left: 10.0),
               child: Container(
                   child: RaisedButton(
                 child: Text("Cancelar"),
