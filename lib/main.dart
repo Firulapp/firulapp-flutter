@@ -3,14 +3,15 @@ import 'package:firulapp/provider/pets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import './routes.dart';
+import './src/theme.dart';
+import './src/home/home.dart';
+import './provider/user.dart';
 import './provider/city.dart';
 import './provider/session.dart';
-import './src/theme.dart';
-import './provider/user.dart';
-import './routes.dart';
 import './provider/species.dart';
-import './src/home/home.dart';
 import './provider/medical_record.dart';
+import './provider/vaccination_record.dart';
 
 void main() => runApp(MyApp());
 
@@ -54,6 +55,19 @@ class MyApp extends StatelessWidget {
             med == null ? {} : med.items,
           ),
           create: (ctx) => MedicalRecord(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, VaccinationRecord>(
+          update: (context, user, med) => VaccinationRecord(
+            user,
+            med == null ? {} : med.items,
+          ),
+          create: (ctx) => VaccinationRecord(
             User(
               UserData(),
               UserSession(),

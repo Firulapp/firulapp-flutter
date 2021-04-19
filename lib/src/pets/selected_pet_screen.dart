@@ -1,8 +1,10 @@
+import 'package:firulapp/provider/vaccination_record.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/medical_record.dart';
 import '../medical_records/medical_records_screen.dart';
+import '../vaccionation_records/vaccination_records_screen.dart';
 import '../../provider/pets.dart';
 import '../profile/components/profile_menu.dart';
 import './components/pet_pic.dart';
@@ -51,7 +53,17 @@ class SelectedPetScreen extends StatelessWidget {
           ProfileMenu(
             text: "Libreta de Vacunación",
             icon: "assets/icons/syringe.svg",
-            press: () {},
+            press: () {
+              Provider.of<VaccinationRecord>(
+                context,
+                listen: false,
+              ).setPetItem(pet);
+              Navigator.pushNamed(
+                context,
+                VaccinationRecordsScreen.routeName,
+                arguments: pet,
+              );
+            },
           ),
         ]),
       ),
