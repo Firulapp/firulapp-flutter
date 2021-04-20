@@ -118,8 +118,8 @@ class Pets with ChangeNotifier {
           "description": _petItem.description,
           "createdAt": _petItem.createdAt != null ? _petItem.createdAt : null,
           "createdBy": userData.userData.id,
-          "modifiedAt": null,
-          "modifiedBy": null
+          "modifiedAt": _petItem.createdAt != null ? _petItem.createdAt : null,
+          "modifiedBy": userData.userData.id,
         },
       );
       if (_items.contains(_petItem)) {
