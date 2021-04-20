@@ -197,13 +197,33 @@ class Pets with ChangeNotifier {
     }
   }
 
-  Future deletePet(int petId) async {
+  Future deletePet(PetItem pet) async {
     try {
       await this._dio.delete(
         Endpoints.petDelete,
-        data: {"id": petId},
+        data: {
+          "id": pet.id != null ? pet.id : null,
+          "userId": userData.userData.id,
+          "speciesId": pet.speciesId,
+          "breedId": pet.breedId,
+          "name": pet.name,
+          "birthDate": pet.birthDate,
+          "age": pet.age,
+          "petSize": pet.petSize,
+          "city": userData.userData.city,
+          "address": null, //TODO: direccion del usuario
+          "primaryColor": pet.primaryColor,
+          "secondaryColor": pet.secondaryColor,
+          "status": pet.status,
+          "picture": pet.picture,
+          "description": pet.description,
+          "createdAt": pet.createdAt != null ? pet.createdAt : null,
+          "createdBy": userData.userData.id,
+          "modifiedAt": pet.createdAt != null ? pet.createdAt : null,
+          "modifiedBy": userData.userData.id,
+        },
       );
-      _items.remove(getLocalPetById(petId));
+      _items.remove(getLocalPetById(pet.id));
       notifyListeners();
     } catch (error) {
       print(error.toString());
