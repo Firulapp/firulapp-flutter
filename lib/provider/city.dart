@@ -25,7 +25,7 @@ class City with ChangeNotifier {
       final response = await this._dio.get(
             Endpoints.city,
           );
-      final cityResponse = response.data["dto"];
+      final cityResponse = response.data["list"];
       cityResponse.forEach((cityData) {
         loadedCities.add(CityItem(
           id: cityData["id"],
