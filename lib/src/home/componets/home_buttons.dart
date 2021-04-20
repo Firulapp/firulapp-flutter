@@ -8,60 +8,81 @@ class HomeButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SizeConfig sizeConfig = SizeConfig();
-    final double _elevation = sizeConfig.wp(1.5);
-    final double _sizeBotton = sizeConfig.dp(7);
-    final double _sizeTextBotton = sizeConfig.dp(2);
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: sizeConfig.wp(4.5),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: sizeConfig.wp(9)),
+                child: Text(
+                  'Firulapp',
+                  style: TextStyle(
+                    fontSize: sizeConfig.hp(4),
+                    color: kSecondaryColor,
+                  ),
+                ),
+              ),
+              buildButtonOption(sizeConfig, 'Mascotas', Icons.pets_rounded,
+                  context, PetsScreen.routeName),
+              SizedBox(
+                height: getProportionateScreenHeight(25),
+              ),
+              buildButtonOption(
+                  sizeConfig, 'Servicios', Icons.store, context, ""),
+              SizedBox(
+                height: getProportionateScreenHeight(25),
+              ),
+              buildButtonOption(
+                  sizeConfig, 'Cuidados', Icons.favorite, context, ""),
+              SizedBox(
+                height: getProportionateScreenHeight(25),
+              ),
+              buildButtonOption(
+                  sizeConfig, 'Agenda', Icons.calendar_today, context, ""),
+              SizedBox(
+                height: getProportionateScreenHeight(25),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildButtonOption(
+    SizeConfig sizeConfig,
+    String label,
+    IconData icon,
+    BuildContext context,
+    String routeName,
+  ) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: sizeConfig.wp(9)),
-          child: Text(
-            'Firulapp',
-            style: TextStyle(
-              fontSize: sizeConfig.hp(4),
-              color: kSecondaryColor,
-            ),
-          ),
-        ),
         RawMaterialButton(
-          onPressed: () => {Navigator.pushNamed(context, PetsScreen.routeName)},
-          elevation: _elevation,
+          onPressed: () => {
+            Navigator.pushNamed(context, routeName),
+          },
+          elevation: sizeConfig.wp(1.5),
           fillColor: kPrimaryColor,
           child: Icon(
-            Icons.pets_rounded,
-            size: _sizeBotton,
+            icon,
+            size: sizeConfig.dp(7),
           ),
           padding: EdgeInsets.all(sizeConfig.dp(3)),
           shape: CircleBorder(),
         ),
-        Text('Mascotas', style: TextStyle(fontSize: _sizeTextBotton)),
-        Padding(padding: EdgeInsets.all(16.0)),
-        RawMaterialButton(
-          onPressed: () {},
-          elevation: _elevation,
-          fillColor: kPrimaryColor,
-          child: Icon(
-            Icons.store,
-            size: _sizeBotton,
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: sizeConfig.dp(2),
           ),
-          padding: EdgeInsets.all(sizeConfig.dp(3)),
-          shape: CircleBorder(),
-        ),
-        Text('Servicios', style: TextStyle(fontSize: _sizeTextBotton)),
-        Padding(padding: EdgeInsets.all(16.0)),
-        RawMaterialButton(
-          onPressed: () {},
-          elevation: _elevation,
-          fillColor: kPrimaryColor,
-          child: Icon(
-            Icons.favorite,
-            size: _sizeBotton,
-          ),
-          padding: EdgeInsets.all(sizeConfig.dp(3)),
-          shape: CircleBorder(),
-        ),
-        Text('Cuidados', style: TextStyle(fontSize: _sizeTextBotton)),
+        )
       ],
     );
   }
