@@ -122,7 +122,7 @@ class Pets with ChangeNotifier {
           "modifiedBy": userData.userData.id,
         },
       );
-      if (_items.contains(_petItem)) {
+      if (_items.indexWhere((element) => element.id == _petItem.id) != -1) {
         _items[_items.indexWhere((element) => element.id == _petItem.id)] =
             PetItem.fromJson(response.data["dto"]);
       } else {

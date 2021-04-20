@@ -16,7 +16,7 @@ class SelectedPetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final id = ModalRoute.of(context).settings.arguments as int;
-    final pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
+    final pet = Provider.of<Pets>(context).getLocalPetById(id);
     return Scaffold(
       appBar: AppBar(
         title: Text(pet.name),
