@@ -372,7 +372,6 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                     );
                     Provider.of<Pets>(context, listen: false).petItem = newPet;
                     Provider.of<Pets>(context, listen: false).savePet();
-                    print("Se guardo la mascota");
                     Navigator.pop(context);
                   } catch (e) {
                     Dialogs.info(
