@@ -1,5 +1,6 @@
 class Endpoints {
-  static final baseUrl = 'http://localhost:9000/api';
+  static final baseUrl =
+      'http://firulappdev-env.eba-nzxjnnqn.sa-east-1.elasticbeanstalk.com/api';
   static final user = '/user';
   static final param = '/param';
   static final login = '$user/login';
