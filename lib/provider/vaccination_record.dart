@@ -24,7 +24,7 @@ class VaccinationRecordItem {
     this.veterinary,
     this.vaccine,
     this.observation,
-    this.reminders,
+    this.reminders = false,
     this.vaccinationDate,
     this.createdAt,
     this.createdBy,
