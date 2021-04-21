@@ -42,54 +42,58 @@ class _AgendaScreenState extends State<AgendaScreen> {
         child: Icon(Icons.add),
         onPressed: _showAddDialog,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            TableCalendar(
-              availableCalendarFormats: const {
-                CalendarFormat.month: 'Mes',
-                CalendarFormat.week: 'Semana',
-                CalendarFormat.twoWeeks: '2 Semanas',
-              },
-              events: _events,
-              initialCalendarFormat: CalendarFormat.month,
-              calendarController: _calendarController,
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              calendarStyle: CalendarStyle(
-                canEventMarkersOverflow: true,
-                todayColor: kPrimaryLightColor,
-                selectedColor: kPrimaryColor,
-                todayStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
-                  color: Colors.white,
-                ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          TableCalendar(
+            availableCalendarFormats: const {
+              CalendarFormat.month: 'Mes',
+              CalendarFormat.week: 'Semana',
+              CalendarFormat.twoWeeks: '2 Semanas',
+            },
+            events: _events,
+            initialCalendarFormat: CalendarFormat.month,
+            calendarController: _calendarController,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            calendarStyle: CalendarStyle(
+              canEventMarkersOverflow: true,
+              todayColor: kPrimaryLightColor,
+              selectedColor: kPrimaryColor,
+              todayStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0,
+                color: Colors.white,
               ),
-              onDaySelected: (date, events, holidays) {
-                setState(() {
-                  _selectedEvents = events;
-                });
-              },
             ),
-            ..._selectedEvents.map(
-              (event) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  child: ListTile(
-                    leading: SvgPicture.asset(
-                      "assets/icons/medical-check.svg",
-                      color: kPrimaryColor,
-                      width: 35,
+            onDaySelected: (date, events, holidays) {
+              setState(() {
+                _selectedEvents = events;
+              });
+            },
+          ),
+          Flexible(
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    elevation: 3,
+                    child: ListTile(
+                      leading: SvgPicture.asset(
+                        "assets/icons/medical-check.svg",
+                        color: kPrimaryColor,
+                        width: 35,
+                      ),
+                      title: Text(_selectedEvents[index].title),
+                      subtitle: Text(_selectedEvents[index].description),
                     ),
-                    title: Text('Consulta Médica'),
-                    subtitle: Text(event.description),
                   ),
-                ),
-              ),
+                );
+              },
+              itemCount: _selectedEvents.length,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
