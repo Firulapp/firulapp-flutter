@@ -62,6 +62,11 @@ class _AgendaScreenState extends State<AgendaScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             TableCalendar(
+              availableCalendarFormats: const {
+                CalendarFormat.month: 'Mes',
+                CalendarFormat.week: 'Semana',
+                CalendarFormat.twoWeeks: '2 Semanas',
+              },
               events: _events,
               initialCalendarFormat: CalendarFormat.month,
               calendarController: _calendarController,
