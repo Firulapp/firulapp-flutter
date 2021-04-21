@@ -1,4 +1,5 @@
 import 'package:firulapp/constants/constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/material.dart';
 
@@ -22,22 +23,6 @@ class _AgendaScreenState extends State<AgendaScreen> {
     _eventController = TextEditingController();
     _events = {};
     _selectedEvents = [];
-  }
-
-  Map<String, dynamic> encodeMap(Map<DateTime, dynamic> map) {
-    Map<String, dynamic> newMap = {};
-    map.forEach((key, value) {
-      newMap[key.toString()] = map[key];
-    });
-    return newMap;
-  }
-
-  Map<DateTime, dynamic> decodeMap(Map<String, dynamic> map) {
-    Map<DateTime, dynamic> newMap = {};
-    map.forEach((key, value) {
-      newMap[DateTime.parse(key)] = map[key];
-    });
-    return newMap;
   }
 
   @override
@@ -90,21 +75,15 @@ class _AgendaScreenState extends State<AgendaScreen> {
             ..._selectedEvents.map(
               (event) => Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: MediaQuery.of(context).size.height / 20,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey)),
-                  child: Center(
-                    child: Text(
-                      event,
-                      style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                child: Card(
+                  child: ListTile(
+                    leading: SvgPicture.asset(
+                      "assets/icons/medical-check.svg",
+                      color: kPrimaryColor,
+                      width: 35,
                     ),
+                    title: Text('Consulta Médica'),
+                    subtitle: Text(event.description),
                   ),
                 ),
               ),
@@ -134,11 +113,20 @@ class _AgendaScreenState extends State<AgendaScreen> {
               if (_eventController.text.isEmpty) return;
               setState(() {
                 if (_events[_calendarController.selectedDay] != null) {
-                  _events[_calendarController.selectedDay]
-                      .add(_eventController.text);
+                  _events[_calendarController.selectedDay].add(
+                    Agenda(
+                      id: 1,
+                      title: _eventController.text,
+                      description: _eventController.text,
+                    ),
+                  );
                 } else {
                   _events[_calendarController.selectedDay] = [
-                    _eventController.text
+                    Agenda(
+                      id: 1,
+                      title: _eventController.text,
+                      description: _eventController.text,
+                    ),
                   ];
                 }
                 _eventController.clear();
@@ -150,4 +138,16 @@ class _AgendaScreenState extends State<AgendaScreen> {
       ),
     );
   }
+}
+
+class Agenda {
+  final int id;
+  final String title;
+  final String description;
+
+  Agenda({
+    this.id,
+    this.title,
+    this.description,
+  });
 }
