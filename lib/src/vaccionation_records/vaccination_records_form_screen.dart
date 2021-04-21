@@ -23,8 +23,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
-  VaccinationRecordItem _vaccinationRecord =
-      new VaccinationRecordItem(reminders: false);
+  VaccinationRecordItem _vaccinationRecord = new VaccinationRecordItem();
   DateTime _vaccinationRecordDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -126,9 +125,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                             Row(
                               children: [
                                 CupertinoSwitch(
-                                  value: _vaccinationRecord.reminders == null
-                                      ? false
-                                      : _vaccinationRecord.reminders,
+                                  value: _vaccinationRecord.reminders,
                                   onChanged: (value) {
                                     setState(() {
                                       _vaccinationRecord.reminders = value;

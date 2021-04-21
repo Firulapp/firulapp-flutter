@@ -140,10 +140,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                             Row(
                               children: [
                                 CupertinoSwitch(
-                                  value:
-                                      _medicalRecord.treatmentReminder == null
-                                          ? false
-                                          : _medicalRecord.treatmentReminder,
+                                  value: _medicalRecord.treatmentReminder,
                                   onChanged: (value) {
                                     setState(() {
                                       _medicalRecord.treatmentReminder = value;
