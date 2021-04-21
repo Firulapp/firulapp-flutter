@@ -1,8 +1,8 @@
+import 'package:firulapp/src/agenda/agenda_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/menu_button.dart';
 import '../../../size_config.dart';
-import '../../pets/pets_screen.dart';
 import '../../../constants/constants.dart';
 
 class Body extends StatelessWidget {
@@ -65,7 +65,7 @@ class Body extends StatelessWidget {
                     sizeConfig: sizeConfig,
                     label: 'Agenda',
                     icon: Icons.calendar_today,
-                    routeName: "",
+                    routeName: AgendaScreen.routeName,
                     color: kPrimaryColor,
                   ),
                   SizedBox(
