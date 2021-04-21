@@ -23,7 +23,8 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
-  VaccinationRecordItem _vaccinationRecord = new VaccinationRecordItem();
+  VaccinationRecordItem _vaccinationRecord =
+      new VaccinationRecordItem(reminders: false);
   DateTime _vaccinationRecordDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
