@@ -125,9 +125,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                             Row(
                               children: [
                                 CupertinoSwitch(
-                                  value: _vaccinationRecord.reminders == null
-                                      ? false
-                                      : _vaccinationRecord.reminders,
+                                  value: _vaccinationRecord.reminders,
                                   onChanged: (value) {
                                     setState(() {
                                       _vaccinationRecord.reminders = value;

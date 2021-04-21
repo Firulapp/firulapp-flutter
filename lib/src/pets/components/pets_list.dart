@@ -112,7 +112,7 @@ class _PetsListState extends State<PetsList> {
                   "Aceptar",
                 );
                 if (response) {
-                  Provider.of<Pets>(context, listen: false).deletePet(pet.id);
+                  Provider.of<Pets>(context, listen: false).deletePet(pet);
                 }
               },
             ),
