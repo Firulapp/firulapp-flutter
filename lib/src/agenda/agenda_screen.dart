@@ -3,6 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/material.dart';
 
+import './components/event_item.dart';
+import '../medical_records/medical_record_form_screen.dart';
+
 class AgendaScreen extends StatefulWidget {
   static const routeName = "/agenda";
 
@@ -14,13 +17,11 @@ class _AgendaScreenState extends State<AgendaScreen> {
   var _calendarController;
   Map<DateTime, List<dynamic>> _events;
   List<dynamic> _selectedEvents;
-  TextEditingController _eventController;
 
   @override
   void initState() {
     super.initState();
     _calendarController = CalendarController();
-    _eventController = TextEditingController();
     _events = {};
     _selectedEvents = [];
   }
@@ -36,11 +37,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Agenda"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        child: Icon(Icons.add),
-        onPressed: _showAddDialog,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: _showAddDialog,
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,43 +104,32 @@ class _AgendaScreenState extends State<AgendaScreen> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.white70,
-        title: Text("Add Events"),
-        content: TextField(
-          controller: _eventController,
+        title: Text(
+          "Elegir Evento",
+          textAlign: TextAlign.center,
         ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(
-              "Save",
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-            ),
-            onPressed: () {
-              if (_eventController.text.isEmpty) return;
-              setState(() {
-                if (_events[_calendarController.selectedDay] != null) {
-                  _events[_calendarController.selectedDay].add(
-                    Agenda(
-                      id: 1,
-                      title: _eventController.text,
-                      description: _eventController.text,
-                    ),
-                  );
-                } else {
-                  _events[_calendarController.selectedDay] = [
-                    Agenda(
-                      id: 1,
-                      title: _eventController.text,
-                      description: _eventController.text,
-                    ),
-                  ];
-                }
-                _eventController.clear();
-                Navigator.pop(context);
-              });
-            },
-          )
-        ],
+        content: Container(
+          height: 400,
+          child: Column(
+            children: [
+              EventItem(
+                "Consulta Médica",
+                "assets/icons/medical-check.svg",
+                NewMedicalRecordScreen.routeName,
+              ),
+              EventItem(
+                "Vacuna",
+                "assets/icons/syringe.svg",
+                NewMedicalRecordScreen.routeName,
+              ),
+              EventItem(
+                "Actividad",
+                "assets/icons/play-with-pet.svg",
+                NewMedicalRecordScreen.routeName,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
