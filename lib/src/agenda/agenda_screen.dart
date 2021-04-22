@@ -1,8 +1,8 @@
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/material.dart';
 
+import '../vaccionation_records/vaccination_records_form_screen.dart';
 import '../../constants/constants.dart';
 import '../../provider/agenda.dart';
 import './components/event_item.dart';
@@ -65,12 +65,11 @@ class _AgendaScreenState extends State<AgendaScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Agenda"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: _showAddDialog,
-          ),
-        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: kPrimaryColor,
+        child: Icon(Icons.add),
+        onPressed: _showAddDialog,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,7 +159,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
               EventItem(
                 "Vacuna",
                 "assets/icons/syringe.svg",
-                NewMedicalRecordScreen.routeName,
+                NewVaccinationRecordScreen.routeName,
               ),
               EventItem(
                 "Actividad",
