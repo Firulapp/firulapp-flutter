@@ -1,8 +1,9 @@
-import 'package:firulapp/provider/breeds.dart';
-import 'package:firulapp/provider/pets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import './provider/agenda.dart';
+import './provider/breeds.dart';
+import './provider/pets.dart';
 import './provider/city.dart';
 import './provider/session.dart';
 import './src/theme.dart';
@@ -66,6 +67,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => Breeds(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Agenda(),
         ),
       ],
       child: MaterialApp(

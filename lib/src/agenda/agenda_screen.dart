@@ -1,8 +1,10 @@
-import 'package:firulapp/constants/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/material.dart';
 
+import '../../constants/constants.dart';
+import '../../provider/agenda.dart';
 import './components/event_item.dart';
 import '../medical_records/medical_record_form_screen.dart';
 
@@ -21,9 +23,35 @@ class _AgendaScreenState extends State<AgendaScreen> {
   @override
   void initState() {
     super.initState();
+    var date = DateTime.now();
     _calendarController = CalendarController();
-    _events = {};
-    _selectedEvents = [];
+    _events = {
+      DateTime.now().add(Duration(days: 11)): [
+        Agenda(
+          id: 1,
+          title: 'Consulta Médica',
+          description: 'Doctor ayuda',
+        ),
+        Agenda(
+          id: 2,
+          title: 'Vacuna',
+          description: 'Vacuna anti algo',
+        ),
+        Agenda(
+          id: 3,
+          title: 'Actividad',
+          description: 'Pasear',
+        ),
+      ],
+      DateTime.now().add(Duration(days: 10)): [
+        Agenda(
+          id: 4,
+          title: 'Actividad',
+          description: 'Pasear',
+        ),
+      ]
+    };
+    _selectedEvents = _events[date] == null ? [] : _events[date];
   }
 
   @override
@@ -81,11 +109,23 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   child: Card(
                     elevation: 3,
                     child: ListTile(
-                      leading: SvgPicture.asset(
-                        "assets/icons/medical-check.svg",
-                        color: kPrimaryColor,
-                        width: 35,
-                      ),
+                      leading: _selectedEvents[index].title == 'Vacuna'
+                          ? SvgPicture.asset(
+                              "assets/icons/syringe.svg",
+                              color: kPrimaryColor,
+                              width: 35,
+                            )
+                          : _selectedEvents[index].title == 'Actividad'
+                              ? SvgPicture.asset(
+                                  "assets/icons/play-with-pet.svg",
+                                  color: kPrimaryColor,
+                                  width: 35,
+                                )
+                              : SvgPicture.asset(
+                                  "assets/icons/medical-check.svg",
+                                  color: kPrimaryColor,
+                                  width: 35,
+                                ),
                       title: Text(_selectedEvents[index].title),
                       subtitle: Text(_selectedEvents[index].description),
                     ),
@@ -133,16 +173,4 @@ class _AgendaScreenState extends State<AgendaScreen> {
       ),
     );
   }
-}
-
-class Agenda {
-  final int id;
-  final String title;
-  final String description;
-
-  Agenda({
-    this.id,
-    this.title,
-    this.description,
-  });
 }
