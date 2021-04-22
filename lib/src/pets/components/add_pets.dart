@@ -51,8 +51,6 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
 
   Future<void> _getListBreeds(int idSpecies) async {
     try {
-      final List<BreedsItem> items = [];
-      Provider.of<Breeds>(context, listen: false).items = items;
       Provider.of<Breeds>(context, listen: false).getBreeds(idSpecies);
     } catch (e) {
       Dialogs.info(
@@ -372,7 +370,6 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                     );
                     Provider.of<Pets>(context, listen: false).petItem = newPet;
                     Provider.of<Pets>(context, listen: false).savePet();
-                    print("Se guardo la mascota");
                     Navigator.pop(context);
                   } catch (e) {
                     Dialogs.info(
@@ -380,7 +377,6 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                       title: 'ERROR',
                       content: e.response.data["message"],
                     );
-                    print(e);
                   }
                   setState(() {
                     _status = true;

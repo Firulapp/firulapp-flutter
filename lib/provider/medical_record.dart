@@ -28,7 +28,7 @@ class MedicalRecordItem {
     this.treatment,
     this.observations,
     this.diagnostic,
-    this.treatmentReminder,
+    this.treatmentReminder = false,
     this.petWeight,
     this.petHeight,
     this.consultedAt,

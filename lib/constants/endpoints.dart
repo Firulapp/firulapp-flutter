@@ -1,5 +1,5 @@
 class Endpoints {
-  static final baseUrl = 'http://localhost:9000/api';
+  static final baseUrl = '';
   static final user = '/user';
   static final param = '/param';
   static final login = '$user/login';
@@ -17,4 +17,8 @@ class Endpoints {
   static final medicalRecordByPet = '$pet/medical/record/pet';
   static final saveMedicalRecord = '$medicalRecord/save';
   static final deleteMedicalRecord = "$medicalRecord/delete";
+  static final vaccinationRecord = '$pet/vaccination/record';
+  static final vaccinationRecordByPet = '$vaccinationRecord/pet';
+  static final saveVaccinationRecord = '$vaccinationRecord/save';
+  static final deleteVaccinationRecord = "$vaccinationRecord/delete";
 }
