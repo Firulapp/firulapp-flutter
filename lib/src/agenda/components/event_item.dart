@@ -41,13 +41,11 @@ class EventItem extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
-                child: FittedBox(
+                child: SvgPicture.asset(
+                  icon,
+                  color: kPrimaryColor,
+                  width: 60,
                   fit: BoxFit.cover,
-                  child: SvgPicture.asset(
-                    icon,
-                    color: kPrimaryColor,
-                    width: 60,
-                  ),
                 ),
               ),
             ],

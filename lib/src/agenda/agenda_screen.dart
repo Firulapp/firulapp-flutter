@@ -65,6 +65,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Agenda"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: _showAddDialog,
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryColor,
@@ -143,6 +149,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: Colors.black,
+          ),
+        ),
         title: Text(
           "Elegir Evento",
           textAlign: TextAlign.center,
@@ -156,10 +168,16 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 "assets/icons/medical-check.svg",
                 NewMedicalRecordScreen.routeName,
               ),
+              const SizedBox(
+                height: 8,
+              ),
               EventItem(
                 "Vacuna",
                 "assets/icons/syringe.svg",
                 NewVaccinationRecordScreen.routeName,
+              ),
+              const SizedBox(
+                height: 8,
               ),
               EventItem(
                 "Actividad",
