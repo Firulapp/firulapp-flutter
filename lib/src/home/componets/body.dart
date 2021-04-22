@@ -1,4 +1,5 @@
 import 'package:firulapp/src/agenda/agenda_screen.dart';
+import 'package:firulapp/src/pets/pets_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/menu_button.dart';
@@ -35,7 +36,7 @@ class Body extends StatelessWidget {
                     sizeConfig: sizeConfig,
                     label: 'Mascotas',
                     icon: Icons.pets_rounded,
-                    routeName: "",
+                    routeName: PetsScreen.routeName,
                     color: kPrimaryColor,
                   ),
                   SizedBox(
