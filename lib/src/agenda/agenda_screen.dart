@@ -7,6 +7,7 @@ import '../../constants/constants.dart';
 import '../../provider/agenda.dart';
 import './components/event_item.dart';
 import '../medical_records/medical_record_form_screen.dart';
+import './activity_form_screen.dart';
 
 class AgendaScreen extends StatefulWidget {
   static const routeName = "/agenda";
@@ -182,7 +183,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
               EventItem(
                 "Actividad",
                 "assets/icons/play-with-pet.svg",
-                NewMedicalRecordScreen.routeName,
+                ActivityFormScreen.routeName,
               ),
             ],
           ),

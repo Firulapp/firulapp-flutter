@@ -15,6 +15,7 @@ import './src/agenda/agenda_screen.dart';
 import './src/medical_records/medical_record_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
+import './src/agenda/activity_form_screen.dart';
 
 final Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => HomeScreen(),
@@ -33,4 +34,5 @@ final Map<String, WidgetBuilder> routes = {
   NewVaccinationRecordScreen.routeName: (context) =>
       NewVaccinationRecordScreen(),
   AgendaScreen.routeName: (context) => AgendaScreen(),
+  ActivityFormScreen.routeName: (context) => ActivityFormScreen(),
 };
