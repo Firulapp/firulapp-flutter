@@ -6,15 +6,15 @@ import '../constants/endpoints.dart';
 import 'user.dart';
 
 class ActivityItem {
-  final int id;
-  final int petId;
-  final String activityDate;
-  final String activityTime;
-  final String detail;
-  final String createdAt;
-  final int createdBy;
-  final String modifiedAt;
-  final int modifiedBy;
+  int id;
+  int petId;
+  String activityDate;
+  String activityTime;
+  String detail;
+  String createdAt;
+  int createdBy;
+  String modifiedAt;
+  int modifiedBy;
 
   ActivityItem({
     this.id,
@@ -29,13 +29,13 @@ class ActivityItem {
   });
 }
 
-class Activty with ChangeNotifier {
+class Activity with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
   List<ActivityItem> _items = [];
   PetItem _petItem;
   final User user;
 
-  Activty(this.user, _items);
+  Activity(this.user, _items);
 
   List<ActivityItem> get items {
     return [..._items];
@@ -49,7 +49,7 @@ class Activty with ChangeNotifier {
     _petItem = petItem;
   }
 
-  ActivityItem getLocalMedicalRecordById(int id) {
+  ActivityItem getLocalActivityById(int id) {
     return _items.firstWhere((med) => med.id == id);
   }
 
