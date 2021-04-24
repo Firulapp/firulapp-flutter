@@ -179,7 +179,7 @@ class MapScreenState extends State<ProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                DateFormat('dd-MM-yyyy').format(_date),
+                                DateTime.parse(user.userData.birthDate),
                                 style: TextStyle(
                                   fontSize: 23,
                                   fontWeight: FontWeight.bold,
@@ -187,9 +187,11 @@ class MapScreenState extends State<ProfilePage>
                               ),
                               IconButton(
                                 icon: Icon(Icons.calendar_today_outlined),
-                                onPressed: () {
-                                  _selectDate(context);
-                                  user.userData.birthDate = _birthDate;
+                                onPressed: () async {
+                                  await _selectDate(context);
+                                  setState(() {
+                                    user.userData.birthDate = _birthDate;
+                                  });
                                 },
                               ),
                             ],

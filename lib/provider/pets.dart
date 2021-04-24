@@ -22,7 +22,6 @@ class PetItem with ChangeNotifier {
   String description;
   String createdAt;
   int createdBy;
-  //DateTime createdBy; //userId
 
   PetItem({
     this.id,
