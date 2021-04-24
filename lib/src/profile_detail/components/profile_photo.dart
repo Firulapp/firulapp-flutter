@@ -149,31 +149,33 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 90.0, right: 100.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CupertinoButton(
-                      child: Container(
-                        child: CircleAvatar(
-                          backgroundColor: Constants.kPrimaryColor,
-                          radius: 25.0,
-                          child: Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
-                          ),
-                        ),
+              widget.onSelectImage == null
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 90.0, right: 100.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          CupertinoButton(
+                            child: Container(
+                              child: CircleAvatar(
+                                backgroundColor: Constants.kPrimaryColor,
+                                radius: 25.0,
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              if (!widget.status) {
+                                _showPicker(context);
+                              }
+                            },
+                          )
+                        ],
                       ),
-                      onPressed: () {
-                        if (!widget.status) {
-                          _showPicker(context);
-                        }
-                      },
-                    )
-                  ],
-                ),
-              ),
+                    ),
             ],
           ),
         )
