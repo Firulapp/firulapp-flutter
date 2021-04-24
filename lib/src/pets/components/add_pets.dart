@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -49,18 +50,6 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
     }
   }
 
-  Future<void> _getListBreeds(int idSpecies) async {
-    try {
-      Provider.of<Breeds>(context, listen: false).getBreeds(idSpecies);
-    } catch (e) {
-      Dialogs.info(
-        context,
-        title: 'ERROR',
-        content: e.toString(),
-      );
-    }
-  }
-
   @override
   void initState() {
     _initialSpecies = _getListSpecies();
@@ -69,11 +58,12 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
 
   @override
   void didChangeDependencies() {
+    final providerBreeds = Provider.of<Breeds>(context, listen: false);
     final id = ModalRoute.of(context).settings.arguments as int;
     if (id != null && isInit) {
       _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
       _birthDate = DateTime.parse(_pet.birthDate);
-      _initialBreeds = _getListBreeds(_pet.speciesId);
+      _initialBreeds = providerBreeds.getBreeds(_pet.speciesId);
       isInit = false;
     }
     super.didChangeDependencies();
@@ -83,6 +73,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
 
   @override
   Widget build(BuildContext context) {
+    final providerBreeds = Provider.of<Breeds>(context, listen: false);
     return new Scaffold(
         appBar: AppBar(
           title: Text("Agregar Mascota"),
@@ -174,7 +165,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                               if (_pet.speciesId != v) {
                                                 _pet.breedId = null;
                                                 _initialBreeds =
-                                                    _getListBreeds(v);
+                                                    providerBreeds.getBreeds(v);
                                               }
                                               _pet.speciesId = v;
                                             })
