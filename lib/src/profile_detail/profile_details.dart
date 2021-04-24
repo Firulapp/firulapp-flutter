@@ -327,19 +327,21 @@ class MapScreenState extends State<ProfilePage>
             child: Padding(
               padding: EdgeInsets.only(left: 10.0),
               child: Container(
-                  child: RaisedButton(
-                child: const Text("Cancelar"),
-                textColor: Colors.white,
-                color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-              )),
+                child: RaisedButton(
+                  child: const Text("Cancelar"),
+                  textColor: Colors.white,
+                  color: Colors.red,
+                  onPressed: () {
+                    setState(() {
+                      _status = true;
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    });
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
             ),
             flex: 2,
           ),

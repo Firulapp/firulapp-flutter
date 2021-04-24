@@ -10,12 +10,15 @@ import '../../../provider/user.dart';
 class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         children: [
-          ProfilePhoto(null, user.userData.profilePicture, true),
+          Consumer<User>(
+            builder: (ctx, user, child) {
+              return ProfilePhoto(null, user.userData.profilePicture, true);
+            },
+          ),
           SizedBox(height: 20),
           ProfileMenu(
             text: "Mi Cuenta",
