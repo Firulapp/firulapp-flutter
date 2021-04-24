@@ -179,7 +179,9 @@ class MapScreenState extends State<ProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                DateTime.parse(user.userData.birthDate),
+                                DateFormat('dd-MM-yyyy').format(
+                                  DateTime.parse(user.userData.birthDate),
+                                ),
                                 style: TextStyle(
                                   fontSize: 23,
                                   fontWeight: FontWeight.bold,
