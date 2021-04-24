@@ -72,6 +72,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
     final id = ModalRoute.of(context).settings.arguments as int;
     if (id != null && isInit) {
       _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
+      _birthDate = DateTime.parse(_pet.birthDate);
       _initialBreeds = _getListBreeds(_pet.speciesId);
       isInit = false;
     }
@@ -248,7 +249,13 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                               ),
                               IconButton(
                                 icon: Icon(Icons.calendar_today_outlined),
-                                onPressed: () => _selectDate(context),
+                                onPressed: () async {
+                                  await _selectDate(context);
+                                  setState(() {
+                                    _pet.birthDate =
+                                        _birthDate.toIso8601String();
+                                  });
+                                },
                                 iconSize: 40,
                                 color: kPrimaryColor,
                               ),
@@ -358,7 +365,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                       name: _pet.name,
                       speciesId: _pet.speciesId,
                       breedId: _pet.breedId,
-                      birthDate: _birthDate.toIso8601String(),
+                      birthDate: _pet.birthDate,
                       age: _age,
                       petSize: _pet.petSize,
                       primaryColor: _pet.primaryColor,
