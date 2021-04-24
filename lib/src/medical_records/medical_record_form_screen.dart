@@ -47,7 +47,11 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
         context,
         listen: false,
       ).getLocalMedicalRecordById(id);
-      _medicalRecordDate = DateTime.parse(_medicalRecord.consultedAt);
+      if (_medicalRecord != null) {
+        _medicalRecordDate = DateTime.parse(_medicalRecord.consultedAt);
+      } else {
+        _medicalRecord = new MedicalRecordItem();
+      }
     } else {
       _medicalRecord.consultedAt = _medicalRecordDate.toIso8601String();
     }
@@ -225,7 +229,6 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                                 context,
                                                 listen: false,
                                               ).delete(_medicalRecord);
-                                              Navigator.pop(context);
                                             } catch (error) {
                                               Dialogs.info(
                                                 context,
@@ -237,6 +240,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                             setState(() {
                                               _isLoading = false;
                                             });
+                                            Navigator.pop(context);
                                           }
                                         },
                                       ),
