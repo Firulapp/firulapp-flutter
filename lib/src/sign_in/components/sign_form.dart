@@ -43,10 +43,16 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
         );
       } catch (error) {
         print(error);
+        String message;
+        if (error.response.data["status"] == 500) {
+          message = "Usuario incorrecto o inexistente";
+        } else {
+          message = error.response.data["message"];
+        }
         Dialogs.info(
           context,
           title: 'ERROR',
-          content: error.response.data["message"],
+          content: message,
         );
       }
     }
