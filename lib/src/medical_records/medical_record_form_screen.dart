@@ -172,7 +172,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                     25)),
                             DefaultButton(
                               text: "Guardar",
-                              color: kPrimaryColor,
+                              color: Constants.kPrimaryColor,
                               press: () async {
                                 final isOK = _formKey.currentState.validate();
                                 if (isOK) {

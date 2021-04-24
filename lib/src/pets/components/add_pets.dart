@@ -258,7 +258,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                   });
                                 },
                                 iconSize: 40,
-                                color: kPrimaryColor,
+                                color: Constants.kPrimaryColor,
                               ),
                             ],
                           ),
@@ -429,7 +429,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   Widget _getEditIcon() {
     return GestureDetector(
       child: CircleAvatar(
-        backgroundColor: kPrimaryColor,
+        backgroundColor: Constants.kPrimaryColor,
         radius: 20.0,
         child: Icon(
           Icons.edit,

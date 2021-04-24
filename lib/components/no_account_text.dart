@@ -25,7 +25,7 @@ class NoAccountText extends StatelessWidget {
             "Registrarse",
             style: TextStyle(
                 fontSize: SizeConfig.getProportionateScreenWidth(16),
-                color: kPrimaryColor),
+                color: Constants.kPrimaryColor),
           ),
         ),
       ],

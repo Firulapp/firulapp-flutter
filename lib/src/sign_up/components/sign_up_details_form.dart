@@ -33,7 +33,7 @@ class SignUpDetailsForm extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: sizeConfig.hp(4)), // 4%
-                  Text("Registrar Cuenta", style: headingStyle),
+                  Text("Registrar Cuenta", style: Constants.headingStyle),
                   Text("Complete sus datos",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -186,7 +186,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
               SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               DefaultButton(
                 text: "Registrar",
-                color: kPrimaryColor,
+                color: Constants.kPrimaryColor,
                 press: () async {
                   setState(() {
                     _isLoading = true;

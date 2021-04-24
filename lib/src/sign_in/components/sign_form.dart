@@ -71,7 +71,7 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
                 DefaultButton(
                   text: "Iniciar Sesión",
                   press: _submit,
-                  color: kPrimaryColor,
+                  color: Constants.kPrimaryColor,
                 ),
               ],
             ),

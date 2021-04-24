@@ -351,7 +351,7 @@ class MapScreenState extends State<ProfilePage>
   Widget _getEditIcon() {
     return GestureDetector(
       child: CircleAvatar(
-        backgroundColor: kPrimaryColor,
+        backgroundColor: Constants.kPrimaryColor,
         radius: 20.0,
         child: Icon(
           Icons.edit,
