@@ -87,7 +87,7 @@ class MyApp extends StatelessWidget {
         title: 'Firulapp',
         theme: theme(),
         initialRoute: HomeScreen.routeName,
-        routes: routes,
+        routes: Routes.routes,
       ),
     );
   }
