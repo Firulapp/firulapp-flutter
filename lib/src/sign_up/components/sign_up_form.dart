@@ -27,11 +27,11 @@ class _SignUpFormState extends State<SignUpForm> with ValidatorMixins {
       child: Column(
         children: [
           buildEmailFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
+          SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
           buildPasswordFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
+          SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
           buildConformPassFormField(),
-          SizedBox(height: getProportionateScreenHeight(40)),
+          SizedBox(height: SizeConfig.getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Continue",
             color: kPrimaryColor,

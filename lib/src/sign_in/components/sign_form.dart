@@ -63,11 +63,11 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: getProportionateScreenHeight(30)),
+                SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
                 emailFormField(),
-                SizedBox(height: getProportionateScreenHeight(30)),
+                SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
                 passwordFormField(),
-                SizedBox(height: getProportionateScreenHeight(30)),
+                SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
                 DefaultButton(
                   text: "Iniciar Sesión",
                   press: _submit,

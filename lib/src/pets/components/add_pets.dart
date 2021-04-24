@@ -99,7 +99,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                     _status,
                   ),
                 ),
-                SizedBox(height: getProportionateScreenHeight(25)),
+                SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,7 +133,8 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                               )
                             ],
                           )),
-                      SizedBox(height: getProportionateScreenHeight(25)),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       buildNameFormField(
                         label: "Nombre de mascota",
                         hint: "Ingrese un nombre",
@@ -302,21 +303,25 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                           ],
                         ),
                       ),
-                      SizedBox(height: getProportionateScreenHeight(25)),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       buildDropdown(['PEQUEÑO', 'MEDIANO', 'GRANDE']),
-                      SizedBox(height: getProportionateScreenHeight(25)),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       buildPrimaryColorFormField(
                         label: "Color primario",
                         hint: "Ingrese un color",
                         tipo: TextInputType.text,
                       ),
-                      SizedBox(height: getProportionateScreenHeight(25)),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       buildSecondaryColorFormField(
                         label: "Color secundario",
                         hint: "Ingrese un color",
                         tipo: TextInputType.text,
                       ),
-                      SizedBox(height: getProportionateScreenHeight(25)),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       buildDescriptionFormField(
                         label: "Descripción",
                         hint: "Ingrese una description",

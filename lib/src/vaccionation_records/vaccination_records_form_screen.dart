@@ -103,25 +103,33 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                 ),
                               ],
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             buildNameFormField(
                               "Nombre de la Vacuna",
                               "Ingrese el nombre de la vacuna",
                               TextInputType.name,
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             buildVeterinaryFormField(
                               "Veterinaria",
                               "Ingrese el nombre de la veterinaria",
                               TextInputType.name,
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             buildObservationsFormField(
                               "Observaciones",
                               "Ingrese observaciones sobre el diagnostico",
                               TextInputType.multiline,
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             Row(
                               children: [
                                 CupertinoSwitch(
@@ -138,7 +146,9 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                 )
                               ],
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             DefaultButton(
                               text: "Guardar",
                               color: kPrimaryColor,
@@ -171,8 +181,9 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                 ? Column(
                                     children: [
                                       SizedBox(
-                                          height:
-                                              getProportionateScreenHeight(25)),
+                                          height: SizeConfig
+                                              .getProportionateScreenHeight(
+                                                  25)),
                                       DefaultButton(
                                         text: "Borrar",
                                         color: Colors.white,
@@ -210,13 +221,15 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                         },
                                       ),
                                       SizedBox(
-                                        height:
-                                            getProportionateScreenHeight(25),
+                                        height: SizeConfig
+                                            .getProportionateScreenHeight(25),
                                       ),
                                     ],
                                   )
                                 : SizedBox(
-                                    height: getProportionateScreenHeight(25),
+                                    height:
+                                        SizeConfig.getProportionateScreenHeight(
+                                            25),
                                   ),
                           ],
                         ),

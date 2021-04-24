@@ -92,35 +92,46 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 ),
                               ],
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             buildVeterinaryFormField(
                               "Veterinaria",
                               "Ingrese el nombre de la veterinaria",
                               TextInputType.name,
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             buildDiagnosticFormField(
                               "Diagnóstico",
                               "Ingrese el diagnóstico de la mascota",
                               TextInputType.multiline,
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             buildTreatmentFormField(
                               "Tratamiento",
                               "Ingrese el tratamiento a seguir",
                               TextInputType.multiline,
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             buildObservationsFormField(
                               "Observaciones",
                               "Ingrese observaciones sobre el diagnostico",
                               TextInputType.multiline,
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             Row(
                               children: [
                                 Container(
-                                  width: getProportionateScreenWidth(150),
+                                  width: SizeConfig.getProportionateScreenWidth(
+                                      150),
                                   child: buildWeightFormField(
                                     "Peso",
                                     TextInputType.number,
@@ -128,7 +139,8 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 ),
                                 const SizedBox(width: 10),
                                 Container(
-                                  width: getProportionateScreenWidth(150),
+                                  width: SizeConfig.getProportionateScreenWidth(
+                                      150),
                                   child: buildHeightFormField(
                                     "Altura",
                                     TextInputType.number,
@@ -136,7 +148,9 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 ),
                               ],
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             Row(
                               children: [
                                 CupertinoSwitch(
@@ -153,7 +167,9 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 )
                               ],
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             DefaultButton(
                               text: "Guardar",
                               color: kPrimaryColor,
@@ -186,8 +202,9 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 ? Column(
                                     children: [
                                       SizedBox(
-                                          height:
-                                              getProportionateScreenHeight(25)),
+                                          height: SizeConfig
+                                              .getProportionateScreenHeight(
+                                                  25)),
                                       DefaultButton(
                                         text: "Borrar",
                                         color: Colors.white,
@@ -224,13 +241,15 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                         },
                                       ),
                                       SizedBox(
-                                        height:
-                                            getProportionateScreenHeight(25),
+                                        height: SizeConfig
+                                            .getProportionateScreenHeight(25),
                                       ),
                                     ],
                                   )
                                 : SizedBox(
-                                    height: getProportionateScreenHeight(25),
+                                    height:
+                                        SizeConfig.getProportionateScreenHeight(
+                                            25),
                                   ),
                           ],
                         ),
