@@ -27,14 +27,14 @@ class _SignUpFormState extends State<SignUpForm> with ValidatorMixins {
       child: Column(
         children: [
           buildEmailFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
+          SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
           buildPasswordFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
+          SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
           buildConformPassFormField(),
-          SizedBox(height: getProportionateScreenHeight(40)),
+          SizedBox(height: SizeConfig.getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Continue",
-            color: kPrimaryColor,
+            color: Constants.kPrimaryColor,
             press: () {
               final isOK = _formKey.currentState.validate();
               if (isOK) {
@@ -62,15 +62,15 @@ class _SignUpFormState extends State<SignUpForm> with ValidatorMixins {
         onSaved: (newValue) => _confirmPassword = newValue,
         onChanged: (value) {
           if (value.isNotEmpty && _password == _confirmPassword) {
-            return kMatchPassError;
+            return Constants.kMatchPassError;
           }
           _confirmPassword = value;
         },
         validator: (value) {
           if (value.isEmpty) {
-            return kPassNullError;
+            return Constants.kPassNullError;
           } else if ((_password != value)) {
-            return kMatchPassError;
+            return Constants.kMatchPassError;
           }
           return null;
         },

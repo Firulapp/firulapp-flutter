@@ -66,7 +66,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     );
                   }
                 }),
-            decoration: BoxDecoration(color: kSecondaryColor),
+            decoration: BoxDecoration(color: Constants.kSecondaryColor),
             //Lista de Otros Usuarios
             otherAccountsPictures: <Widget>[
               Image.network(

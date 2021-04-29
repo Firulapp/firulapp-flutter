@@ -52,7 +52,7 @@ class _VaccinationRecordsScreenState extends State<VaccinationRecordsScreen> {
           ),
           Flexible(
             child: Container(
-              color: lightBackgroundColor,
+              color: Constants.lightBackgroundColor,
               child: FutureBuilder(
                 future: _vaccinationRecordsFuture,
                 builder: (_, dataSnapshot) {
@@ -98,7 +98,7 @@ class _VaccinationRecordsScreenState extends State<VaccinationRecordsScreen> {
                                     'Sin Vacunas :(',
                                     style: TextStyle(
                                       fontSize: sizeConfig.hp(4),
-                                      color: kPrimaryColor,
+                                      color: Constants.kPrimaryColor,
                                     ),
                                   )
                                 ],

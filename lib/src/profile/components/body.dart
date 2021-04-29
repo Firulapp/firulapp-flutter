@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../profile_detail/profile_details.dart';
 import '../../../components/dialogs.dart';
-import 'profile_menu.dart';
-import 'profile_pic.dart';
+import './profile_menu.dart';
+import '../../profile_detail/components/profile_photo.dart';
+import '../../../provider/user.dart';
 
 class Body extends StatelessWidget {
   @override
@@ -12,7 +14,11 @@ class Body extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         children: [
-          ProfilePic(),
+          Consumer<User>(
+            builder: (ctx, user, child) {
+              return ProfilePhoto(null, user.userData.profilePicture, true);
+            },
+          ),
           SizedBox(height: 20),
           ProfileMenu(
             text: "Mi Cuenta",

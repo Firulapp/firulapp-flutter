@@ -42,7 +42,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
     FileImage(_storedImage).evict();
   }
 
-  Future _getImage(bool fromCamera) async {
+  Future _getNewImage(bool fromCamera) async {
     final ImagePicker picker = ImagePicker();
     final pickedFile = await picker.getImage(
         source: fromCamera ? ImageSource.camera : ImageSource.gallery);
@@ -74,14 +74,14 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                     leading: Icon(Icons.photo_library),
                     title: const Text('Galería'),
                     onTap: () {
-                      _getImage(false);
+                      _getNewImage(false);
                       Navigator.of(context).pop();
                     }),
                 ListTile(
                   leading: Icon(Icons.photo_camera),
                   title: const Text('Cámara'),
                   onTap: () {
-                    _getImage(true);
+                    _getNewImage(true);
                     Navigator.of(context).pop();
                   },
                 ),
@@ -149,31 +149,33 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 90.0, right: 100.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CupertinoButton(
-                      child: Container(
-                        child: CircleAvatar(
-                          backgroundColor: kPrimaryColor,
-                          radius: 25.0,
-                          child: Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
-                          ),
-                        ),
+              widget.onSelectImage == null
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 90.0, right: 100.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          CupertinoButton(
+                            child: Container(
+                              child: CircleAvatar(
+                                backgroundColor: Constants.kPrimaryColor,
+                                radius: 25.0,
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              if (!widget.status) {
+                                _showPicker(context);
+                              }
+                            },
+                          )
+                        ],
                       ),
-                      onPressed: () {
-                        if (!widget.status) {
-                          _showPicker(context);
-                        }
-                      },
-                    )
-                  ],
-                ),
-              ),
+                    ),
             ],
           ),
         )

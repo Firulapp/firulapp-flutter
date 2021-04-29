@@ -112,7 +112,7 @@ class _PetImageState extends State<PetImage> {
                     CupertinoButton(
                       child: Container(
                         child: CircleAvatar(
-                          backgroundColor: kPrimaryColor,
+                          backgroundColor: Constants.kPrimaryColor,
                           radius: 25.0,
                           child: Icon(
                             Icons.camera_alt,

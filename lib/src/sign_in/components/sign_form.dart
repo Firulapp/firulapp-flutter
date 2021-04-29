@@ -42,11 +42,16 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
           (_) => false,
         );
       } catch (error) {
-        print(error);
+        String message;
+        if (error.response.data["status"] == 500) {
+          message = "Usuario incorrecto o inexistente";
+        } else {
+          message = error.response.data["message"];
+        }
         Dialogs.info(
           context,
           title: 'ERROR',
-          content: error.response.data["message"],
+          content: message,
         );
       }
     }
@@ -63,15 +68,15 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: getProportionateScreenHeight(30)),
+                SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
                 emailFormField(),
-                SizedBox(height: getProportionateScreenHeight(30)),
+                SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
                 passwordFormField(),
-                SizedBox(height: getProportionateScreenHeight(30)),
+                SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
                 DefaultButton(
                   text: "Iniciar Sesión",
                   press: _submit,
-                  color: kPrimaryColor,
+                  color: Constants.kPrimaryColor,
                 ),
               ],
             ),

@@ -85,9 +85,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Firulapp',
-        theme: theme(),
+        theme: CustomTheme.theme(),
         initialRoute: HomeScreen.routeName,
-        routes: routes,
+        routes: Routes.routes,
       ),
     );
   }

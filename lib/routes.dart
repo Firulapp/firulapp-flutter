@@ -15,20 +15,22 @@ import './src/medical_records/medical_record_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
 
-final Map<String, WidgetBuilder> routes = {
-  HomeScreen.routeName: (context) => HomeScreen(),
-  SignInScreen.routeName: (context) => SignInScreen(),
-  ProfileScreen.routeName: (context) => ProfileScreen(),
-  ProfilePage.routeName: (context) => ProfilePage(),
-  PetsScreen.routeName: (context) => PetsScreen(),
-  SelectedPetScreen.routeName: (context) => SelectedPetScreen(),
-  SignUpScreen.routeName: (context) => SignUpScreen(),
-  SignUpDetailsForm.routeName: (context) => SignUpDetailsForm(),
-  AddPets.routeName: (context) => AddPets(),
-  PetsList.routeName: (context) => PetsList(),
-  MedicalRecordsScreen.routeName: (context) => MedicalRecordsScreen(),
-  NewMedicalRecordScreen.routeName: (context) => NewMedicalRecordScreen(),
-  VaccinationRecordsScreen.routeName: (context) => VaccinationRecordsScreen(),
-  NewVaccinationRecordScreen.routeName: (context) =>
-      NewVaccinationRecordScreen(),
-};
+class Routes {
+  static final Map<String, WidgetBuilder> routes = {
+    HomeScreen.routeName: (context) => HomeScreen(),
+    SignInScreen.routeName: (context) => SignInScreen(),
+    ProfileScreen.routeName: (context) => ProfileScreen(),
+    ProfilePage.routeName: (context) => ProfilePage(),
+    PetsScreen.routeName: (context) => PetsScreen(),
+    SelectedPetScreen.routeName: (context) => SelectedPetScreen(),
+    SignUpScreen.routeName: (context) => SignUpScreen(),
+    SignUpDetailsForm.routeName: (context) => SignUpDetailsForm(),
+    AddPets.routeName: (context) => AddPets(),
+    PetsList.routeName: (context) => PetsList(),
+    MedicalRecordsScreen.routeName: (context) => MedicalRecordsScreen(),
+    NewMedicalRecordScreen.routeName: (context) => NewMedicalRecordScreen(),
+    VaccinationRecordsScreen.routeName: (context) => VaccinationRecordsScreen(),
+    NewVaccinationRecordScreen.routeName: (context) =>
+        NewVaccinationRecordScreen(),
+  };
+}
