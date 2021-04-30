@@ -49,18 +49,6 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
     }
   }
 
-  Future<void> _getListBreeds(int idSpecies) async {
-    try {
-      Provider.of<Breeds>(context, listen: false).getBreeds(idSpecies);
-    } catch (e) {
-      Dialogs.info(
-        context,
-        title: 'ERROR',
-        content: e.toString(),
-      );
-    }
-  }
-
   @override
   void initState() {
     _initialSpecies = _getListSpecies();
@@ -69,10 +57,12 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
 
   @override
   void didChangeDependencies() {
+    final providerBreeds = Provider.of<Breeds>(context, listen: false);
     final id = ModalRoute.of(context).settings.arguments as int;
     if (id != null && isInit) {
       _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
-      _initialBreeds = _getListBreeds(_pet.speciesId);
+      _birthDate = DateTime.parse(_pet.birthDate);
+      _initialBreeds = providerBreeds.getBreeds(_pet.speciesId);
       isInit = false;
     }
     super.didChangeDependencies();
@@ -82,6 +72,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
 
   @override
   Widget build(BuildContext context) {
+    final providerBreeds = Provider.of<Breeds>(context, listen: false);
     return new Scaffold(
         appBar: AppBar(
           title: Text("Agregar Mascota"),
@@ -98,7 +89,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                     _status,
                   ),
                 ),
-                SizedBox(height: getProportionateScreenHeight(25)),
+                SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,7 +123,8 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                               )
                             ],
                           )),
-                      SizedBox(height: getProportionateScreenHeight(25)),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       buildNameFormField(
                         label: "Nombre de mascota",
                         hint: "Ingrese un nombre",
@@ -172,7 +164,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                               if (_pet.speciesId != v) {
                                                 _pet.breedId = null;
                                                 _initialBreeds =
-                                                    _getListBreeds(v);
+                                                    providerBreeds.getBreeds(v);
                                               }
                                               _pet.speciesId = v;
                                             })
@@ -248,9 +240,15 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                               ),
                               IconButton(
                                 icon: Icon(Icons.calendar_today_outlined),
-                                onPressed: () => _selectDate(context),
+                                onPressed: () async {
+                                  await _selectDate(context);
+                                  setState(() {
+                                    _pet.birthDate =
+                                        _birthDate.toIso8601String();
+                                  });
+                                },
                                 iconSize: 40,
-                                color: kPrimaryColor,
+                                color: Constants.kPrimaryColor,
                               ),
                             ],
                           ),
@@ -295,21 +293,25 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                           ],
                         ),
                       ),
-                      SizedBox(height: getProportionateScreenHeight(25)),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       buildDropdown(['PEQUEÑO', 'MEDIANO', 'GRANDE']),
-                      SizedBox(height: getProportionateScreenHeight(25)),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       buildPrimaryColorFormField(
                         label: "Color primario",
                         hint: "Ingrese un color",
                         tipo: TextInputType.text,
                       ),
-                      SizedBox(height: getProportionateScreenHeight(25)),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       buildSecondaryColorFormField(
                         label: "Color secundario",
                         hint: "Ingrese un color",
                         tipo: TextInputType.text,
                       ),
-                      SizedBox(height: getProportionateScreenHeight(25)),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       buildDescriptionFormField(
                         label: "Descripción",
                         hint: "Ingrese una description",
@@ -358,7 +360,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                       name: _pet.name,
                       speciesId: _pet.speciesId,
                       breedId: _pet.breedId,
-                      birthDate: _birthDate.toIso8601String(),
+                      birthDate: _pet.birthDate,
                       age: _age,
                       petSize: _pet.petSize,
                       primaryColor: _pet.primaryColor,
@@ -417,7 +419,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   Widget _getEditIcon() {
     return GestureDetector(
       child: CircleAvatar(
-        backgroundColor: kPrimaryColor,
+        backgroundColor: Constants.kPrimaryColor,
         radius: 20.0,
         child: Icon(
           Icons.edit,

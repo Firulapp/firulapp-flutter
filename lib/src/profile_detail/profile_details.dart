@@ -179,7 +179,9 @@ class MapScreenState extends State<ProfilePage>
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                DateFormat('dd-MM-yyyy').format(_date),
+                                DateFormat('dd-MM-yyyy').format(
+                                  DateTime.parse(user.userData.birthDate),
+                                ),
                                 style: TextStyle(
                                   fontSize: 23,
                                   fontWeight: FontWeight.bold,
@@ -187,9 +189,11 @@ class MapScreenState extends State<ProfilePage>
                               ),
                               IconButton(
                                 icon: Icon(Icons.calendar_today_outlined),
-                                onPressed: () {
-                                  _selectDate(context);
-                                  user.userData.birthDate = _birthDate;
+                                onPressed: () async {
+                                  await _selectDate(context);
+                                  setState(() {
+                                    user.userData.birthDate = _birthDate;
+                                  });
                                 },
                               ),
                             ],
@@ -323,19 +327,21 @@ class MapScreenState extends State<ProfilePage>
             child: Padding(
               padding: EdgeInsets.only(left: 10.0),
               child: Container(
-                  child: RaisedButton(
-                child: const Text("Cancelar"),
-                textColor: Colors.white,
-                color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-              )),
+                child: RaisedButton(
+                  child: const Text("Cancelar"),
+                  textColor: Colors.white,
+                  color: Colors.red,
+                  onPressed: () {
+                    setState(() {
+                      _status = true;
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    });
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
             ),
             flex: 2,
           ),
@@ -347,7 +353,7 @@ class MapScreenState extends State<ProfilePage>
   Widget _getEditIcon() {
     return GestureDetector(
       child: CircleAvatar(
-        backgroundColor: kPrimaryColor,
+        backgroundColor: Constants.kPrimaryColor,
         radius: 20.0,
         child: Icon(
           Icons.edit,

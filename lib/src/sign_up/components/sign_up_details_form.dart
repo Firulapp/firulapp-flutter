@@ -33,7 +33,7 @@ class SignUpDetailsForm extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: sizeConfig.hp(4)), // 4%
-                  Text("Registrar Cuenta", style: headingStyle),
+                  Text("Registrar Cuenta", style: Constants.headingStyle),
                   Text("Complete sus datos",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -116,29 +116,29 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 "Ingrese un nombre de usuario",
                 TextInputType.name,
               ),
-              SizedBox(height: getProportionateScreenHeight(25)),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               buildNameFormField(
                 "Nombre",
                 "Ingrese su primer nombre",
                 TextInputType.name,
               ),
-              SizedBox(height: getProportionateScreenHeight(25)),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               buildSurnameFormField(
                 "Apellido",
                 "Ingrese su apellido",
                 TextInputType.name,
               ),
-              SizedBox(height: getProportionateScreenHeight(25)),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               buildDropdown(
                 _user.getDocumentTypeOptions(),
               ),
-              SizedBox(height: getProportionateScreenHeight(15)),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
               buildDocumentFormField(
                 "Documento de identidad",
                 "Ingrese su documento",
                 TextInputType.number,
               ),
-              SizedBox(height: getProportionateScreenHeight(25)),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               FutureBuilder(
                 future: _citiesFuture,
                 builder: (_, dataSnapshot) {
@@ -159,7 +159,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
                   );
                 },
               ),
-              SizedBox(height: getProportionateScreenHeight(25)),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
@@ -183,10 +183,10 @@ class _BodyState extends State<Body> with ValidatorMixins {
                   )
                 ],
               ),
-              SizedBox(height: getProportionateScreenHeight(25)),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               DefaultButton(
                 text: "Registrar",
-                color: kPrimaryColor,
+                color: Constants.kPrimaryColor,
                 press: () async {
                   setState(() {
                     _isLoading = true;

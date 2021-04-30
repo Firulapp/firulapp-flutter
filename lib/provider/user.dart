@@ -121,6 +121,7 @@ class User with ChangeNotifier {
           "enabled": true
         },
       );
+      addUser(userData);
     } catch (error) {
       throw error;
     }
