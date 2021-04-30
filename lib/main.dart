@@ -76,14 +76,24 @@ class MyApp extends StatelessWidget {
             [],
           ),
         ),
+        ChangeNotifierProxyProvider<User, Agenda>(
+          update: (context, user, agenda) => Agenda(
+            user,
+            agenda == null ? {} : agenda.items,
+          ),
+          create: (ctx) => Agenda(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
         ChangeNotifierProvider(
           create: (_) => Species(),
         ),
         ChangeNotifierProvider(
           create: (_) => Breeds(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => Agenda(),
         ),
       ],
       child: MaterialApp(

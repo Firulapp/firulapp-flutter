@@ -1,4 +1,6 @@
+import 'package:firulapp/provider/pets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +10,7 @@ import '../../provider/agenda.dart';
 import './components/event_item.dart';
 import '../medical_records/medical_record_form_screen.dart';
 import './activity_form_screen.dart';
+import 'components/pet_option.dart';
 
 class AgendaScreen extends StatefulWidget {
   static const routeName = "/agenda";
@@ -20,38 +23,15 @@ class _AgendaScreenState extends State<AgendaScreen> {
   var _calendarController;
   Map<DateTime, List<dynamic>> _events;
   List<dynamic> _selectedEvents;
+  Future _petsFuture;
 
   @override
   void initState() {
     super.initState();
+    _petsFuture = Provider.of<Pets>(context, listen: false).fetchPetList();
     var date = DateTime.now();
     _calendarController = CalendarController();
-    _events = {
-      DateTime.now().add(Duration(days: 11)): [
-        Agenda(
-          id: 1,
-          title: 'Consulta Médica',
-          description: 'Doctor ayuda',
-        ),
-        Agenda(
-          id: 2,
-          title: 'Vacuna',
-          description: 'Vacuna anti algo',
-        ),
-        Agenda(
-          id: 3,
-          title: 'Actividad',
-          description: 'Pasear',
-        ),
-      ],
-      DateTime.now().add(Duration(days: 10)): [
-        Agenda(
-          id: 4,
-          title: 'Actividad',
-          description: 'Pasear',
-        ),
-      ]
-    };
+    _events = {};
     _selectedEvents = _events[date] == null ? [] : _events[date];
   }
 
@@ -76,7 +56,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryColor,
         child: Icon(Icons.add),
-        onPressed: _showAddDialog,
+        onPressed: _showPetListDialog,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -162,30 +142,69 @@ class _AgendaScreenState extends State<AgendaScreen> {
         ),
         content: Container(
           height: 400,
-          child: Column(
-            children: [
-              EventItem(
-                "Consulta Médica",
-                "assets/icons/medical-check.svg",
-                NewMedicalRecordScreen.routeName,
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              EventItem(
-                "Vacuna",
-                "assets/icons/syringe.svg",
-                NewVaccinationRecordScreen.routeName,
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              EventItem(
-                "Actividad",
-                "assets/icons/play-with-pet.svg",
-                ActivityFormScreen.routeName,
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                EventItem(
+                  "Consulta Médica",
+                  "assets/icons/medical-check.svg",
+                  NewMedicalRecordScreen.routeName,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                EventItem(
+                  "Vacuna",
+                  "assets/icons/syringe.svg",
+                  NewVaccinationRecordScreen.routeName,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                EventItem(
+                  "Actividad",
+                  "assets/icons/play-with-pet.svg",
+                  ActivityFormScreen.routeName,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _showPetListDialog() async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: Colors.black,
+          ),
+        ),
+        title: Text(
+          "Elegir Mascota",
+          textAlign: TextAlign.center,
+        ),
+        content: Container(
+          height: 400,
+          child: FutureBuilder(
+            future: _petsFuture,
+            builder: (_, dataSnapshot) {
+              return Consumer<Pets>(
+                builder: (context, providerData, _) => SingleChildScrollView(
+                  child: Column(
+                    children: providerData.items
+                        .map(
+                          (pet) => PetOption(pet),
+                        )
+                        .toList(),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
