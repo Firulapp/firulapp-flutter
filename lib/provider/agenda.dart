@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:firulapp/constants/endpoints.dart';
-import 'package:firulapp/provider/pets.dart';
 import 'package:firulapp/provider/user.dart';
 import 'package:flutter/material.dart';
 
+/*
+* Estructura que el backend responde, no se usa, porque el calendario solo
+* funciona con tipo de dato 'dynamic', se deja para futuro fix
+*/
 class AgendaItem {
   final int id;
   final int userId;
@@ -12,7 +15,6 @@ class AgendaItem {
   final int petMedicalRecordId;
   final int petVaccinationRecordId;
   final String details;
-  final String activityTitle;
   final String activityDate;
   final String activityTime;
 
@@ -24,7 +26,6 @@ class AgendaItem {
     this.petMedicalRecordId,
     this.petVaccinationRecordId,
     this.details,
-    this.activityTitle,
     this.activityDate,
     this.activityTime,
   });
@@ -32,21 +33,51 @@ class AgendaItem {
 
 class Agenda with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
-  PetItem _petItem;
   final User user;
-  List<AgendaItem> _items = [];
+  Map<DateTime, List<dynamic>> _items = {};
 
   Agenda(this.user, _items);
 
-  List<AgendaItem> get items {
-    return [..._items];
+  Map<DateTime, List<dynamic>> get items {
+    return _items;
   }
 
   int get itemCount {
     return _items.length;
   }
 
-  void setPetItem(PetItem petItem) {
-    _petItem = petItem;
+  /*
+  * _items es una lista ordenada de AgendaItem, recorremos la lista y 
+  * creamos un Map por fecha
+  */
+  Future<void> fetchEvents() async {
+    List<dynamic> agendaItems = [];
+    try {
+      final response =
+          await this._dio.get('${Endpoints.userAgenda}/${user.session.userId}');
+      final events = response.data["list"];
+
+      var auxDate = events[0]["activityDate"];
+      var firstTime = true;
+      events.forEach((item) {
+        if (auxDate != item["activityDate"] && !firstTime) {
+          _items.addAll({
+            DateTime.parse(auxDate): agendaItems,
+          });
+          agendaItems = [];
+          auxDate = item["activityDate"];
+        }
+        agendaItems.add(item);
+        firstTime = false;
+      });
+      print(_items);
+      _items.addAll({
+        DateTime.parse(auxDate): agendaItems,
+      });
+      print(_items);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 }

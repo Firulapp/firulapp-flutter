@@ -25,14 +25,19 @@ class AgendaScreen extends StatefulWidget {
 
 class _AgendaScreenState extends State<AgendaScreen> {
   var _calendarController;
-  Map<DateTime, List<dynamic>> _events;
-  List<AgendaItem> _selectedEvents = [];
+  List<dynamic> _selectedEvents = [];
   Future _petsFuture;
+  Future _eventsFuture;
+
+  Future _obtainEventsFuture() {
+    return Provider.of<Agenda>(context, listen: false).fetchEvents();
+  }
 
   @override
   void initState() {
     super.initState();
     _petsFuture = Provider.of<Pets>(context, listen: false).fetchPetList();
+    _eventsFuture = _obtainEventsFuture();
     _calendarController = CalendarController();
   }
 
@@ -63,31 +68,37 @@ class _AgendaScreenState extends State<AgendaScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          TableCalendar(
-            availableCalendarFormats: const {
-              CalendarFormat.month: 'Mes',
-              CalendarFormat.week: 'Semana',
-              CalendarFormat.twoWeeks: '2 Semanas',
-            },
-            events: _events,
-            initialCalendarFormat: CalendarFormat.month,
-            calendarController: _calendarController,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            calendarStyle: CalendarStyle(
-              canEventMarkersOverflow: true,
-              todayColor: Constants.kPrimaryLightColor,
-              selectedColor: Constants.kPrimaryColor,
-              todayStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-                color: Colors.white,
-              ),
-            ),
-            onDaySelected: (date, events, holidays) {
-              setState(() {
-                _selectedEvents =
-                    events.map((item) => item as AgendaItem)?.toList();
-              });
+          FutureBuilder(
+            future: _eventsFuture,
+            builder: (context, snapshot) {
+              return Consumer<Agenda>(
+                builder: (context, agenda, _) => TableCalendar(
+                  availableCalendarFormats: const {
+                    CalendarFormat.month: 'Mes',
+                    CalendarFormat.week: 'Semana',
+                    CalendarFormat.twoWeeks: '2 Semanas',
+                  },
+                  events: agenda.items,
+                  initialCalendarFormat: CalendarFormat.month,
+                  calendarController: _calendarController,
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  calendarStyle: CalendarStyle(
+                    canEventMarkersOverflow: true,
+                    todayColor: Constants.kPrimaryLightColor,
+                    selectedColor: Constants.kPrimaryColor,
+                    todayStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onDaySelected: (date, events, holidays) {
+                    setState(() {
+                      _selectedEvents = events;
+                    });
+                  },
+                ),
+              );
             },
           ),
           Flexible(
