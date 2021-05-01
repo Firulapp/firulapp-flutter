@@ -1,3 +1,4 @@
+import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:firulapp/src/vaccionation_records/vaccination_records_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,7 +49,12 @@ class _VaccinationRecordsScreenState extends State<VaccinationRecordsScreen> {
               Icons.add,
             ),
             onPressed: () => Navigator.pushNamed(
-                context, NewVaccinationRecordScreen.routeName),
+              context,
+              NewVaccinationRecordScreen.routeName,
+              arguments: EventItem(
+                date: DateTime.now(),
+              ),
+            ),
           ),
           Flexible(
             child: Container(

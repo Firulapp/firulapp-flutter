@@ -1,3 +1,4 @@
+import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,8 +47,13 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
             icon: Icon(
               Icons.add,
             ),
-            onPressed: () =>
-                Navigator.pushNamed(context, NewMedicalRecordScreen.routeName),
+            onPressed: () => Navigator.pushNamed(
+              context,
+              NewMedicalRecordScreen.routeName,
+              arguments: EventItem(
+                date: DateTime.now(),
+              ),
+            ),
           ),
           Flexible(
             child: Container(

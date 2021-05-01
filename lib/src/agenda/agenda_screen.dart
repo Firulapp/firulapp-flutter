@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/activity.dart';
 import 'package:firulapp/provider/medical_record.dart';
 import 'package:firulapp/provider/pets.dart';
 import 'package:firulapp/provider/vaccination_record.dart';
@@ -8,11 +9,11 @@ import 'package:flutter/material.dart';
 
 import '../vaccionation_records/vaccination_records_form_screen.dart';
 import '../../constants/constants.dart';
-import '../../provider/agenda.dart';
 import './components/event_item.dart';
 import '../medical_records/medical_record_form_screen.dart';
 import './activity_form_screen.dart';
 import 'components/pet_option.dart';
+import 'package:firulapp/components/dtos/event_item.dart' as eventDTO;
 
 class AgendaScreen extends StatefulWidget {
   static const routeName = "/agenda";
@@ -51,14 +52,15 @@ class _AgendaScreenState extends State<AgendaScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: _showPetListDialog,
+            onPressed: () =>
+                _showPetListDialog(_calendarController.selectedDay),
           )
         ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Constants.kPrimaryColor,
         child: Icon(Icons.add),
-        onPressed: _showPetListDialog,
+        onPressed: () => _showPetListDialog(_calendarController.selectedDay),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,7 +130,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
     );
   }
 
-  _showAddDialog(PetItem petSelected) async {
+  _showAddDialog(PetItem petSelected, DateTime selectedDate) async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -159,6 +161,9 @@ class _AgendaScreenState extends State<AgendaScreen> {
                     Navigator.pushNamed(
                       context,
                       NewMedicalRecordScreen.routeName,
+                      arguments: eventDTO.EventItem(
+                        date: selectedDate,
+                      ),
                     );
                   },
                 ),
@@ -177,6 +182,9 @@ class _AgendaScreenState extends State<AgendaScreen> {
                     Navigator.pushNamed(
                       context,
                       NewVaccinationRecordScreen.routeName,
+                      arguments: eventDTO.EventItem(
+                        date: selectedDate,
+                      ),
                     );
                   },
                 ),
@@ -188,13 +196,16 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   icon: "assets/icons/play-with-pet.svg",
                   pet: petSelected,
                   onTap: (pet) {
-                    Provider.of<VaccinationRecord>(
+                    Provider.of<Activity>(
                       context,
                       listen: false,
                     ).setPetItem(pet);
                     Navigator.pushNamed(
                       context,
                       ActivityFormScreen.routeName,
+                      arguments: eventDTO.EventItem(
+                        date: selectedDate,
+                      ),
                     );
                   },
                 ),
@@ -206,7 +217,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
     );
   }
 
-  _showPetListDialog() async {
+  _showPetListDialog(DateTime selectedDate) async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -233,7 +244,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                           (pet) => PetOption(
                             petItem: pet,
                             onTap: (petSelected) {
-                              _showAddDialog(petSelected);
+                              _showAddDialog(petSelected, selectedDate);
                             },
                           ),
                         )
