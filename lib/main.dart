@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/activity.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -69,6 +70,19 @@ class MyApp extends StatelessWidget {
             med == null ? {} : med.items,
           ),
           create: (ctx) => VaccinationRecord(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, Activity>(
+          update: (context, user, act) => Activity(
+            user,
+            act == null ? {} : act.items,
+          ),
+          create: (ctx) => Activity(
             User(
               UserData(),
               UserSession(),
