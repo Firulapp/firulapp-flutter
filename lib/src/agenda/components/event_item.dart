@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -6,18 +7,20 @@ import '../../../constants/constants.dart';
 class EventItem extends StatelessWidget {
   final String title;
   final String icon;
-  final String routeName;
+  final ValueSetter<PetItem> onTap;
+  final PetItem pet;
 
-  EventItem(
+  EventItem({
     this.title,
     this.icon,
-    this.routeName,
-  );
+    this.onTap,
+    this.pet,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, routeName),
+      onTap: () => onTap(pet),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
