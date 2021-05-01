@@ -10,7 +10,7 @@ class ActivityItem {
   int petId;
   String activityDate;
   String activityTime;
-  String title;
+  String activityTitle;
   String detail;
   bool reminder;
   String createdAt;
@@ -23,7 +23,7 @@ class ActivityItem {
     this.petId,
     this.activityDate,
     this.activityTime,
-    this.title,
+    this.activityTitle,
     this.reminder,
     this.detail,
     this.createdAt,
@@ -85,7 +85,7 @@ class Activity with ChangeNotifier {
           "activityTime": activity.activityTime,
           "detail": activity.detail,
           "reminder": activity.reminder,
-          "activityTitle": activity.title,
+          "activityTitle": activity.activityTitle,
           "createdAt": activity.createdAt,
           "createdBy": user.userData.id,
           "modifiedAt": activity.createdAt,
@@ -116,7 +116,7 @@ class Activity with ChangeNotifier {
           "activityTime": activity.activityTime,
           "detail": activity.detail,
           "reminder": activity.reminder,
-          "activityTitle": activity.title,
+          "activityTitle": activity.activityTitle,
           "createdAt": activity.createdAt,
           "createdBy": user.userData.id,
           "modifiedAt": activity.createdAt,
@@ -140,7 +140,7 @@ class Activity with ChangeNotifier {
       activityTime: json["activityTime"],
       detail: json["detail"],
       reminder: json["reminder"],
-      title: json["activityTitle"],
+      activityTitle: json["activityTitle"],
       createdAt: json["createdAt"],
       createdBy: user.userData.id,
       modifiedAt: json["modifiedAt"],

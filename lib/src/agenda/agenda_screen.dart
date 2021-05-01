@@ -104,7 +104,38 @@ class _AgendaScreenState extends State<AgendaScreen> {
           Flexible(
             child: ListView.builder(
               itemBuilder: (context, index) {
-                return AgendaEventItem(_selectedEvents[index]);
+                return AgendaEventItem(
+                  event: _selectedEvents[index],
+                  onTap: (pet) {
+                    if (_selectedEvents[index]["petVaccinationRecordId"] !=
+                        null) {
+                      Navigator.of(context).pushNamed(
+                        NewVaccinationRecordScreen.routeName,
+                        arguments: eventDTO.EventItem(
+                          eventId: _selectedEvents[index]
+                              ["petVaccinationRecordId"],
+                          date: DateTime.now(),
+                        ),
+                      );
+                    } else if (_selectedEvents[index]["activityId"] != null) {
+                      Navigator.of(context).pushNamed(
+                        ActivityFormScreen.routeName,
+                        arguments: eventDTO.EventItem(
+                          eventId: _selectedEvents[index]["activityId"],
+                          date: DateTime.now(),
+                        ),
+                      );
+                    } else {
+                      Navigator.of(context).pushNamed(
+                        NewMedicalRecordScreen.routeName,
+                        arguments: eventDTO.EventItem(
+                          eventId: _selectedEvents[index]["petMedicalRecordId"],
+                          date: DateTime.now(),
+                        ),
+                      );
+                    }
+                  },
+                );
               },
               itemCount: _selectedEvents.length,
             ),

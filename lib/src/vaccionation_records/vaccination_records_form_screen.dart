@@ -32,7 +32,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
       context: context,
       initialDate: _vaccinationRecordDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
+      lastDate: DateTime(2030),
     );
     if (pickedDate != null && pickedDate != _vaccinationRecordDate) {
       setState(() {

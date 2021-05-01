@@ -70,11 +70,9 @@ class Agenda with ChangeNotifier {
         agendaItems.add(item);
         firstTime = false;
       });
-      print(_items);
       _items.addAll({
         DateTime.parse(auxDate): agendaItems,
       });
-      print(_items);
       notifyListeners();
     } catch (error) {
       throw error;

@@ -31,7 +31,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
       context: context,
       initialDate: _medicalRecordDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
+      lastDate: DateTime(2030),
     );
     if (pickedDate != null && pickedDate != _medicalRecordDate) {
       setState(() {

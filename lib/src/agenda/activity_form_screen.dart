@@ -32,7 +32,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
       context: context,
       initialDate: _activityDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
+      lastDate: DateTime(2030),
     );
     final TimeOfDay _selectedTime24Hour = await showTimePicker(
       context: context,
@@ -118,16 +118,27 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                               ],
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            buildDetailFormField(
-                              "Detalle de la actividad",
-                              "Ingrese el detalle de la actividad",
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
+                            buildTitleFormField(
+                              "Título de la actividad",
+                              "Ingrese el título de la actividad",
                               TextInputType.name,
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
+                            buildDetailFormField(
+                              "Detalle de la actividad",
+                              "Ingrese el detalle de la actividad",
+                              TextInputType.multiline,
+                            ),
+                            SizedBox(
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
                             DefaultButton(
                               text: "Guardar",
                               color: Constants.kPrimaryColor,
@@ -220,6 +231,17 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
     );
   }
 
+  Widget buildTitleFormField(String label, String hint, TextInputType tipo) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      validator: validateTextNotNull,
+      value: _activity.activityTitle,
+      onChanged: (newValue) => _activity.activityTitle = newValue,
+    );
+  }
+
   Widget buildDetailFormField(String label, String hint, TextInputType tipo) {
     return InputText(
       label: label,
@@ -227,6 +249,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
       keyboardType: tipo,
       validator: validateTextNotNull,
       value: _activity.detail,
+      maxLines: 10,
       onChanged: (newValue) => _activity.detail = newValue,
     );
   }
