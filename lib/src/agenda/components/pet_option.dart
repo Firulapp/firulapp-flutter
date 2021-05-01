@@ -6,14 +6,15 @@ import 'package:path_provider/path_provider.dart' as syspaths;
 
 import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class PetOption extends StatefulWidget {
   final PetItem petItem;
+  final ValueSetter<PetItem> onTap;
 
-  PetOption(
+  PetOption({
     this.petItem,
-  );
+    this.onTap,
+  });
 
   @override
   _PetOptionState createState() => _PetOptionState();
@@ -48,7 +49,7 @@ class _PetOptionState extends State<PetOption> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => print("agregar petId a agendaItem"),
+      onTap: () => widget.onTap(widget.petItem),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
