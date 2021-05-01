@@ -54,7 +54,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: kPrimaryColor,
+        backgroundColor: Constants.kPrimaryColor,
         child: Icon(Icons.add),
         onPressed: _showPetListDialog,
       ),
@@ -73,8 +73,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
             startingDayOfWeek: StartingDayOfWeek.monday,
             calendarStyle: CalendarStyle(
               canEventMarkersOverflow: true,
-              todayColor: kPrimaryLightColor,
-              selectedColor: kPrimaryColor,
+              todayColor: Constants.kPrimaryLightColor,
+              selectedColor: Constants.kPrimaryColor,
               todayStyle: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18.0,
@@ -98,18 +98,18 @@ class _AgendaScreenState extends State<AgendaScreen> {
                       leading: _selectedEvents[index].title == 'Vacuna'
                           ? SvgPicture.asset(
                               "assets/icons/syringe.svg",
-                              color: kPrimaryColor,
+                              color: Constants.kPrimaryColor,
                               width: 35,
                             )
                           : _selectedEvents[index].title == 'Actividad'
                               ? SvgPicture.asset(
                                   "assets/icons/play-with-pet.svg",
-                                  color: kPrimaryColor,
+                                  color: Constants.kPrimaryColor,
                                   width: 35,
                                 )
                               : SvgPicture.asset(
                                   "assets/icons/medical-check.svg",
-                                  color: kPrimaryColor,
+                                  color: Constants.kPrimaryColor,
                                   width: 35,
                                 ),
                       title: Text(_selectedEvents[index].title),

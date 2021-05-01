@@ -115,16 +115,20 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                                 ),
                               ],
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             buildDetailFormField(
                               "Detalle de la actividad",
                               "Ingrese el detalle de la actividad",
                               TextInputType.name,
                             ),
-                            SizedBox(height: getProportionateScreenHeight(25)),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
                             DefaultButton(
                               text: "Guardar",
-                              color: kPrimaryColor,
+                              color: Constants.kPrimaryColor,
                               press: () async {
                                 final isOK = _formKey.currentState.validate();
                                 if (isOK) {
@@ -154,8 +158,9 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                                 ? Column(
                                     children: [
                                       SizedBox(
-                                          height:
-                                              getProportionateScreenHeight(25)),
+                                          height: SizeConfig
+                                              .getProportionateScreenHeight(
+                                                  25)),
                                       DefaultButton(
                                         text: "Borrar",
                                         color: Colors.white,
@@ -192,13 +197,15 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                                         },
                                       ),
                                       SizedBox(
-                                        height:
-                                            getProportionateScreenHeight(25),
+                                        height: SizeConfig
+                                            .getProportionateScreenHeight(25),
                                       ),
                                     ],
                                   )
                                 : SizedBox(
-                                    height: getProportionateScreenHeight(25),
+                                    height:
+                                        SizeConfig.getProportionateScreenHeight(
+                                            25),
                                   ),
                           ],
                         ),

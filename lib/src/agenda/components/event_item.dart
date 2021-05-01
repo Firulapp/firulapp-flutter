@@ -43,7 +43,7 @@ class EventItem extends StatelessWidget {
                 padding: EdgeInsets.all(8.0),
                 child: SvgPicture.asset(
                   icon,
-                  color: kPrimaryColor,
+                  color: Constants.kPrimaryColor,
                   width: 60,
                   fit: BoxFit.cover,
                 ),
