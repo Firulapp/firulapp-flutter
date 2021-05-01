@@ -1,8 +1,8 @@
 import 'package:firulapp/provider/activity.dart';
+import 'package:firulapp/provider/agenda.dart';
 import 'package:firulapp/provider/medical_record.dart';
 import 'package:firulapp/provider/pets.dart';
 import 'package:firulapp/provider/vaccination_record.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,7 @@ import '../../constants/constants.dart';
 import './components/event_item.dart';
 import '../medical_records/medical_record_form_screen.dart';
 import './activity_form_screen.dart';
+import 'components/agenda_event_item.dart';
 import 'components/pet_option.dart';
 import 'package:firulapp/components/dtos/event_item.dart' as eventDTO;
 
@@ -25,17 +26,14 @@ class AgendaScreen extends StatefulWidget {
 class _AgendaScreenState extends State<AgendaScreen> {
   var _calendarController;
   Map<DateTime, List<dynamic>> _events;
-  List<dynamic> _selectedEvents;
+  List<AgendaItem> _selectedEvents = [];
   Future _petsFuture;
 
   @override
   void initState() {
     super.initState();
     _petsFuture = Provider.of<Pets>(context, listen: false).fetchPetList();
-    var date = DateTime.now();
     _calendarController = CalendarController();
-    _events = {};
-    _selectedEvents = _events[date] == null ? [] : _events[date];
   }
 
   @override
@@ -87,40 +85,15 @@ class _AgendaScreenState extends State<AgendaScreen> {
             ),
             onDaySelected: (date, events, holidays) {
               setState(() {
-                _selectedEvents = events;
+                _selectedEvents =
+                    events.map((item) => item as AgendaItem)?.toList();
               });
             },
           ),
           Flexible(
             child: ListView.builder(
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    elevation: 3,
-                    child: ListTile(
-                      leading: _selectedEvents[index].title == 'Vacuna'
-                          ? SvgPicture.asset(
-                              "assets/icons/syringe.svg",
-                              color: Constants.kPrimaryColor,
-                              width: 35,
-                            )
-                          : _selectedEvents[index].title == 'Actividad'
-                              ? SvgPicture.asset(
-                                  "assets/icons/play-with-pet.svg",
-                                  color: Constants.kPrimaryColor,
-                                  width: 35,
-                                )
-                              : SvgPicture.asset(
-                                  "assets/icons/medical-check.svg",
-                                  color: Constants.kPrimaryColor,
-                                  width: 35,
-                                ),
-                      title: Text(_selectedEvents[index].title),
-                      subtitle: Text(_selectedEvents[index].description),
-                    ),
-                  ),
-                );
+                return AgendaEventItem(_selectedEvents[index]);
               },
               itemCount: _selectedEvents.length,
             ),

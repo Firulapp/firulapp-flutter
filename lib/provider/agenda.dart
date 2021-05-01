@@ -7,22 +7,24 @@ import 'package:flutter/material.dart';
 class AgendaItem {
   final int id;
   final int userId;
-  final int activityId;
   final int petId;
+  final int activityId;
   final int petMedicalRecordId;
   final int petVaccinationRecordId;
   final String details;
+  final String activityTitle;
   final String activityDate;
   final String activityTime;
 
   AgendaItem({
     this.id,
     this.userId,
-    this.activityId,
     this.petId,
+    this.activityId,
     this.petMedicalRecordId,
     this.petVaccinationRecordId,
     this.details,
+    this.activityTitle,
     this.activityDate,
     this.activityTime,
   });
