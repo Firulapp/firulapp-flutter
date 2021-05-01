@@ -1,4 +1,6 @@
+import 'package:firulapp/provider/medical_record.dart';
 import 'package:firulapp/provider/pets.dart';
+import 'package:firulapp/provider/vaccination_record.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -49,7 +51,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: _showAddDialog,
+            onPressed: _showPetListDialog,
           )
         ],
       ),
@@ -126,7 +128,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
     );
   }
 
-  _showAddDialog() async {
+  _showAddDialog(PetItem petSelected) async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -146,25 +148,55 @@ class _AgendaScreenState extends State<AgendaScreen> {
             child: Column(
               children: [
                 EventItem(
-                  "Consulta Médica",
-                  "assets/icons/medical-check.svg",
-                  NewMedicalRecordScreen.routeName,
+                  title: "Consulta Médica",
+                  icon: "assets/icons/medical-check.svg",
+                  pet: petSelected,
+                  onTap: (petSelected) {
+                    Provider.of<MedicalRecord>(
+                      context,
+                      listen: false,
+                    ).setPetItem(petSelected);
+                    Navigator.pushNamed(
+                      context,
+                      NewMedicalRecordScreen.routeName,
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 8,
                 ),
                 EventItem(
-                  "Vacuna",
-                  "assets/icons/syringe.svg",
-                  NewVaccinationRecordScreen.routeName,
+                  title: "Vacuna",
+                  icon: "assets/icons/syringe.svg",
+                  pet: petSelected,
+                  onTap: (pet) {
+                    Provider.of<VaccinationRecord>(
+                      context,
+                      listen: false,
+                    ).setPetItem(pet);
+                    Navigator.pushNamed(
+                      context,
+                      NewVaccinationRecordScreen.routeName,
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 8,
                 ),
                 EventItem(
-                  "Actividad",
-                  "assets/icons/play-with-pet.svg",
-                  ActivityFormScreen.routeName,
+                  title: "Actividad",
+                  icon: "assets/icons/play-with-pet.svg",
+                  pet: petSelected,
+                  onTap: (pet) {
+                    Provider.of<VaccinationRecord>(
+                      context,
+                      listen: false,
+                    ).setPetItem(pet);
+                    Navigator.pushNamed(
+                      context,
+                      ActivityFormScreen.routeName,
+                    );
+                  },
                 ),
               ],
             ),
@@ -198,7 +230,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   child: Column(
                     children: providerData.items
                         .map(
-                          (pet) => PetOption(pet),
+                          (pet) => PetOption(
+                            petItem: pet,
+                            onTap: (petSelected) {
+                              _showAddDialog(petSelected);
+                            },
+                          ),
                         )
                         .toList(),
                   ),
