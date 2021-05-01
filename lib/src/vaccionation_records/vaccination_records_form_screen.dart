@@ -1,3 +1,4 @@
+import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -24,7 +25,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
   VaccinationRecordItem _vaccinationRecord = new VaccinationRecordItem();
-  DateTime _vaccinationRecordDate = DateTime.now();
+  DateTime _vaccinationRecordDate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
@@ -43,12 +44,13 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
   }
 
   Widget build(BuildContext context) {
-    final id = ModalRoute.of(context).settings.arguments as int;
-    if (id != null) {
+    final event = ModalRoute.of(context).settings.arguments as EventItem;
+    _vaccinationRecordDate = event.date;
+    if (event.eventId != null) {
       _vaccinationRecord = Provider.of<VaccinationRecord>(
         context,
         listen: false,
-      ).getLocalVaccinationRecordById(id);
+      ).getLocalVaccinationRecordById(event.eventId);
 
       if (_vaccinationRecord != null) {
         _vaccinationRecordDate =
@@ -182,7 +184,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                 }
                               },
                             ),
-                            id != null
+                            event.eventId != null
                                 ? Column(
                                     children: [
                                       SizedBox(

@@ -1,3 +1,4 @@
+import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:firulapp/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
   MedicalRecordItem _medicalRecord = new MedicalRecordItem();
-  DateTime _medicalRecordDate = DateTime.now();
+  DateTime _medicalRecordDate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
@@ -41,12 +42,13 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
   }
 
   Widget build(BuildContext context) {
-    final id = ModalRoute.of(context).settings.arguments as int;
-    if (id != null) {
+    final event = ModalRoute.of(context).settings.arguments as EventItem;
+    _medicalRecordDate = event.date;
+    if (event.eventId != null) {
       _medicalRecord = Provider.of<MedicalRecord>(
         context,
         listen: false,
-      ).getLocalMedicalRecordById(id);
+      ).getLocalMedicalRecordById(event.eventId);
       if (_medicalRecord != null) {
         _medicalRecordDate = DateTime.parse(_medicalRecord.consultedAt);
       } else {
@@ -202,7 +204,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 }
                               },
                             ),
-                            id != null
+                            event.eventId != null
                                 ? Column(
                                     children: [
                                       SizedBox(

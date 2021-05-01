@@ -1,3 +1,4 @@
+import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:firulapp/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +24,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
   ActivityItem _activity = new ActivityItem();
-  DateTime _activityDate = DateTime.now();
+  DateTime _activityDate;
   TimeOfDay _activityTime = TimeOfDay.now();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -53,12 +54,13 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
 
   @override
   Widget build(BuildContext context) {
-    final id = ModalRoute.of(context).settings.arguments as int;
-    if (id != null) {
+    final event = ModalRoute.of(context).settings.arguments as EventItem;
+    _activityDate = event.date;
+    if (event.eventId != null) {
       _activity = Provider.of<Activity>(
         context,
         listen: false,
-      ).getLocalActivityById(id);
+      ).getLocalActivityById(event.eventId);
       _activityDate = DateTime.parse(_activity.activityDate);
       _activityTime = TimeOfDay(
         hour: int.parse(_activity.activityTime.split(":")[0]),
@@ -154,7 +156,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                                 }
                               },
                             ),
-                            id != null
+                            event.eventId != null
                                 ? Column(
                                     children: [
                                       SizedBox(
