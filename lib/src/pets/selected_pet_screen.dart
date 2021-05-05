@@ -9,6 +9,7 @@ import '../../provider/pets.dart';
 import '../profile/components/profile_menu.dart';
 import './components/pet_pic.dart';
 import './components/add_pets.dart';
+import 'pet_for_adoption.dart';
 
 class SelectedPetScreen extends StatelessWidget {
   static const routeName = "/selected-pet";
@@ -62,6 +63,17 @@ class SelectedPetScreen extends StatelessWidget {
                 context,
                 VaccinationRecordsScreen.routeName,
                 arguments: pet,
+              );
+            },
+          ),
+          ProfileMenu(
+            text: "Poner en Adopción",
+            // icon: "assets/icons/adopcion.svg",
+            icon: "assets/icons/casa-de-mascotas.svg",
+            press: () {
+              Navigator.of(context).pushNamed(
+                PetForAdoption.routeName,
+                arguments: pet.id,
               );
             },
           ),

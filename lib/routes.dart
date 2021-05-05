@@ -14,6 +14,7 @@ import './src/medical_records/medical_records_screen.dart';
 import './src/medical_records/medical_record_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
+import './src/pets/pet_for_adoption.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
