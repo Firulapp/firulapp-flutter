@@ -191,7 +191,8 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                       context,
                                       listen: false,
                                     ).saveMedicalRecord(_medicalRecord);
-                                    Provider.of<Agenda>(context, listen: false)
+                                    await Provider.of<Agenda>(context,
+                                            listen: false)
                                         .fetchEvents();
                                     Navigator.pop(context);
                                   } catch (error) {
@@ -234,7 +235,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                                 context,
                                                 listen: false,
                                               ).delete(_medicalRecord);
-                                              Provider.of<Agenda>(context,
+                                              await Provider.of<Agenda>(context,
                                                       listen: false)
                                                   .fetchEvents();
                                             } catch (error) {

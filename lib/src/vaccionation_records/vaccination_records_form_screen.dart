@@ -171,7 +171,8 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                       context,
                                       listen: false,
                                     ).save(_vaccinationRecord);
-                                    Provider.of<Agenda>(context, listen: false)
+                                    await Provider.of<Agenda>(context,
+                                            listen: false)
                                         .fetchEvents();
                                     Navigator.pop(context);
                                   } catch (error) {
@@ -215,7 +216,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                                 context,
                                                 listen: false,
                                               ).delete(_vaccinationRecord);
-                                              Provider.of<Agenda>(context,
+                                              await Provider.of<Agenda>(context,
                                                       listen: false)
                                                   .fetchEvents();
                                             } catch (error) {
