@@ -67,7 +67,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Agregar Vacunación"),
+        title: const Text("Formulario Vacunación"),
       ),
       body: _isLoading
           ? Center(

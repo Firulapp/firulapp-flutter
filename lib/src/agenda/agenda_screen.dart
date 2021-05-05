@@ -106,9 +106,16 @@ class _AgendaScreenState extends State<AgendaScreen> {
               itemBuilder: (context, index) {
                 return AgendaEventItem(
                   event: _selectedEvents[index],
-                  onTap: (pet) {
+                  onTap: (pet) async {
                     if (_selectedEvents[index]["petVaccinationRecordId"] !=
                         null) {
+                      Provider.of<VaccinationRecord>(
+                        context,
+                        listen: false,
+                      ).setPetItem(pet);
+                      await Provider.of<VaccinationRecord>(context,
+                              listen: false)
+                          .fetchVaccinationRecords();
                       Navigator.of(context).pushNamed(
                         NewVaccinationRecordScreen.routeName,
                         arguments: eventDTO.EventItem(
@@ -118,6 +125,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
                         ),
                       );
                     } else if (_selectedEvents[index]["activityId"] != null) {
+                      Provider.of<Activity>(
+                        context,
+                        listen: false,
+                      ).setPetItem(pet);
+                      await Provider.of<Activity>(context, listen: false)
+                          .fetchActivities();
                       Navigator.of(context).pushNamed(
                         ActivityFormScreen.routeName,
                         arguments: eventDTO.EventItem(
@@ -126,6 +139,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
                         ),
                       );
                     } else {
+                      Provider.of<MedicalRecord>(
+                        context,
+                        listen: false,
+                      ).setPetItem(pet);
+                      await Provider.of<MedicalRecord>(context, listen: false)
+                          .fetchMedicalRecords();
                       Navigator.of(context).pushNamed(
                         NewMedicalRecordScreen.routeName,
                         arguments: eventDTO.EventItem(
