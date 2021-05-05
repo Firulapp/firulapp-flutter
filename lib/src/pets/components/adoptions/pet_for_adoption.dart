@@ -5,8 +5,8 @@ import 'package:firulapp/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/pets.dart';
-import './components/pet_pic.dart';
+import '../../../../provider/pets.dart';
+import '../pet_pic.dart';
 
 String commentary;
 

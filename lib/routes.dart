@@ -9,12 +9,12 @@ import './src/pets/pets_screen.dart';
 import './src/pets/selected_pet_screen.dart';
 import './src/sign_up/sign_up_screen.dart';
 import './src/pets/components/add_pets.dart';
-import './src/pets/components/pets_list.dart';
 import './src/medical_records/medical_records_screen.dart';
 import './src/medical_records/medical_record_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
 import './src/pets/pet_for_adoption.dart';
+import './src/pets/components/adoptions/pet_for_adoption.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {

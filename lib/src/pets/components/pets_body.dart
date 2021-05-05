@@ -11,8 +11,6 @@ class PetsBody extends StatefulWidget {
 }
 
 class _BodyState extends State<PetsBody> {
-  List<String> litems = [];
-  final TextEditingController eCtrl = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
