@@ -1,5 +1,7 @@
 import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:firulapp/constants/constants.dart';
+import 'package:firulapp/provider/agenda.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -139,6 +141,26 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                               height:
                                   SizeConfig.getProportionateScreenHeight(25),
                             ),
+                            Row(
+                              children: [
+                                CupertinoSwitch(
+                                  value: _activity.reminder,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _activity.reminder = value;
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  "Recordatorio",
+                                  style: TextStyle(fontSize: 20),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
                             DefaultButton(
                               text: "Guardar",
                               color: Constants.kPrimaryColor,
@@ -153,6 +175,8 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                                       context,
                                       listen: false,
                                     ).saveActivity(_activity);
+                                    Provider.of<Agenda>(context, listen: false)
+                                        .fetchEvents();
                                     Navigator.pop(context);
                                   } catch (error) {
                                     Dialogs.info(
@@ -194,6 +218,9 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                                                 context,
                                                 listen: false,
                                               ).delete(_activity);
+                                              Provider.of<Agenda>(context,
+                                                      listen: false)
+                                                  .fetchEvents();
                                               Navigator.pop(context);
                                             } catch (error) {
                                               Dialogs.info(

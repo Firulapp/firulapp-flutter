@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import './pets.dart';
 import '../constants/endpoints.dart';
 import 'user.dart';
+import 'agenda.dart';
 
 class ActivityItem {
   int id;
@@ -24,7 +25,7 @@ class ActivityItem {
     this.activityDate,
     this.activityTime,
     this.activityTitle,
-    this.reminder,
+    this.reminder = false,
     this.detail,
     this.createdAt,
     this.createdBy,
@@ -75,6 +76,7 @@ class Activity with ChangeNotifier {
   }
 
   Future<void> saveActivity(ActivityItem activity) async {
+    var time = activity.activityTime.split(":");
     try {
       final response = await _dio.post(
         Endpoints.savePetActivity,
@@ -82,13 +84,15 @@ class Activity with ChangeNotifier {
           "id": activity.id,
           "petId": _petItem.id,
           "activityDate": activity.activityDate,
-          "activityTime": activity.activityTime,
+          "activityTime": DateTime(
+                  2020, 9, 7, 6, int.parse(time.first), int.parse(time.last))
+              .toIso8601String(),
           "detail": activity.detail,
-          "reminder": activity.reminder,
+          "reminders": activity.reminder,
           "activityTitle": activity.activityTitle,
-          "createdAt": activity.createdAt,
+          "createdAt": DateTime.now().toIso8601String(),
           "createdBy": user.userData.id,
-          "modifiedAt": activity.createdAt,
+          "modifiedAt": DateTime.now().toIso8601String(),
           "modifiedBy": user.userData.id,
         },
       );
@@ -115,7 +119,7 @@ class Activity with ChangeNotifier {
           "activityDate": activity.activityDate,
           "activityTime": activity.activityTime,
           "detail": activity.detail,
-          "reminder": activity.reminder,
+          "reminders": activity.reminder,
           "activityTitle": activity.activityTitle,
           "createdAt": activity.createdAt,
           "createdBy": user.userData.id,
@@ -139,7 +143,7 @@ class Activity with ChangeNotifier {
       activityDate: json["activityDate"],
       activityTime: json["activityTime"],
       detail: json["detail"],
-      reminder: json["reminder"],
+      reminder: json["reminders"],
       activityTitle: json["activityTitle"],
       createdAt: json["createdAt"],
       createdBy: user.userData.id,

@@ -1,4 +1,5 @@
 import 'package:firulapp/components/dtos/event_item.dart';
+import 'package:firulapp/provider/agenda.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -170,6 +171,8 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                       context,
                                       listen: false,
                                     ).save(_vaccinationRecord);
+                                    Provider.of<Agenda>(context, listen: false)
+                                        .fetchEvents();
                                     Navigator.pop(context);
                                   } catch (error) {
                                     Dialogs.info(
@@ -212,6 +215,9 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                                 context,
                                                 listen: false,
                                               ).delete(_vaccinationRecord);
+                                              Provider.of<Agenda>(context,
+                                                      listen: false)
+                                                  .fetchEvents();
                                             } catch (error) {
                                               Dialogs.info(
                                                 context,

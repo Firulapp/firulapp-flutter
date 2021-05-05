@@ -1,5 +1,6 @@
 import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:firulapp/constants/constants.dart';
+import 'package:firulapp/provider/agenda.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -190,6 +191,8 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                       context,
                                       listen: false,
                                     ).saveMedicalRecord(_medicalRecord);
+                                    Provider.of<Agenda>(context, listen: false)
+                                        .fetchEvents();
                                     Navigator.pop(context);
                                   } catch (error) {
                                     Dialogs.info(
@@ -231,6 +234,9 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                                 context,
                                                 listen: false,
                                               ).delete(_medicalRecord);
+                                              Provider.of<Agenda>(context,
+                                                      listen: false)
+                                                  .fetchEvents();
                                             } catch (error) {
                                               Dialogs.info(
                                                 context,
