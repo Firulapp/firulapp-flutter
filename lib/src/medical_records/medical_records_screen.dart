@@ -100,7 +100,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
                                     ),
                                   ),
                                   Text(
-                                    'Sin Fichas Médicas :(',
+                                    'Sin Consultas Médicas :(',
                                     style: TextStyle(
                                       fontSize: sizeConfig.hp(4),
                                       color: Constants.kPrimaryColor,
