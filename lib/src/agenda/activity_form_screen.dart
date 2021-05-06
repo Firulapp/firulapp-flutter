@@ -205,9 +205,9 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                                 ? Column(
                                     children: [
                                       SizedBox(
-                                          height: SizeConfig
-                                              .getProportionateScreenHeight(
-                                                  25)),
+                                        height: SizeConfig
+                                            .getProportionateScreenHeight(25),
+                                      ),
                                       DefaultButton(
                                         text: "Borrar",
                                         color: Colors.white,
@@ -215,7 +215,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                                           final response = await Dialogs.alert(
                                             context,
                                             "¿Estás seguro que desea eliminar?",
-                                            "Se borrará el registro de esta vacuna",
+                                            "Se borrará el registro de esta actividad",
                                             "Cancelar",
                                             "Aceptar",
                                           );
