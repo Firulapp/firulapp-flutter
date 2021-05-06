@@ -77,6 +77,9 @@ class Activity with ChangeNotifier {
 
   Future<void> saveActivity(ActivityItem activity) async {
     var time = activity.activityTime.split(":");
+    if (time.length == 3) {
+      time.removeAt(0);
+    }
     try {
       final response = await _dio.post(
         Endpoints.savePetActivity,
@@ -84,9 +87,9 @@ class Activity with ChangeNotifier {
           "id": activity.id,
           "petId": _petItem.id,
           "activityDate": activity.activityDate,
-          "activityTime": DateTime(
-                  2020, 9, 7, 6, int.parse(time.first), int.parse(time.last))
-              .toIso8601String(),
+          "activityTime":
+              DateTime(2020, 9, 7, int.parse(time.first), int.parse(time.last))
+                  .toIso8601String(),
           "detail": activity.detail,
           "reminders": activity.reminder,
           "activityTitle": activity.activityTitle,

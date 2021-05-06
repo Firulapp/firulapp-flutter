@@ -49,7 +49,8 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
     if (_selectedTime24Hour != null && _activityTime != _selectedTime24Hour) {
       setState(() {
         _activityTime = _selectedTime24Hour;
-        _activity.activityTime = _activityTime.toString();
+        _activity.activityTime =
+            "${_activityTime.hour}:${_activityTime.minute}";
       });
     }
   }
@@ -64,10 +65,18 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
         listen: false,
       ).getLocalActivityById(event.eventId);
       _activityDate = DateTime.parse(_activity.activityDate);
-      _activityTime = TimeOfDay(
-        hour: int.parse(_activity.activityTime.split(":")[0]),
-        minute: int.parse(_activity.activityTime.split(":")[1]),
-      );
+      if (_activity.activityTime.length <= 5) {
+        var time = _activity.activityTime.split(":");
+        _activityTime = TimeOfDay(
+          hour: int.parse(time.first),
+          minute: int.parse(time.last),
+        );
+      } else {
+        _activityTime = TimeOfDay(
+          hour: DateTime.parse(_activity.activityTime).hour,
+          minute: DateTime.parse(_activity.activityTime).minute,
+        );
+      }
     } else {
       _activity.activityDate = _activityDate.toIso8601String();
       _activity.activityTime = "${_activityTime.hour}:${_activityTime.minute}";
@@ -175,7 +184,8 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                                       context,
                                       listen: false,
                                     ).saveActivity(_activity);
-                                    Provider.of<Agenda>(context, listen: false)
+                                    await Provider.of<Agenda>(context,
+                                            listen: false)
                                         .fetchEvents();
                                     Navigator.pop(context);
                                   } catch (error) {
@@ -218,7 +228,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
                                                 context,
                                                 listen: false,
                                               ).delete(_activity);
-                                              Provider.of<Agenda>(context,
+                                              await Provider.of<Agenda>(context,
                                                       listen: false)
                                                   .fetchEvents();
                                               Navigator.pop(context);
