@@ -115,20 +115,7 @@ class Activity with ChangeNotifier {
   Future<void> delete(ActivityItem activity) async {
     try {
       await _dio.delete(
-        Endpoints.deletePetActivity,
-        data: {
-          "id": activity.id,
-          "petId": _petItem.id,
-          "activityDate": activity.activityDate,
-          "activityTime": activity.activityTime,
-          "detail": activity.detail,
-          "reminders": activity.reminder,
-          "activityTitle": activity.activityTitle,
-          "createdAt": activity.createdAt,
-          "createdBy": user.userData.id,
-          "modifiedAt": activity.createdAt,
-          "modifiedBy": user.userData.id,
-        },
+        "${Endpoints.petActivity}/${activity.id}",
       );
       _items.remove(
         activity,
