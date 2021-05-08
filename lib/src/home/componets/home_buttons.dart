@@ -20,14 +20,14 @@ class HomeButtons extends StatelessWidget {
             'Firulapp',
             style: TextStyle(
               fontSize: sizeConfig.hp(4),
-              color: kSecondaryColor,
+              color: Constants.kSecondaryColor,
             ),
           ),
         ),
         RawMaterialButton(
           onPressed: () => {Navigator.pushNamed(context, PetsScreen.routeName)},
           elevation: _elevation,
-          fillColor: kPrimaryColor,
+          fillColor: Constants.kPrimaryColor,
           child: Icon(
             Icons.pets_rounded,
             size: _sizeBotton,
@@ -40,7 +40,7 @@ class HomeButtons extends StatelessWidget {
         RawMaterialButton(
           onPressed: () {},
           elevation: _elevation,
-          fillColor: kPrimaryColor,
+          fillColor: Constants.kPrimaryColor,
           child: Icon(
             Icons.store,
             size: _sizeBotton,
@@ -53,7 +53,7 @@ class HomeButtons extends StatelessWidget {
         RawMaterialButton(
           onPressed: () {},
           elevation: _elevation,
-          fillColor: kPrimaryColor,
+          fillColor: Constants.kPrimaryColor,
           child: Icon(
             Icons.favorite,
             size: _sizeBotton,

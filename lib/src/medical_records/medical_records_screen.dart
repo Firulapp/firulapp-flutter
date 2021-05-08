@@ -51,7 +51,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
           ),
           Flexible(
             child: Container(
-              color: lightBackgroundColor,
+              color: Constants.lightBackgroundColor,
               child: FutureBuilder(
                 future: _medicalRecordsFuture,
                 builder: (_, dataSnapshot) {
@@ -97,7 +97,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen> {
                                     'Sin Fichas Médicas :(',
                                     style: TextStyle(
                                       fontSize: sizeConfig.hp(4),
-                                      color: kPrimaryColor,
+                                      color: Constants.kPrimaryColor,
                                     ),
                                   )
                                 ],

@@ -54,7 +54,10 @@ class VaccinationRecord with ChangeNotifier {
   }
 
   VaccinationRecordItem getLocalVaccinationRecordById(int id) {
-    return _items.firstWhere((vax) => vax.id == id);
+    return _items.firstWhere(
+      (vax) => vax.id == id,
+      orElse: () => null,
+    );
   }
 
   Future<void> fetchVaccinationRecords() async {

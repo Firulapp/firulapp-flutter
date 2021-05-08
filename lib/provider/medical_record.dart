@@ -60,7 +60,10 @@ class MedicalRecord with ChangeNotifier {
   }
 
   MedicalRecordItem getLocalMedicalRecordById(int id) {
-    return _items.firstWhere((med) => med.id == id);
+    return _items.firstWhere(
+      (med) => med.id == id,
+      orElse: () => null,
+    );
   }
 
   Future<void> fetchMedicalRecords() async {

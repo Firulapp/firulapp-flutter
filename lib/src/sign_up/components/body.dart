@@ -17,7 +17,7 @@ class Body extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: sizeConfig.hp(4)), // 4%
-                Text("Registrar Cuenta", style: headingStyle),
+                Text("Registrar Cuenta", style: Constants.headingStyle),
                 Text("Complete sus datos",
                     textAlign: TextAlign.center,
                     style: TextStyle(
