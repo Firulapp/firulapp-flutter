@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../size_config.dart';
 import '../../pets/pets_screen.dart';
 import '../../../constants/constants.dart';
+import '../../pets/lost_and_found/lost_and_found_map.dart';
 
 class HomeButtons extends StatelessWidget {
   @override
@@ -51,7 +52,8 @@ class HomeButtons extends StatelessWidget {
         Text('Servicios', style: TextStyle(fontSize: _sizeTextBotton)),
         Padding(padding: EdgeInsets.all(16.0)),
         RawMaterialButton(
-          onPressed: () {},
+          onPressed: () =>
+              {Navigator.pushNamed(context, LostAndFoundMap.routeName)},
           elevation: _elevation,
           fillColor: Constants.kPrimaryColor,
           child: Icon(

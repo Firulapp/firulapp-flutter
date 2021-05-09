@@ -14,6 +14,7 @@ import './src/medical_records/medical_records_screen.dart';
 import './src/medical_records/medical_record_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
+import './src/pets/lost_and_found/lost_and_found_map.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
@@ -32,5 +33,6 @@ class Routes {
     VaccinationRecordsScreen.routeName: (context) => VaccinationRecordsScreen(),
     NewVaccinationRecordScreen.routeName: (context) =>
         NewVaccinationRecordScreen(),
+    LostAndFoundMap.routeName: (context) => LostAndFoundMap(),
   };
 }
