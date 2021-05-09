@@ -10,6 +10,9 @@
         android:label="firulapp"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyB-pGd2y6jY65PW6Jp2xcW6kRtXCaH0zX0"/>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
