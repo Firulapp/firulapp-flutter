@@ -35,7 +35,7 @@ class PetForAdoption extends StatelessWidget {
           SizedBox(height: 20),
           DefaultButton(
             text: "PONER EN ADOPCIÓN",
-            color: kPrimaryColor,
+            color: Constants.kPrimaryColor,
             press: () async {
               final response = await Dialogs.alert(
                 context,

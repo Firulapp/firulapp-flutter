@@ -16,7 +16,7 @@ class PetItem with ChangeNotifier {
   String address;
   String primaryColor;
   String secondaryColor;
-  bool status;
+  String status;
   int speciesId;
   String picture;
   String description;
@@ -66,6 +66,8 @@ class PetItem with ChangeNotifier {
   }
 }
 
+enum PetStatus { ADOPTAR, APADRINAR, APADRINADA, ADOPTADA, PERDIDA, ENCONTRADA }
+
 class Pets with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
   PetItem _petItem;
@@ -84,8 +86,6 @@ class Pets with ChangeNotifier {
     notifyListeners();
   }
 
-  // Devuelve solo las mascotas con status True
-  List<PetItem> get enablePets => _items.where((e) => e.status).toList();
   // devuelve todas las mascotas
   List<PetItem> get items => [..._items];
 
@@ -227,6 +227,27 @@ class Pets with ChangeNotifier {
     } catch (error) {
       print(error.toString());
       throw error.toString();
+    }
+  }
+}
+
+extension PetsExtension on PetStatus {
+  String get value {
+    switch (this) {
+      case PetStatus.ADOPTADA:
+        return 'ADOPTADA';
+      case PetStatus.ADOPTAR:
+        return 'ADOPTAR';
+      case PetStatus.APADRINADA:
+        return 'APADRINADA';
+      case PetStatus.APADRINAR:
+        return 'APADRINAR';
+      case PetStatus.ENCONTRADA:
+        return 'ENCONTRADA';
+      case PetStatus.PERDIDA:
+        return 'PERDIDA';
+      default:
+        return null;
     }
   }
 }
