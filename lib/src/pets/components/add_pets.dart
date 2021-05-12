@@ -34,7 +34,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   int _speciesId;
   DateTime _birthDate = DateTime.now();
   int _age;
-  bool _petStatus = true;
+  String _petStatus = PetStatus.ADOPTADA.value;
 
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
