@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 import 'components/report_item.dart';
 
@@ -16,11 +17,27 @@ class LostAndFoundMap extends StatefulWidget {
 class _LostAndFoundMapState extends State<LostAndFoundMap> {
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = HashSet<Marker>();
+  Location _location = Location();
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(-25.265620626519592, -57.5632423825354),
     zoom: 16.5,
   );
+
+  @override
+  void initState() {
+    _markers.add(
+      Marker(
+        markerId: MarkerId("myMarker"),
+        draggable: false,
+        onTap: () {
+          print("myMarker tapped");
+        },
+        position: LatLng(-25.265620626519592, -57.5632423825354),
+      ),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +47,8 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
       ),
       body: GoogleMap(
         initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
         markers: _markers,
+        myLocationEnabled: true,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showAddDialog,
