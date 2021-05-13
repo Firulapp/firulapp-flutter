@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 
 import 'components/report_item.dart';
 
@@ -15,28 +13,50 @@ class LostAndFoundMap extends StatefulWidget {
 }
 
 class _LostAndFoundMapState extends State<LostAndFoundMap> {
-  Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = HashSet<Marker>();
-  Location _location = Location();
+  BitmapDescriptor mapMarker;
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(-25.265620626519592, -57.5632423825354),
     zoom: 16.5,
   );
 
+  void setCustomMarker() async {
+    mapMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), 'assets/images/pinLost.png');
+  }
+
   @override
   void initState() {
-    _markers.add(
-      Marker(
-        markerId: MarkerId("myMarker"),
-        draggable: false,
-        onTap: () {
-          print("myMarker tapped");
-        },
-        position: LatLng(-25.265620626519592, -57.5632423825354),
-      ),
-    );
+    setCustomMarker();
     super.initState();
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    setState(() {
+      _markers.add(
+        Marker(
+          markerId: MarkerId("myMarker"),
+          draggable: false,
+          onTap: () {
+            print("myMarker tapped");
+          },
+          icon: mapMarker,
+          position: LatLng(-25.265620626519592, -57.5632423825354),
+        ),
+      );
+      _markers.add(
+        Marker(
+          markerId: MarkerId("myMarker2"),
+          draggable: false,
+          onTap: () {
+            print("myMarker2 tapped");
+          },
+          icon: mapMarker,
+          position: LatLng(-25.2637, -57.5759),
+        ),
+      );
+    });
   }
 
   @override
@@ -49,6 +69,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
         initialCameraPosition: _kGooglePlex,
         markers: _markers,
         myLocationEnabled: true,
+        onMapCreated: _onMapCreated,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showAddDialog,
