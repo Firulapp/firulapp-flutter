@@ -54,6 +54,17 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
       );
       _markers.add(
         Marker(
+          markerId: MarkerId("myMarker3"),
+          draggable: false,
+          onTap: () {
+            print("myMarker3 tapped");
+          },
+          icon: foundMarker,
+          position: LatLng(-25.2655, -57.5632423825354),
+        ),
+      );
+      _markers.add(
+        Marker(
           markerId: MarkerId("myMarker2"),
           draggable: false,
           onTap: () {
@@ -79,7 +90,9 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
         onMapCreated: _onMapCreated,
       ),
       floatingActionButton: FloatingActionButton.extended(
+        elevation: 0,
         onPressed: _showAddDialog,
+        backgroundColor: Color(0xE6FDBE83),
         label: Text('Reportar'),
         icon: Icon(Icons.add),
       ),
