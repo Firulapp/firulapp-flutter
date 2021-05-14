@@ -120,14 +120,14 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
             child: Column(
               children: [
                 ReportItem(
-                  title: "Mascota Perdida",
+                  title: "¡Perdí a mi mascota!",
                   icon: "assets/icons/lostDog.svg",
                 ),
                 const SizedBox(
                   height: 8,
                 ),
                 ReportItem(
-                  title: "Mascota Encontrada",
+                  title: "¡Encontré una mascota!",
                   icon: "assets/icons/foundDog.svg",
                 ),
               ],

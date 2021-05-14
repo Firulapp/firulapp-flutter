@@ -32,7 +32,7 @@ class ReportItem extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
-                  fontSize: 15.0,
+                  fontSize: 16.0,
                 ),
                 overflow: TextOverflow.clip,
               ),
