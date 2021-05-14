@@ -14,7 +14,8 @@ class LostAndFoundMap extends StatefulWidget {
 
 class _LostAndFoundMapState extends State<LostAndFoundMap> {
   Set<Marker> _markers = HashSet<Marker>();
-  BitmapDescriptor mapMarker;
+  BitmapDescriptor lostMarker;
+  BitmapDescriptor foundMarker;
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(-25.265620626519592, -57.5632423825354),
@@ -22,8 +23,14 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
   );
 
   void setCustomMarker() async {
-    mapMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), 'assets/images/pinLost.png');
+    lostMarker = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(),
+      'assets/images/pinLost.png',
+    );
+    foundMarker = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(),
+      'assets/images/pinFound.png',
+    );
   }
 
   @override
@@ -41,7 +48,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
           onTap: () {
             print("myMarker tapped");
           },
-          icon: mapMarker,
+          icon: lostMarker,
           position: LatLng(-25.265620626519592, -57.5632423825354),
         ),
       );
@@ -52,7 +59,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
           onTap: () {
             print("myMarker2 tapped");
           },
-          icon: mapMarker,
+          icon: foundMarker,
           position: LatLng(-25.2637, -57.5759),
         ),
       );
