@@ -1,3 +1,4 @@
+import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:flutter/material.dart';
 
 import '../../../provider/medical_record.dart' as medProvider;
@@ -46,7 +47,10 @@ class MedicalRecordItem extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           NewMedicalRecordScreen.routeName,
-          arguments: _medicalRecords.id,
+          arguments: EventItem(
+            eventId: _medicalRecords.id,
+            date: DateTime.now(),
+          ),
         );
       },
     );

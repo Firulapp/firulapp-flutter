@@ -1,4 +1,6 @@
+import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:firulapp/constants/constants.dart';
+import 'package:firulapp/provider/agenda.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,14 +25,14 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
   MedicalRecordItem _medicalRecord = new MedicalRecordItem();
-  DateTime _medicalRecordDate = DateTime.now();
+  DateTime _medicalRecordDate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
       context: context,
       initialDate: _medicalRecordDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
+      lastDate: DateTime(2030),
     );
     if (pickedDate != null && pickedDate != _medicalRecordDate) {
       setState(() {
@@ -41,12 +43,13 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
   }
 
   Widget build(BuildContext context) {
-    final id = ModalRoute.of(context).settings.arguments as int;
-    if (id != null) {
+    final event = ModalRoute.of(context).settings.arguments as EventItem;
+    _medicalRecordDate = event.date;
+    if (event.eventId != null) {
       _medicalRecord = Provider.of<MedicalRecord>(
         context,
         listen: false,
-      ).getLocalMedicalRecordById(id);
+      ).getLocalMedicalRecordById(event.eventId);
       if (_medicalRecord != null) {
         _medicalRecordDate = DateTime.parse(_medicalRecord.consultedAt);
       } else {
@@ -59,7 +62,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Agregar Consula Médica"),
+        title: const Text("Formulario Consulta Médica"),
       ),
       body: _isLoading
           ? Center(
@@ -188,6 +191,9 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                       context,
                                       listen: false,
                                     ).saveMedicalRecord(_medicalRecord);
+                                    await Provider.of<Agenda>(context,
+                                            listen: false)
+                                        .fetchEvents();
                                     Navigator.pop(context);
                                   } catch (error) {
                                     Dialogs.info(
@@ -202,7 +208,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 }
                               },
                             ),
-                            id != null
+                            event.eventId != null
                                 ? Column(
                                     children: [
                                       SizedBox(
@@ -229,6 +235,9 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                                 context,
                                                 listen: false,
                                               ).delete(_medicalRecord);
+                                              await Provider.of<Agenda>(context,
+                                                      listen: false)
+                                                  .fetchEvents();
                                             } catch (error) {
                                               Dialogs.info(
                                                 context,

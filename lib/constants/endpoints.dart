@@ -21,4 +21,8 @@ class Endpoints {
   static final vaccinationRecordByPet = '$vaccinationRecord/pet';
   static final saveVaccinationRecord = '$vaccinationRecord/save';
   static final deleteVaccinationRecord = "$vaccinationRecord/delete";
+  static final petActivity = '$pet/activity';
+  static final petActivityByPet = '$petActivity/pet';
+  static final savePetActivity = '$petActivity/save';
+  static final userAgenda = '$user/agenda';
 }

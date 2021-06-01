@@ -11,9 +11,11 @@ import './src/sign_up/sign_up_screen.dart';
 import './src/pets/components/add_pets.dart';
 import './src/pets/components/pets_list.dart';
 import './src/medical_records/medical_records_screen.dart';
+import './src/agenda/agenda_screen.dart';
 import './src/medical_records/medical_record_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
+import './src/agenda/activity_form_screen.dart';
 import './src/pets/lost_and_found/lost_and_found_map.dart';
 
 class Routes {
@@ -33,6 +35,8 @@ class Routes {
     VaccinationRecordsScreen.routeName: (context) => VaccinationRecordsScreen(),
     NewVaccinationRecordScreen.routeName: (context) =>
         NewVaccinationRecordScreen(),
+  AgendaScreen.routeName: (context) => AgendaScreen(),
+  ActivityFormScreen.routeName: (context) => ActivityFormScreen(),
     LostAndFoundMap.routeName: (context) => LostAndFoundMap(),
   };
 }
