@@ -36,7 +36,7 @@ class SelectedPetScreen extends StatelessWidget {
             },
           ),
           ProfileMenu(
-            text: "Fichas Médicas",
+            text: "Ficha Médica",
             icon: "assets/icons/medical-check.svg",
             press: () {
               Provider.of<MedicalRecord>(

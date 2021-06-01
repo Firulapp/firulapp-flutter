@@ -1,3 +1,4 @@
+import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:flutter/material.dart';
 
 import '../../../provider/vaccination_record.dart' as vaxProvider;
@@ -46,7 +47,10 @@ class VaccinationRecordItem extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           NewVaccinationRecordScreen.routeName,
-          arguments: _vaxRecords.id,
+          arguments: EventItem(
+            eventId: _vaxRecords.id,
+            date: DateTime.now(),
+          ),
         );
       },
     );
