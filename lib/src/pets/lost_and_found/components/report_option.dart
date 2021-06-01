@@ -2,11 +2,11 @@ import 'package:firulapp/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ReportItem extends StatelessWidget {
+class ReportOption extends StatelessWidget {
   final String title;
   final String icon;
 
-  ReportItem({
+  ReportOption({
     this.title,
     this.icon,
   });
