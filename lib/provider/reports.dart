@@ -30,17 +30,17 @@ class Reports with ChangeNotifier {
     return [..._reports];
   }
 
-  Future<void> fetchReports(
+  Future<void> fetchReports({
     double latitudeMin,
     double longitudeMin,
     double latitudeMax,
     double longitudeMax,
-  ) async {
+  }) async {
     final List<ReportItem> loadedReports = [];
     try {
       final response = await this._dio.get(
             '${Endpoints.lostAndFoundReports}' +
-                '?latitudeMin=$latitudeMin&latitudeMin=$latitudeMin&' +
+                '?latitudeMin=$latitudeMin&longitudeMin=$longitudeMin&' +
                 'latitudeMax=$latitudeMax&longitudeMax=$longitudeMax',
           );
       final reportResponse = response.data["list"];
