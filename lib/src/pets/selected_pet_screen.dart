@@ -68,7 +68,6 @@ class SelectedPetScreen extends StatelessWidget {
           ),
           ProfileMenu(
             text: "Poner en Adopción",
-            // icon: "assets/icons/adopcion.svg",
             icon: "assets/icons/casa-de-mascotas.svg",
             press: () {
               Navigator.of(context).pushNamed(

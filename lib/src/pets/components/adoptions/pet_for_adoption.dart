@@ -2,6 +2,7 @@ import 'package:firulapp/components/default_button.dart';
 import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/components/input_text.dart';
 import 'package:firulapp/constants/constants.dart';
+import 'package:firulapp/src/pets/pets_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +46,11 @@ class PetForAdoption extends StatelessWidget {
                 "Aceptar",
               );
               if (response) {
-                //TODO: se pone mascota en adopción
+                pet.status = "ADOPTAR";
+                pet.description = commentary;
+                Provider.of<Pets>(context, listen: false).petItem = pet;
+                Provider.of<Pets>(context, listen: false).savePet();
+                Navigator.pushReplacementNamed(context, PetsScreen.routeName);
               }
             },
           )

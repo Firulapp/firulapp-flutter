@@ -1,3 +1,4 @@
+import 'package:firulapp/src/pets/components/adoptions/pet_for_adoption.dart';
 import 'package:flutter/widgets.dart';
 
 import './src/sign_up/components/sign_up_details_form.dart';
@@ -13,8 +14,6 @@ import './src/medical_records/medical_records_screen.dart';
 import './src/medical_records/medical_record_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
-import './src/pets/pet_for_adoption.dart';
-import './src/pets/components/adoptions/pet_for_adoption.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
@@ -27,11 +26,11 @@ class Routes {
     SignUpScreen.routeName: (context) => SignUpScreen(),
     SignUpDetailsForm.routeName: (context) => SignUpDetailsForm(),
     AddPets.routeName: (context) => AddPets(),
-    PetsList.routeName: (context) => PetsList(),
     MedicalRecordsScreen.routeName: (context) => MedicalRecordsScreen(),
     NewMedicalRecordScreen.routeName: (context) => NewMedicalRecordScreen(),
     VaccinationRecordsScreen.routeName: (context) => VaccinationRecordsScreen(),
     NewVaccinationRecordScreen.routeName: (context) =>
         NewVaccinationRecordScreen(),
+    PetForAdoption.routeName: (context) => PetForAdoption()
   };
 }
