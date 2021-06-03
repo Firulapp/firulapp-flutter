@@ -1,4 +1,6 @@
+import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/provider/vaccination_record.dart';
+import 'package:firulapp/src/pets/pets_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -74,6 +76,26 @@ class SelectedPetScreen extends StatelessWidget {
                 PetForAdoption.routeName,
                 arguments: pet.id,
               );
+            },
+          ),
+          ProfileMenu(
+            text: "Quitar de Adopción",
+            icon: "assets/icons/Error.svg",
+            press: () async {
+              final response = await Dialogs.alert(
+                context,
+                "¿Estás seguro que desea quitar de adopción a ${pet.name}?",
+                "",
+                "Cancelar",
+                "Aceptar",
+              );
+              if (response) {
+                pet.status = "ADOPTADA";
+                pet.description = commentary;
+                Provider.of<Pets>(context, listen: false).petItem = pet;
+                Provider.of<Pets>(context, listen: false).savePet();
+                Navigator.pushReplacementNamed(context, PetsScreen.routeName);
+              }
             },
           ),
         ]),
