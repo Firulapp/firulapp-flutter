@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 
 import 'components/report_option.dart';
 import '../../../provider/reports.dart';
+import 'lost_pet_form.dart';
 
 class LostAndFoundMap extends StatefulWidget {
   static const routeName = "/map";
@@ -20,7 +21,6 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
   Set<Marker> _markers = HashSet<Marker>();
   BitmapDescriptor lostMarker;
   BitmapDescriptor foundMarker;
-  Future _reportsFuture;
   Location _locationTracker = Location();
   StreamSubscription _locationSubscription;
 
@@ -73,7 +73,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
         ScreenCoordinate(x: 0, y: screenHeight.round());
     LatLng northEastPoint = await controller.getLatLng(northEast);
     LatLng southWestPoint = await controller.getLatLng(southWest);
-    _reportsFuture = Provider.of<Reports>(context, listen: false).fetchReports(
+    Provider.of<Reports>(context, listen: false).fetchReports(
       latitudeMax: northEastPoint.latitude,
       latitudeMin: southWestPoint.latitude,
       longitudeMin: southWestPoint.longitude,
@@ -158,16 +158,22 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                ReportOption(
-                  title: "¡Perdí a mi mascota!",
-                  icon: "assets/icons/lostDog.svg",
+                GestureDetector(
+                  child: ReportOption(
+                    title: "¡Perdí a mi mascota!",
+                    icon: "assets/icons/lostDog.svg",
+                  ),
+                  onTap: () =>
+                      Navigator.pushNamed(context, LostPetForm.routeName),
                 ),
                 const SizedBox(
                   height: 8,
                 ),
-                ReportOption(
-                  title: "¡Encontré una mascota!",
-                  icon: "assets/icons/foundDog.svg",
+                GestureDetector(
+                  child: ReportOption(
+                    title: "¡Encontré una mascota!",
+                    icon: "assets/icons/foundDog.svg",
+                  ),
                 ),
               ],
             ),

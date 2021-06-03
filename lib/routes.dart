@@ -17,6 +17,7 @@ import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
 import './src/agenda/activity_form_screen.dart';
 import './src/pets/lost_and_found/lost_and_found_map.dart';
+import './src/pets/lost_and_found/lost_pet_form.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
@@ -35,8 +36,9 @@ class Routes {
     VaccinationRecordsScreen.routeName: (context) => VaccinationRecordsScreen(),
     NewVaccinationRecordScreen.routeName: (context) =>
         NewVaccinationRecordScreen(),
-  AgendaScreen.routeName: (context) => AgendaScreen(),
-  ActivityFormScreen.routeName: (context) => ActivityFormScreen(),
+    AgendaScreen.routeName: (context) => AgendaScreen(),
+    ActivityFormScreen.routeName: (context) => ActivityFormScreen(),
     LostAndFoundMap.routeName: (context) => LostAndFoundMap(),
+    LostPetForm.routeName: (context) => LostPetForm(),
   };
 }
