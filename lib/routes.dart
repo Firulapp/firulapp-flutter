@@ -14,6 +14,8 @@ import './src/medical_records/medical_records_screen.dart';
 import './src/medical_records/medical_record_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
+import './src/pets/pets_dashboard.dart';
+import './src/pets/pets_screen_adoptions.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
@@ -31,6 +33,8 @@ class Routes {
     VaccinationRecordsScreen.routeName: (context) => VaccinationRecordsScreen(),
     NewVaccinationRecordScreen.routeName: (context) =>
         NewVaccinationRecordScreen(),
-    PetForAdoption.routeName: (context) => PetForAdoption()
+    PetForAdoption.routeName: (context) => PetForAdoption(),
+    PetsDashboard.routeName: (context) => PetsDashboard(),
+    PetOnAdoption.routeName: (context) => PetOnAdoption()
   };
 }
