@@ -11,6 +11,8 @@ class ReportItem {
   String mainStreet;
   String secondaryStreet;
   int city;
+  String status; //ABIERTO, CERRADO
+  String type; // MASCOTA_PERDIDA, MASCOTA_ENCONTRADA
   double locationLongitude;
   double locationLatitude;
   String reference;
@@ -19,6 +21,26 @@ class ReportItem {
   int createdBy;
   String modifiedAt;
   int modifiedBy;
+
+  ReportItem({
+    this.id,
+    this.petId,
+    this.userId,
+    this.description,
+    this.mainStreet,
+    this.secondaryStreet,
+    this.city,
+    this.status,
+    this.type,
+    this.locationLongitude,
+    this.locationLatitude,
+    this.reference,
+    this.observations,
+    this.createdAt,
+    this.createdBy,
+    this.modifiedAt,
+    this.modifiedBy,
+  });
 }
 
 class Reports with ChangeNotifier {
@@ -51,26 +73,5 @@ class Reports with ChangeNotifier {
     }
   }
 
-  /*
-  Future<void> fetchCities() async {
-    final List<CityItem> loadedCities = [];
-    try {
-      final response = await this._dio.get(
-            Endpoints.city,
-          );
-      final cityResponse = response.data["list"];
-      cityResponse.forEach((cityData) {
-        loadedCities.add(CityItem(
-          id: cityData["id"],
-          name: cityData["name"],
-        ));
-      });
-      _cities = loadedCities.toList();
-      notifyListeners();
-    } catch (error) {
-      print(error);
-      throw error;
-    }
-  }
-  */
+  saveReport(ReportItem report) {}
 }
