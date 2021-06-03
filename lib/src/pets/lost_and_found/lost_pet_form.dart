@@ -36,6 +36,9 @@ class _LostPetFormState extends State<LostPetForm> with ValidatorMixins {
 
   @override
   Widget build(BuildContext context) {
+    final point = ModalRoute.of(context).settings.arguments as GeographicPoints;
+    _report.locationLatitude = point.latitude;
+    _report.locationLongitude = point.longitude;
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
@@ -147,6 +150,8 @@ class _LostPetFormState extends State<LostPetForm> with ValidatorMixins {
                                   try {
                                     setState(() {
                                       _isLoading = true;
+                                      _report.city = _city;
+                                      _report.petId = _petId;
                                     });
                                     await Provider.of<Reports>(
                                       context,

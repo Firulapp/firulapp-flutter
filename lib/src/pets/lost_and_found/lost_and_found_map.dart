@@ -23,6 +23,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
   BitmapDescriptor foundMarker;
   Location _locationTracker = Location();
   StreamSubscription _locationSubscription;
+  LocationData _location;
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(-25.265620626519592, -57.5632423825354),
@@ -47,7 +48,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
   }
 
   void _onMapCreated(GoogleMapController controller) async {
-    var location = await _locationTracker.getLocation();
+    _location = await _locationTracker.getLocation();
 
     if (_locationSubscription != null) {
       _locationSubscription.cancel();
@@ -57,7 +58,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
       CameraUpdate.newCameraPosition(
         new CameraPosition(
           bearing: 192.8334901395799,
-          target: LatLng(location.latitude, location.longitude),
+          target: LatLng(_location.latitude, _location.longitude),
           tilt: 0,
           zoom: 16.5,
         ),
@@ -163,8 +164,14 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
                     title: "¡Perdí a mi mascota!",
                     icon: "assets/icons/lostDog.svg",
                   ),
-                  onTap: () =>
-                      Navigator.pushNamed(context, LostPetForm.routeName),
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    LostPetForm.routeName,
+                    arguments: GeographicPoints(
+                      "${_location.longitude}",
+                      "${_location.latitude}",
+                    ),
+                  ),
                 ),
                 const SizedBox(
                   height: 8,

@@ -104,14 +104,24 @@ class MyApp extends StatelessWidget {
             [],
           ),
         ),
+        ChangeNotifierProxyProvider<User, Reports>(
+          update: (context, user, report) => Reports(
+            user,
+            report == null ? {} : report.items,
+          ),
+          create: (ctx) => Reports(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
         ChangeNotifierProvider(
           create: (_) => Species(),
         ),
         ChangeNotifierProvider(
           create: (_) => Breeds(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => Reports(),
         ),
       ],
       child: MaterialApp(

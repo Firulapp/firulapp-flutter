@@ -56,7 +56,9 @@ class Agenda with ChangeNotifier {
       final response =
           await this._dio.get('${Endpoints.userAgenda}/${user.session.userId}');
       final events = response.data["list"];
-
+      if (events.length == 0) {
+        return;
+      }
       var auxDate = events[0]["activityDate"];
       var firstTime = true;
       events.forEach((item) {
