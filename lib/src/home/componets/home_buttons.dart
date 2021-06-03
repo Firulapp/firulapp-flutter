@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../size_config.dart';
-import '../../pets/pets_screen.dart';
+import '../../pets/pets_dashboard.dart';
 import '../../../constants/constants.dart';
 
 class HomeButtons extends StatelessWidget {
@@ -25,7 +25,8 @@ class HomeButtons extends StatelessWidget {
           ),
         ),
         RawMaterialButton(
-          onPressed: () => {Navigator.pushNamed(context, PetsScreen.routeName)},
+          onPressed: () =>
+              {Navigator.pushNamed(context, PetsDashboard.routeName)},
           elevation: _elevation,
           fillColor: Constants.kPrimaryColor,
           child: Icon(
