@@ -21,8 +21,8 @@ class ReportItem {
   int city;
   String status; //ABIERTO, CERRADO
   String type; // MASCOTA_PERDIDA, MASCOTA_ENCONTRADA
-  String locationLongitude;
-  String locationLatitude;
+  double locationLongitude;
+  double locationLatitude;
   String reference;
   String observations;
   String createdAt;
