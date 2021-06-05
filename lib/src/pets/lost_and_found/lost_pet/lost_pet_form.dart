@@ -9,7 +9,7 @@ import 'package:firulapp/src/mixins/validator_mixins.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../size_config.dart';
+import '../../../../size_config.dart';
 
 class LostPetForm extends StatefulWidget {
   static const routeName = "/lost_pet_form";

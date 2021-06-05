@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:firulapp/src/pets/lost_and_found/found_pet/found_pet_form_step1.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +9,7 @@ import 'package:location/location.dart';
 
 import 'components/report_option.dart';
 import '../../../provider/reports.dart';
-import 'lost_pet_form.dart';
+import 'lost_pet/lost_pet_form.dart';
 
 class LostAndFoundMap extends StatefulWidget {
   static const routeName = "/map";
@@ -66,16 +67,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
         ),
       ),
     );
-    double screenWidth = MediaQuery.of(context).size.width *
-        MediaQuery.of(context).devicePixelRatio;
-    double screenHeight = MediaQuery.of(context).size.height *
-        MediaQuery.of(context).devicePixelRatio;
 
-    ScreenCoordinate northEast = ScreenCoordinate(x: screenWidth.round(), y: 0);
-    ScreenCoordinate southWest =
-        ScreenCoordinate(x: 0, y: screenHeight.round());
-    LatLng northEastPoint = await controller.getLatLng(northEast);
-    LatLng southWestPoint = await controller.getLatLng(southWest);
     var bounds = await controller.getVisibleRegion();
     Provider.of<Reports>(context, listen: false).fetchReports(
       latitudeMax: -250.0,
@@ -186,6 +178,14 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
                   child: ReportOption(
                     title: "¡Encontré una mascota!",
                     icon: "assets/icons/foundDog.svg",
+                  ),
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    FoundPetFormStep1.routeName,
+                    arguments: GeographicPoints(
+                      "${_location.longitude}",
+                      "${_location.latitude}",
+                    ),
                   ),
                 ),
               ],
