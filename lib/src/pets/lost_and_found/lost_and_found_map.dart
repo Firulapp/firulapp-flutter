@@ -24,11 +24,18 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
   Location _locationTracker = Location();
   StreamSubscription _locationSubscription;
   LocationData _location;
+  static LatLng _initialPosition;
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(-25.265620626519592, -57.5632423825354),
-    zoom: 16.5,
-  );
+  void _getUserLocation() async {
+    _location = await _locationTracker.getLocation();
+
+    if (_locationSubscription != null) {
+      _locationSubscription.cancel();
+    }
+    setState(() {
+      _initialPosition = LatLng(_location.latitude, _location.longitude);
+    });
+  }
 
   void setCustomMarker() async {
     lostMarker = await BitmapDescriptor.fromAssetImage(
@@ -44,16 +51,11 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
   @override
   void initState() {
     setCustomMarker();
+    _getUserLocation();
     super.initState();
   }
 
   void _onMapCreated(GoogleMapController controller) async {
-    _location = await _locationTracker.getLocation();
-
-    if (_locationSubscription != null) {
-      _locationSubscription.cancel();
-    }
-
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
         new CameraPosition(
@@ -74,11 +76,12 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
         ScreenCoordinate(x: 0, y: screenHeight.round());
     LatLng northEastPoint = await controller.getLatLng(northEast);
     LatLng southWestPoint = await controller.getLatLng(southWest);
+    var bounds = await controller.getVisibleRegion();
     Provider.of<Reports>(context, listen: false).fetchReports(
-      latitudeMax: northEastPoint.latitude,
-      latitudeMin: southWestPoint.latitude,
-      longitudeMin: southWestPoint.longitude,
-      longitudeMax: northEastPoint.longitude,
+      latitudeMax: -250.0,
+      latitudeMin: 250.0,
+      longitudeMin: 250.0,
+      longitudeMax: -250.0,
     );
     setState(() {
       _markers.add(
@@ -124,7 +127,10 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
         title: Text('Firulapp'),
       ),
       body: GoogleMap(
-        initialCameraPosition: _kGooglePlex,
+        initialCameraPosition: CameraPosition(
+          target: _initialPosition,
+          zoom: 16.5,
+        ),
         markers: _markers,
         myLocationEnabled: true,
         onMapCreated: _onMapCreated,
