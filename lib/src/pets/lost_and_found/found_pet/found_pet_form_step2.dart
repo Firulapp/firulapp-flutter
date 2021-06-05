@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import '../../../../size_config.dart';
 
 class FoundPetFormStep2 extends StatefulWidget {
-  static const routeName = "/lost_pet_form";
+  static const routeName = "/found_pet_form/step2";
 
   @override
   _FoundPetFormStep2State createState() => _FoundPetFormStep2State();
@@ -22,7 +22,6 @@ class _FoundPetFormStep2State extends State<FoundPetFormStep2>
   final _formKey = GlobalKey<FormState>();
   ReportItem _report = new ReportItem();
   Future _citiesFuture;
-  int _petId;
   int _city;
   bool _isLoading = false;
 
@@ -34,9 +33,8 @@ class _FoundPetFormStep2State extends State<FoundPetFormStep2>
 
   @override
   Widget build(BuildContext context) {
-    final point = ModalRoute.of(context).settings.arguments as GeographicPoints;
-    _report.locationLatitude = double.parse(point.latitude);
-    _report.locationLongitude = double.parse(point.longitude);
+    final foundReport =
+        ModalRoute.of(context).settings.arguments as FoundPetReport;
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
@@ -123,14 +121,21 @@ class _FoundPetFormStep2State extends State<FoundPetFormStep2>
                                   try {
                                     setState(() {
                                       _isLoading = true;
-                                      _report.city = _city;
-                                      _report.petId = _petId;
+                                      foundReport.report.city = _city;
+                                      foundReport.report.mainStreet =
+                                          _report.mainStreet;
+                                      foundReport.report.description =
+                                          _report.description;
+                                      foundReport.report.secondaryStreet =
+                                          _report.secondaryStreet;
                                     });
                                     await Provider.of<Reports>(
                                       context,
                                       listen: false,
-                                    ).saveReport(_report);
-                                    Navigator.pop(context);
+                                    ).saveFoundReport(foundReport);
+                                    int count = 0;
+                                    Navigator.of(context)
+                                        .popUntil((_) => count++ >= 2);
                                   } catch (error) {
                                     Dialogs.info(
                                       context,

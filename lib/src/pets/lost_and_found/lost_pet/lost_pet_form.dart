@@ -156,7 +156,7 @@ class _LostPetFormState extends State<LostPetForm> with ValidatorMixins {
                                     await Provider.of<Reports>(
                                       context,
                                       listen: false,
-                                    ).saveReport(_report);
+                                    ).saveLostReport(_report);
                                     Navigator.pop(context);
                                   } catch (error) {
                                     Dialogs.info(

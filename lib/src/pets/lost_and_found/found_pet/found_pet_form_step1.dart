@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../size_config.dart';
+import 'found_pet_form_step2.dart';
 
 class FoundPetFormStep1 extends StatefulWidget {
   static const routeName = "/found_pet_form/step1";
@@ -209,7 +210,14 @@ class _FoundPetFormStep1State extends State<FoundPetFormStep1>
                           text: "Siguiente",
                           color: Constants.kPrimaryColor,
                           press: () async {
-                            Navigator.pop(context);
+                            Navigator.pushNamed(
+                              context,
+                              FoundPetFormStep2.routeName,
+                              arguments: FoundPetReport(
+                                pet: _pet,
+                                report: _report,
+                              ),
+                            );
                           },
                         ),
                       ],

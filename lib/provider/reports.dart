@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/endpoints.dart';
@@ -51,6 +52,16 @@ class ReportItem {
   });
 }
 
+class FoundPetReport {
+  ReportItem report;
+  PetItem pet;
+
+  FoundPetReport({
+    this.report,
+    this.pet,
+  });
+}
+
 class Reports with ChangeNotifier {
   List<ReportItem> _items = [];
   final User user;
@@ -84,7 +95,7 @@ class Reports with ChangeNotifier {
     }
   }
 
-  Future<void> saveReport(ReportItem report) async {
+  Future<void> saveLostReport(ReportItem report) async {
     try {
       await _dio.post(
         Endpoints.reportLostPet,
@@ -97,7 +108,7 @@ class Reports with ChangeNotifier {
           "secondaryStreet": report.secondaryStreet,
           "city": report.city,
           "status": "ABIERTO",
-          "type": "MASCOTA_PERDIDA",
+          "type": "MASCOTA_ENCONTRADA",
           "locationLongitude": report.locationLongitude,
           "locationLatitude": report.locationLatitude,
           "reference": "",
@@ -134,5 +145,61 @@ class Reports with ChangeNotifier {
       modifiedAt: json["modifiedAt"],
       modifiedBy: json["modifiedBy"],
     );
+  }
+
+  Future<void> saveFoundReport(FoundPetReport foundReport) async {
+    try {
+      await _dio.post(
+        Endpoints.reportFoundPet,
+        data: {
+          "reportPetDto": {
+            "id": null,
+            "userId": user.userData.id,
+            "description": foundReport.report.description,
+            "mainStreet": foundReport.report.mainStreet,
+            "secondaryStreet": foundReport.report.secondaryStreet,
+            "city": foundReport.report.city,
+            "status": "ABIERTO",
+            "type": "MASCOTA_ENCONTRADA",
+            "locationLongitude": foundReport.report.locationLongitude,
+            "locationLatitude": foundReport.report.locationLatitude,
+            "reference": "",
+            "observations": "",
+            "createdAt": foundReport.report.createdAt,
+            "createdBy": user.userData.id,
+            "modifiedAt": foundReport.report.modifiedAt,
+            "modifiedBy": user.userData.id,
+          },
+          "petDto": {
+            "id": null,
+            "userId": user.userData.id,
+            "speciesId": foundReport.pet.speciesId,
+            "breedId": foundReport.pet.breedId,
+            "name": foundReport.pet.name,
+            "birthDate": null,
+            "age": null,
+            "petSize": foundReport.pet.petSize,
+            "city": null,
+            "address": null,
+            "primaryColor": foundReport.pet.primaryColor,
+            "secondaryColor": foundReport.pet.secondaryColor,
+            "status": "ENCONTRADA",
+            "picture": foundReport.pet.picture,
+            "description": foundReport.pet.description,
+            "createdAt": foundReport.pet.createdAt != null
+                ? foundReport.pet.createdAt
+                : null,
+            "createdBy": user.userData.id,
+            "modifiedAt": foundReport.pet.createdAt != null
+                ? foundReport.pet.createdAt
+                : null,
+            "modifiedBy": user.userData.id,
+          },
+        },
+      );
+    } catch (error) {
+      print(error);
+      throw error;
+    }
   }
 }

@@ -17,8 +17,9 @@ import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
 import './src/agenda/activity_form_screen.dart';
 import './src/pets/lost_and_found/lost_and_found_map.dart';
-import 'src/pets/lost_and_found/found_pet/found_pet_form_step1.dart';
-import 'src/pets/lost_and_found/lost_pet/lost_pet_form.dart';
+import './src/pets/lost_and_found/found_pet/found_pet_form_step1.dart';
+import './src/pets/lost_and_found/found_pet/found_pet_form_step2.dart';
+import './src/pets/lost_and_found/lost_pet/lost_pet_form.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
@@ -42,5 +43,6 @@ class Routes {
     LostPetForm.routeName: (context) => LostPetForm(),
     PetForAdoption.routeName: (context) => PetForAdoption(),
     FoundPetFormStep1.routeName: (context) => FoundPetFormStep1(),
+    FoundPetFormStep2.routeName: (context) => FoundPetFormStep2(),
   };
 }
