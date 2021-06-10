@@ -26,7 +26,7 @@ class Endpoints {
   static final petActivityByPet = '$petActivity/pet';
   static final savePetActivity = '$petActivity/save';
   static final userAgenda = '$user/agenda';
-  static final lostAndFoundReports = '$pet/report/location';
+  static final lostAndFoundReports = '$pet/report/open';
   static final reportLostPet = '$pet/report/pet/lost';
   static final reportFoundPet = '$pet/report/pet/found';
 }

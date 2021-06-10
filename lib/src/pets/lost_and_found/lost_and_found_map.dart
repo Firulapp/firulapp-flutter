@@ -68,47 +68,29 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
       ),
     );
 
-    var bounds = await controller.getVisibleRegion();
-    Provider.of<Reports>(context, listen: false).fetchReports(
-      latitudeMax: -250.0,
-      latitudeMin: 250.0,
-      longitudeMin: 250.0,
-      longitudeMax: -250.0,
+    var bounds = await controller
+        .getVisibleRegion(); //TODO usar los bounds para obtener los markers
+    await Provider.of<Reports>(context, listen: false).fetchReports(
+      latitudeMax: 250.0,
+      latitudeMin: -250.0,
+      longitudeMin: -250.0,
+      longitudeMax: 250.0,
     );
+    var items = Provider.of<Reports>(context, listen: false).items;
     setState(() {
-      _markers.add(
-        Marker(
-          markerId: MarkerId("myMarker"),
-          draggable: false,
-          onTap: () {
-            print("myMarker tapped");
-          },
-          icon: lostMarker,
-          position: LatLng(-25.265620626519592, -57.5632423825354),
-        ),
-      );
-      _markers.add(
-        Marker(
-          markerId: MarkerId("myMarker3"),
-          draggable: false,
-          onTap: () {
-            print("myMarker3 tapped");
-          },
-          icon: foundMarker,
-          position: LatLng(-25.2655, -57.5632423825354),
-        ),
-      );
-      _markers.add(
-        Marker(
-          markerId: MarkerId("myMarker2"),
-          draggable: false,
-          onTap: () {
-            print("myMarker2 tapped");
-          },
-          icon: foundMarker,
-          position: LatLng(-25.2637, -57.5759),
-        ),
-      );
+      items.forEach((marker) {
+        _markers.add(
+          Marker(
+            markerId: MarkerId("${marker.id}"),
+            draggable: false,
+            onTap: () {
+              print("myMarker tapped");
+            },
+            icon: marker.status == 'MASCOTA_PERDIDA' ? lostMarker : foundMarker,
+            position: LatLng(marker.locationLatitude, marker.locationLongitude),
+          ),
+        );
+      });
     });
   }
 

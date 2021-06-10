@@ -80,14 +80,20 @@ class Reports with ChangeNotifier {
     double latitudeMax,
     double longitudeMax,
   }) async {
-    final List<ReportItem> loadedReports = [];
     try {
+      _items = [];
       final response = await this._dio.get(
             '${Endpoints.lostAndFoundReports}' +
                 '?latitudeMin=$latitudeMin&longitudeMin=$longitudeMin&' +
                 'latitudeMax=$latitudeMax&longitudeMax=$longitudeMax',
           );
       final reportResponse = response.data["list"];
+      reportResponse.forEach((report) {
+        _items.add(
+          mapJsonToEntity(report),
+        );
+      });
+      notifyListeners();
       print(response);
     } catch (error) {
       print(error);
@@ -152,7 +158,7 @@ class Reports with ChangeNotifier {
       await _dio.post(
         Endpoints.reportFoundPet,
         data: {
-          "reportPetDto": {
+          "report": {
             "id": null,
             "userId": user.userData.id,
             "description": foundReport.report.description,
@@ -170,7 +176,7 @@ class Reports with ChangeNotifier {
             "modifiedAt": foundReport.report.modifiedAt,
             "modifiedBy": user.userData.id,
           },
-          "petDto": {
+          "pet": {
             "id": null,
             "userId": user.userData.id,
             "speciesId": foundReport.pet.speciesId,
