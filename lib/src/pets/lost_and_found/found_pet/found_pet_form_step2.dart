@@ -39,7 +39,7 @@ class _FoundPetFormStep2State extends State<FoundPetFormStep2>
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Reportar Mascota Perdida"),
+        title: const Text("Reportar Mascota Encontrada, Paso 2"),
       ),
       body: _isLoading
           ? Center(
@@ -79,8 +79,8 @@ class _FoundPetFormStep2State extends State<FoundPetFormStep2>
                                   SizeConfig.getProportionateScreenHeight(25),
                             ),
                             buildSecondaryStreetFormField(
-                              "Calle principal",
-                              "Ingrese la calle principal",
+                              "Calle secundaria",
+                              "Ingrese la calle secundaria",
                               TextInputType.name,
                             ),
                             SizedBox(

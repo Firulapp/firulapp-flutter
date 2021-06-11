@@ -21,7 +21,7 @@ class ReportItem {
   String secondaryStreet;
   int city;
   String status; //ABIERTO, CERRADO
-  String type; // MASCOTA_PERDIDA, MASCOTA_ENCONTRADA
+  String reportType; // MASCOTA_PERDIDA, MASCOTA_ENCONTRADA
   double locationLongitude;
   double locationLatitude;
   String reference;
@@ -40,7 +40,7 @@ class ReportItem {
     this.secondaryStreet,
     this.city,
     this.status,
-    this.type,
+    this.reportType,
     this.locationLongitude,
     this.locationLatitude,
     this.reference,
@@ -114,7 +114,7 @@ class Reports with ChangeNotifier {
           "secondaryStreet": report.secondaryStreet,
           "city": report.city,
           "status": "ABIERTO",
-          "type": "MASCOTA_ENCONTRADA",
+          "reportType": "MASCOTA_ENCONTRADA",
           "locationLongitude": report.locationLongitude,
           "locationLatitude": report.locationLatitude,
           "reference": "",
@@ -124,6 +124,12 @@ class Reports with ChangeNotifier {
           "modifiedAt": report.modifiedAt,
           "modifiedBy": user.userData.id,
         },
+      );
+      fetchReports(
+        latitudeMax: 250.0,
+        latitudeMin: -250.0,
+        longitudeMin: -250.0,
+        longitudeMax: 250.0,
       );
     } catch (error) {
       print(error);
@@ -144,7 +150,7 @@ class Reports with ChangeNotifier {
       reference: json["reference"],
       secondaryStreet: json["secondaryStreet"],
       status: json["status"],
-      type: json["type"],
+      reportType: json["reportType"],
       userId: user.userData.id,
       createdAt: json["createdAt"],
       createdBy: user.userData.id,
@@ -166,7 +172,7 @@ class Reports with ChangeNotifier {
             "secondaryStreet": foundReport.report.secondaryStreet,
             "city": foundReport.report.city,
             "status": "ABIERTO",
-            "type": "MASCOTA_ENCONTRADA",
+            "reportType": "MASCOTA_ENCONTRADA",
             "locationLongitude": foundReport.report.locationLongitude,
             "locationLatitude": foundReport.report.locationLatitude,
             "reference": "",
@@ -203,8 +209,50 @@ class Reports with ChangeNotifier {
           },
         },
       );
+      fetchReports(
+        latitudeMax: 250.0,
+        latitudeMin: -250.0,
+        longitudeMin: -250.0,
+        longitudeMax: 250.0,
+      );
     } catch (error) {
       print(error);
+      throw error;
+    }
+  }
+
+  Future<void> delete(ReportItem report) async {
+    try {
+      await _dio.post(
+        Endpoints.closeReport,
+        data: {
+          "id": report.id,
+          "userId": user.userData.id,
+          "petId": report.petId,
+          "description": report.description,
+          "mainStreet": report.mainStreet,
+          "secondaryStreet": report.secondaryStreet,
+          "city": report.city,
+          "status": "ABIERTO",
+          "reportType": report.reportType,
+          "locationLongitude": report.locationLongitude,
+          "locationLatitude": report.locationLatitude,
+          "reference": "",
+          "observations": "",
+          "createdAt": report.createdAt,
+          "createdBy": user.userData.id,
+          "modifiedAt": report.modifiedAt,
+          "modifiedBy": user.userData.id,
+        },
+      );
+      fetchReports(
+        latitudeMax: 250.0,
+        latitudeMin: -250.0,
+        longitudeMin: -250.0,
+        longitudeMax: 250.0,
+      );
+      notifyListeners();
+    } catch (error) {
       throw error;
     }
   }

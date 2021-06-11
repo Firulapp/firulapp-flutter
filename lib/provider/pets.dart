@@ -142,9 +142,10 @@ class Pets with ChangeNotifier {
     }
   }
 
-  Future<void> getPetById() async {
+  Future<void> getPetById(int optionalId) async {
+    int id = optionalId == null ? _petItem.id : optionalId;
     try {
-      final response = await this._dio.get('${Endpoints.pet}/${_petItem.id}');
+      final response = await this._dio.get('${Endpoints.pet}/$id');
       final petResponse = response.data["dto"];
       var pet = PetItem(
         id: petResponse["id"],

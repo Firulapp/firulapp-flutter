@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:firulapp/provider/pets.dart';
 import 'package:firulapp/src/pets/lost_and_found/found_pet/found_pet_form_step1.dart';
+import 'package:firulapp/src/pets/lost_and_found/lost_pet/show_report.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -51,6 +53,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
 
   @override
   void initState() {
+    Provider.of<Pets>(context, listen: false).fetchPetList();
     setCustomMarker();
     _getUserLocation();
     super.initState();
@@ -77,16 +80,23 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
       longitudeMax: 250.0,
     );
     var items = Provider.of<Reports>(context, listen: false).items;
+
     setState(() {
+      _markers = HashSet<Marker>();
       items.forEach((marker) {
         _markers.add(
           Marker(
             markerId: MarkerId("${marker.id}"),
             draggable: false,
             onTap: () {
-              print("myMarker tapped");
+              Navigator.of(context).pushNamed(
+                ShowReport.routeName,
+                arguments: marker,
+              );
             },
-            icon: marker.status == 'MASCOTA_PERDIDA' ? lostMarker : foundMarker,
+            icon: marker.reportType == 'MASCOTA_PERDIDA'
+                ? lostMarker
+                : foundMarker,
             position: LatLng(marker.locationLatitude, marker.locationLongitude),
           ),
         );
