@@ -28,6 +28,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
   StreamSubscription _locationSubscription;
   LocationData _location;
   static LatLng _initialPosition;
+  GoogleMapController _controller;
 
   void _getUserLocation() async {
     _location = await _locationTracker.getLocation();
@@ -53,14 +54,15 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
 
   @override
   void initState() {
-    Provider.of<Pets>(context, listen: false).fetchPetList();
     setCustomMarker();
     _getUserLocation();
     super.initState();
   }
 
-  void _onMapCreated(GoogleMapController controller) async {
-    controller.animateCamera(
+  void _onMapCreated(GoogleMapController cntl) async {
+    _controller = cntl;
+    await Provider.of<Pets>(context, listen: false).fetchFoundPetList();
+    _controller.animateCamera(
       CameraUpdate.newCameraPosition(
         new CameraPosition(
           bearing: 192.8334901395799,
@@ -71,7 +73,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
       ),
     );
 
-    var bounds = await controller
+    var bounds = await _controller
         .getVisibleRegion(); //TODO usar los bounds para obtener los markers
     await Provider.of<Reports>(context, listen: false).fetchReports(
       latitudeMax: 250.0,
@@ -88,11 +90,12 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
           Marker(
             markerId: MarkerId("${marker.id}"),
             draggable: false,
-            onTap: () {
-              Navigator.of(context).pushNamed(
+            onTap: () async {
+              await Navigator.of(context).pushNamed(
                 ShowReport.routeName,
                 arguments: marker,
               );
+              _onMapCreated(_controller);
             },
             icon: marker.reportType == 'MASCOTA_PERDIDA'
                 ? lostMarker
@@ -150,36 +153,40 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
             child: Column(
               children: [
                 GestureDetector(
-                  child: ReportOption(
-                    title: "¡Perdí a mi mascota!",
-                    icon: "assets/icons/lostDog.svg",
-                  ),
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    LostPetForm.routeName,
-                    arguments: GeographicPoints(
-                      "${_location.longitude}",
-                      "${_location.latitude}",
+                    child: ReportOption(
+                      title: "¡Perdí a mi mascota!",
+                      icon: "assets/icons/lostDog.svg",
                     ),
-                  ),
-                ),
+                    onTap: () async {
+                      await Navigator.pushNamed(
+                        context,
+                        LostPetForm.routeName,
+                        arguments: GeographicPoints(
+                          "${_location.longitude}",
+                          "${_location.latitude}",
+                        ),
+                      );
+                      _onMapCreated(_controller);
+                    }),
                 const SizedBox(
                   height: 8,
                 ),
                 GestureDetector(
-                  child: ReportOption(
-                    title: "¡Encontré una mascota!",
-                    icon: "assets/icons/foundDog.svg",
-                  ),
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    FoundPetFormStep1.routeName,
-                    arguments: GeographicPoints(
-                      "${_location.longitude}",
-                      "${_location.latitude}",
+                    child: ReportOption(
+                      title: "¡Encontré una mascota!",
+                      icon: "assets/icons/foundDog.svg",
                     ),
-                  ),
-                ),
+                    onTap: () async {
+                      await Navigator.pushNamed(
+                        context,
+                        FoundPetFormStep1.routeName,
+                        arguments: GeographicPoints(
+                          "${_location.longitude}",
+                          "${_location.latitude}",
+                        ),
+                      );
+                      _onMapCreated(_controller);
+                    }),
               ],
             ),
           ),

@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:firulapp/components/default_button.dart';
 import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/components/input_text.dart';
-import 'package:firulapp/constants/constants.dart';
 import 'package:firulapp/provider/breeds.dart';
 import 'package:firulapp/provider/pets.dart';
 import 'package:firulapp/provider/reports.dart';
@@ -12,7 +11,6 @@ import 'package:firulapp/provider/species.dart';
 import 'package:firulapp/src/mixins/validator_mixins.dart';
 import 'package:firulapp/src/pets/components/pets_image.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../size_config.dart';
@@ -25,13 +23,12 @@ class ShowReport extends StatefulWidget {
 }
 
 class _ShowReportState extends State<ShowReport> with ValidatorMixins {
-  bool _status = false;
+  bool _status = true;
   Future _initialSpecies;
   Future _initialBreeds;
   PetItem newPet;
   PetItem _pet = new PetItem();
   ReportItem _report = new ReportItem();
-  var isInit = true;
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
   int _speciesId;
 
@@ -58,16 +55,16 @@ class _ShowReportState extends State<ShowReport> with ValidatorMixins {
   void didChangeDependencies() {
     final providerBreeds = Provider.of<Breeds>(context, listen: false);
     _report = ModalRoute.of(context).settings.arguments as ReportItem;
-    if (_report != null && isInit) {
-      _pet = Provider.of<Pets>(context, listen: false)
-          .getLocalPetById(_report.petId);
-      _initialBreeds = providerBreeds.getBreeds(_pet.speciesId);
-      isInit = false;
+    if (_report.reportType == "MASCOTA_PERDIDA") {
+      _pet = Provider.of<Pets>(context).getLocalPetById(_report.petId);
+    } else {
+      _pet = Provider.of<Pets>(context).getLocalFoundPetById(_report.petId);
     }
+
+    _initialBreeds = providerBreeds.getBreeds(_pet.speciesId);
+
     super.didChangeDependencies();
   }
-
-  final df = new DateFormat('dd-MM-yyyy');
 
   @override
   Widget build(BuildContext context) {
@@ -299,7 +296,7 @@ class _ShowReportState extends State<ShowReport> with ValidatorMixins {
                         hint: "Ingrese una description",
                         tipo: TextInputType.multiline,
                       ),
-                      !_status ? _getActionButtons() : Container(),
+                      _getActionButtons(),
                       SizedBox(
                         height: SizeConfig.getProportionateScreenHeight(25),
                       ),

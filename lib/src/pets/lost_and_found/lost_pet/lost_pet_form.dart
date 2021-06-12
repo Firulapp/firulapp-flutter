@@ -29,7 +29,6 @@ class _LostPetFormState extends State<LostPetForm> with ValidatorMixins {
 
   @override
   void initState() {
-    _petsFuture = Provider.of<Pets>(context, listen: false).fetchPetList();
     _citiesFuture = Provider.of<City>(context, listen: false).fetchCities();
     super.initState();
   }
@@ -64,26 +63,21 @@ class _LostPetFormState extends State<LostPetForm> with ValidatorMixins {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            FutureBuilder(
-                              future: _petsFuture,
-                              builder: (_, dataSnapshot) {
-                                return Consumer<Pets>(
-                                  builder: (ctx, providerData, child) =>
-                                      DropdownButtonFormField(
-                                    items: providerData.items
-                                        .map(
-                                          (pet) => DropdownMenuItem(
-                                            value: pet.id,
-                                            child: Text(pet.name),
-                                          ),
-                                        )
-                                        .toList(),
-                                    value: _petId,
-                                    onChanged: (newValue) => _petId = newValue,
-                                    hint: const Text("Mascota"),
-                                  ),
-                                );
-                              },
+                            Consumer<Pets>(
+                              builder: (ctx, providerData, child) =>
+                                  DropdownButtonFormField(
+                                items: providerData.items
+                                    .map(
+                                      (pet) => DropdownMenuItem(
+                                        value: pet.id,
+                                        child: Text(pet.name),
+                                      ),
+                                    )
+                                    .toList(),
+                                value: _petId,
+                                onChanged: (newValue) => _petId = newValue,
+                                hint: const Text("Mascota"),
+                              ),
                             ),
                             SizedBox(
                               height:

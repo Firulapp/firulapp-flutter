@@ -43,6 +43,8 @@ class PetItem with ChangeNotifier {
     this.createdBy,
   });
 
+  String get staus => status;
+
   //https://carlosamillan.medium.com/parseando-json-complejo-en-flutter-18d46c0eb045
   factory PetItem.fromJson(Map<String, dynamic> parsedJson) {
     return PetItem(
@@ -74,6 +76,8 @@ class Pets with ChangeNotifier {
   final User userData;
   List<PetItem> _items = [];
   List<PetItem> _petsByStatus = [];
+  List<PetItem> _foundPets = [];
+  List<PetItem> _allPets = []; //usado para filtrar mascotas
 
   Pets(this.userData, petItem);
 
@@ -99,6 +103,10 @@ class Pets with ChangeNotifier {
 
   PetItem getLocalPetById(int id) {
     return _items.firstWhere((pet) => pet.id == id);
+  }
+
+  PetItem getLocalFoundPetById(int id) {
+    return _foundPets.firstWhere((pet) => pet.id == id);
   }
 
   get petItem => _petItem;
@@ -176,9 +184,12 @@ class Pets with ChangeNotifier {
       final response =
           await this._dio.get('${Endpoints.pet}/user/${userData.userData.id}');
       final List<PetItem> loadedPets = [];
-      if (_items.isEmpty) {
+      if (!response.data['list'].isEmpty) {
         response.data['list'].forEach((pet) {
-          loadedPets.add(PetItem.fromJson(pet));
+          _allPets.add(PetItem.fromJson(pet));
+          if (pet["status"] != "ENCONTRADA") {
+            loadedPets.add(PetItem.fromJson(pet));
+          }
         });
         items = loadedPets;
         notifyListeners();
@@ -236,6 +247,17 @@ class Pets with ChangeNotifier {
       print(error.toString());
       throw error.toString();
     }
+  }
+
+  Future fetchFoundPetList() async {
+    _foundPets = [];
+    await fetchPetList();
+    _allPets.forEach((pet) {
+      if (pet.status == "ENCONTRADA") {
+        _foundPets.add(pet);
+      }
+    });
+    notifyListeners();
   }
 }
 
