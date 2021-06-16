@@ -22,7 +22,8 @@ class _PetsListAdoptionsState extends State<PetsListAdoptions> {
   Directory tempPath;
 
   Future _obtainPetsFuture() {
-    return Provider.of<Pets>(context, listen: false).fetchPetList();
+    return Provider.of<Pets>(context, listen: false)
+        .fetchPetListByStatus(status: "ADOPTAR");
   }
 
   Future _obtainTempPath() async {
@@ -51,9 +52,9 @@ class _PetsListAdoptionsState extends State<PetsListAdoptions> {
         } else {
           return Consumer<Pets>(
             builder: (context, providerData, _) => ListView.builder(
-              itemCount: providerData.items.length,
+              itemCount: providerData.petsByStatus.length,
               itemBuilder: (context, i) {
-                return _getListings(providerData.items[i]);
+                return _getListings(providerData.petsByStatus[i]);
               },
             ),
           );
@@ -106,12 +107,6 @@ class _PetsListAdoptionsState extends State<PetsListAdoptions> {
                 ],
               ),
             ),
-            // onTap: () {
-            //   Navigator.of(context).pushNamed(
-            //     AddPets.routeName,
-            //     arguments: pet.id,
-            //   );
-            // },
             contentPadding: EdgeInsets.symmetric(horizontal: 30),
           ),
         ),

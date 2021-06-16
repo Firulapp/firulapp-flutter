@@ -199,7 +199,7 @@ class Pets with ChangeNotifier {
     }
   }
 
-  Future<void> fetchPetListByStatus({String status = "ADOPTADA"}) async {
+  Future<void> fetchPetListByStatus({String status = "ADOPTAR"}) async {
     try {
       final response = await this._dio.get('${Endpoints.petByStatus}/$status');
       final List<PetItem> loadedPets = [];

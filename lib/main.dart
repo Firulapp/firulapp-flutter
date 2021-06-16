@@ -7,7 +7,7 @@ import './provider/breeds.dart';
 import './provider/pets.dart';
 import './routes.dart';
 import './src/theme.dart';
-import './src/home/home.dart';
+import './src/sign_in/sign_in_screen.dart';
 import './provider/user.dart';
 import './provider/city.dart';
 import './provider/session.dart';
@@ -128,7 +128,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Firulapp',
         theme: CustomTheme.theme(),
-        initialRoute: HomeScreen.routeName,
+        initialRoute: SignInScreen.routeName,
         routes: Routes.routes,
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +11,9 @@ import '../../../components/custom_surfix_icon.dart';
 import '../../../size_config.dart';
 import '../../../constants/constants.dart';
 import '../../mixins/validator_mixins.dart';
+import '../../../provider/session.dart';
+import '../../../provider/user.dart';
+import '../../../components/dialogs.dart';
 
 class SingFrom extends StatefulWidget {
   SingFrom({Key key}) : super(key: key);
@@ -18,11 +22,46 @@ class SingFrom extends StatefulWidget {
   _SingFromState createState() => _SingFromState();
 }
 
-class _SingFromState extends State<SingFrom> with ValidatorMixins {
+class _SingFromState extends State<SingFrom>
+    with AfterLayoutMixin, ValidatorMixins {
   var _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   String _email;
   String _password;
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    _check();
+  }
+
+  _check() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final session = Provider.of<Session>(context, listen: false);
+      await session.getSession();
+      if (session.isAuth) {
+        await Provider.of<User>(context, listen: false).getUser();
+        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+      }
+    } catch (error) {
+      String message;
+      if (error.response.data["status"] == 401) {
+        message = "Servidor no disponible, vuelva a intentar";
+      } else {
+        message = error.response.data["message"];
+      }
+      Dialogs.info(
+        context,
+        title: 'ERROR',
+        content: message,
+      );
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   _submit() async {
     setState(() {
@@ -30,6 +69,7 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
     });
     final isOK = _formKey.currentState.validate();
     _formKey.currentState.save();
+    final session = Provider.of<Session>(context, listen: false);
     if (isOK) {
       try {
         await Provider.of<Session>(context, listen: false).login(
@@ -45,8 +85,10 @@ class _SingFromState extends State<SingFrom> with ValidatorMixins {
         String message;
         if (error.response.data["status"] == 500) {
           message = "Usuario incorrecto o inexistente";
-        } else {
+        } else if (error.response.data != null) {
           message = error.response.data["message"];
+        } else {
+          message = "servidor no disponible";
         }
         Dialogs.info(
           context,

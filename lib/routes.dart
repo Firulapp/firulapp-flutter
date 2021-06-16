@@ -21,6 +21,8 @@ import './src/pets/lost_and_found/found_pet/found_pet_form_step1.dart';
 import './src/pets/lost_and_found/found_pet/found_pet_form_step2.dart';
 import './src/pets/lost_and_found/lost_pet/lost_pet_form.dart';
 import 'src/pets/lost_and_found/lost_pet/show_report.dart';
+import './src/pets/pets_dashboard.dart';
+import './src/pets/pets_screen_adoptions.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
@@ -42,9 +44,11 @@ class Routes {
     ActivityFormScreen.routeName: (context) => ActivityFormScreen(),
     LostAndFoundMap.routeName: (context) => LostAndFoundMap(),
     LostPetForm.routeName: (context) => LostPetForm(),
-    PetForAdoption.routeName: (context) => PetForAdoption(),
     FoundPetFormStep1.routeName: (context) => FoundPetFormStep1(),
     FoundPetFormStep2.routeName: (context) => FoundPetFormStep2(),
     ShowReport.routeName: (context) => ShowReport(),
+    PetForAdoption.routeName: (context) => PetForAdoption(),
+    PetsDashboard.routeName: (context) => PetsDashboard(),
+    PetOnAdoption.routeName: (context) => PetOnAdoption()
   };
 }
