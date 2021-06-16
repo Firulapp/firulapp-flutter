@@ -172,21 +172,22 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
                   height: 8,
                 ),
                 GestureDetector(
-                    child: ReportOption(
-                      title: "¡Encontré una mascota!",
-                      icon: "assets/icons/foundDog.svg",
-                    ),
-                    onTap: () async {
-                      await Navigator.pushNamed(
-                        context,
-                        FoundPetFormStep1.routeName,
-                        arguments: GeographicPoints(
-                          "${_location.longitude}",
-                          "${_location.latitude}",
-                        ),
-                      );
-                      _onMapCreated(_controller);
-                    }),
+                  child: ReportOption(
+                    title: "¡Encontré una mascota!",
+                    icon: "assets/icons/foundDog.svg",
+                  ),
+                  onTap: () async {
+                    await Navigator.pushNamed(
+                      context,
+                      FoundPetFormStep1.routeName,
+                      arguments: GeographicPoints(
+                        "${_location.longitude}",
+                        "${_location.latitude}",
+                      ),
+                    );
+                    _onMapCreated(_controller);
+                  },
+                ),
               ],
             ),
           ),

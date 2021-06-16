@@ -54,16 +54,6 @@ class Body extends StatelessWidget {
                   ),
                   MenuButton(
                     sizeConfig: sizeConfig,
-                    label: 'Cuidados',
-                    icon: Icons.favorite,
-                    routeName: "",
-                    color: Constants.kPrimaryColor,
-                  ),
-                  SizedBox(
-                    height: SizeConfig.getProportionateScreenHeight(25),
-                  ),
-                  MenuButton(
-                    sizeConfig: sizeConfig,
                     label: 'Agenda',
                     icon: Icons.calendar_today,
                     routeName: AgendaScreen.routeName,
