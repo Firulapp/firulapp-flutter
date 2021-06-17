@@ -1,5 +1,5 @@
 class Endpoints {
-  static final baseUrl = '';
+  static final baseUrl = 'http://10.0.2.2:9000/api';
   static final user = '/user';
   static final param = '/param';
   static final login = '$user/login';
@@ -22,4 +22,12 @@ class Endpoints {
   static final vaccinationRecordByPet = '$vaccinationRecord/pet';
   static final saveVaccinationRecord = '$vaccinationRecord/save';
   static final deleteVaccinationRecord = "$vaccinationRecord/delete";
+  static final petActivity = '$pet/activity';
+  static final petActivityByPet = '$petActivity/pet';
+  static final savePetActivity = '$petActivity/save';
+  static final userAgenda = '$user/agenda';
+  static final lostAndFoundReports = '$pet/report/open';
+  static final reportLostPet = '$pet/report/pet/lost';
+  static final reportFoundPet = '$pet/report/pet/found';
+  static final closeReport = '$pet/report/close';
 }

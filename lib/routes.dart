@@ -11,9 +11,16 @@ import './src/pets/selected_pet_screen.dart';
 import './src/sign_up/sign_up_screen.dart';
 import './src/pets/components/add_pets.dart';
 import './src/medical_records/medical_records_screen.dart';
+import './src/agenda/agenda_screen.dart';
 import './src/medical_records/medical_record_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/vaccionation_records/vaccination_records_screen.dart';
+import './src/agenda/activity_form_screen.dart';
+import './src/pets/lost_and_found/lost_and_found_map.dart';
+import './src/pets/lost_and_found/found_pet/found_pet_form_step1.dart';
+import './src/pets/lost_and_found/found_pet/found_pet_form_step2.dart';
+import './src/pets/lost_and_found/lost_pet/lost_pet_form.dart';
+import 'src/pets/lost_and_found/lost_pet/show_report.dart';
 import './src/pets/pets_dashboard.dart';
 import './src/pets/pets_screen_adoptions.dart';
 
@@ -33,6 +40,13 @@ class Routes {
     VaccinationRecordsScreen.routeName: (context) => VaccinationRecordsScreen(),
     NewVaccinationRecordScreen.routeName: (context) =>
         NewVaccinationRecordScreen(),
+    AgendaScreen.routeName: (context) => AgendaScreen(),
+    ActivityFormScreen.routeName: (context) => ActivityFormScreen(),
+    LostAndFoundMap.routeName: (context) => LostAndFoundMap(),
+    LostPetForm.routeName: (context) => LostPetForm(),
+    FoundPetFormStep1.routeName: (context) => FoundPetFormStep1(),
+    FoundPetFormStep2.routeName: (context) => FoundPetFormStep2(),
+    ShowReport.routeName: (context) => ShowReport(),
     PetForAdoption.routeName: (context) => PetForAdoption(),
     PetsDashboard.routeName: (context) => PetsDashboard(),
     PetOnAdoption.routeName: (context) => PetOnAdoption()

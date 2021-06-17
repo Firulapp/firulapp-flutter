@@ -1,8 +1,10 @@
-import 'package:firulapp/provider/breeds.dart';
-import 'package:firulapp/provider/pets.dart';
+import 'package:firulapp/provider/activity.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import './provider/agenda.dart';
+import './provider/breeds.dart';
+import './provider/pets.dart';
 import './routes.dart';
 import './src/theme.dart';
 import './src/sign_in/sign_in_screen.dart';
@@ -12,6 +14,7 @@ import './provider/session.dart';
 import './provider/species.dart';
 import './provider/medical_record.dart';
 import './provider/vaccination_record.dart';
+import './provider/reports.dart';
 
 void main() => runApp(MyApp());
 
@@ -68,6 +71,45 @@ class MyApp extends StatelessWidget {
             med == null ? {} : med.items,
           ),
           create: (ctx) => VaccinationRecord(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, Activity>(
+          update: (context, user, act) => Activity(
+            user,
+            act == null ? {} : act.items,
+          ),
+          create: (ctx) => Activity(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, Agenda>(
+          update: (context, user, agenda) => Agenda(
+            user,
+            agenda == null ? {} : agenda.items,
+          ),
+          create: (ctx) => Agenda(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, Reports>(
+          update: (context, user, report) => Reports(
+            user,
+            report == null ? {} : report.items,
+          ),
+          create: (ctx) => Reports(
             User(
               UserData(),
               UserSession(),

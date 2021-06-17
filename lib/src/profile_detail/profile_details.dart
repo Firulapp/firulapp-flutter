@@ -15,10 +15,10 @@ import '../../provider/user.dart';
 class ProfilePage extends StatefulWidget {
   static const routeName = "/profile-details";
   @override
-  MapScreenState createState() => MapScreenState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class MapScreenState extends State<ProfilePage>
+class ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();

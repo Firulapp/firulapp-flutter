@@ -1,73 +1,91 @@
 import 'package:firulapp/components/dtos/event_item.dart';
+import 'package:firulapp/constants/constants.dart';
 import 'package:firulapp/provider/agenda.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants/constants.dart';
+import '../mixins/validator_mixins.dart';
+import '../../provider/activity.dart';
 import '../../components/default_button.dart';
 import '../../components/input_text.dart';
-import '../../provider/vaccination_record.dart';
 import '../../components/dialogs.dart';
-import '../mixins/validator_mixins.dart';
 import '../../size_config.dart';
 
-class NewVaccinationRecordScreen extends StatefulWidget {
-  static const routeName = "/new_vaccination_records";
+class ActivityFormScreen extends StatefulWidget {
+  static const routeName = "/activity_form";
+
   @override
-  _NewVaccinationRecordScreenState createState() =>
-      _NewVaccinationRecordScreenState();
+  _ActivityFormScreenState createState() => _ActivityFormScreenState();
 }
 
-class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
+class _ActivityFormScreenState extends State<ActivityFormScreen>
     with ValidatorMixins {
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
-  VaccinationRecordItem _vaccinationRecord = new VaccinationRecordItem();
-  DateTime _vaccinationRecordDate;
+  ActivityItem _activity = new ActivityItem();
+  DateTime _activityDate;
+  TimeOfDay _activityTime = TimeOfDay.now();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
       context: context,
-      initialDate: _vaccinationRecordDate,
+      initialDate: _activityDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2030),
     );
-    if (pickedDate != null && pickedDate != _vaccinationRecordDate) {
+    final TimeOfDay _selectedTime24Hour = await showTimePicker(
+      context: context,
+      initialTime: _activityTime,
+    );
+    if (pickedDate != null && pickedDate != _activityDate) {
       setState(() {
-        _vaccinationRecordDate = pickedDate;
-        _vaccinationRecord.vaccinationDate =
-            _vaccinationRecordDate.toIso8601String();
+        _activityDate = pickedDate;
+        _activity.activityDate = _activityDate.toIso8601String();
+      });
+    }
+    if (_selectedTime24Hour != null && _activityTime != _selectedTime24Hour) {
+      setState(() {
+        _activityTime = _selectedTime24Hour;
+        _activity.activityTime =
+            "${_activityTime.hour}:${_activityTime.minute}";
       });
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context).settings.arguments as EventItem;
-    _vaccinationRecordDate = event.date;
+    _activityDate = event.date;
     if (event.eventId != null) {
-      _vaccinationRecord = Provider.of<VaccinationRecord>(
+      _activity = Provider.of<Activity>(
         context,
         listen: false,
-      ).getLocalVaccinationRecordById(event.eventId);
-
-      if (_vaccinationRecord != null) {
-        _vaccinationRecordDate =
-            DateTime.parse(_vaccinationRecord.vaccinationDate);
+      ).getLocalActivityById(event.eventId);
+      _activityDate = DateTime.parse(_activity.activityDate);
+      if (_activity.activityTime.length <= 5) {
+        var time = _activity.activityTime.split(":");
+        _activityTime = TimeOfDay(
+          hour: int.parse(time.first),
+          minute: int.parse(time.last),
+        );
       } else {
-        _vaccinationRecord = new VaccinationRecordItem();
+        _activityTime = TimeOfDay(
+          hour: DateTime.parse(_activity.activityTime).hour,
+          minute: DateTime.parse(_activity.activityTime).minute,
+        );
       }
     } else {
-      _vaccinationRecord.vaccinationDate =
-          _vaccinationRecordDate.toIso8601String();
+      _activity.activityDate = _activityDate.toIso8601String();
+      _activity.activityTime = "${_activityTime.hour}:${_activityTime.minute}";
     }
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Formulario Vacunación"),
+        title: const Text("Agregar Actividad"),
       ),
       body: _isLoading
           ? Center(
@@ -98,8 +116,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                             Row(
                               children: [
                                 Text(
-                                  DateFormat('dd-MM-yyyy')
-                                      .format(_vaccinationRecordDate),
+                                  "${DateFormat('dd-MM-yyyy').format(_activityDate)} ${_activityTime.hour}:${_activityTime.minute}",
                                   style: TextStyle(
                                     fontSize: 23,
                                     fontWeight: FontWeight.bold,
@@ -112,39 +129,34 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                               ],
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            buildNameFormField(
-                              "Nombre de la Vacuna",
-                              "Ingrese el nombre de la vacuna",
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
+                            buildTitleFormField(
+                              "Título de la actividad",
+                              "Ingrese el título de la actividad",
                               TextInputType.name,
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            buildVeterinaryFormField(
-                              "Veterinaria",
-                              "Ingrese el nombre de la veterinaria",
-                              TextInputType.name,
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
                             ),
-                            SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            buildObservationsFormField(
-                              "Observaciones",
-                              "Ingrese observaciones sobre el diagnostico",
+                            buildDetailFormField(
+                              "Detalle de la actividad",
+                              "Ingrese el detalle de la actividad",
                               TextInputType.multiline,
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
                             Row(
                               children: [
                                 CupertinoSwitch(
-                                  value: _vaccinationRecord.reminders,
+                                  value: _activity.reminder,
                                   onChanged: (value) {
                                     setState(() {
-                                      _vaccinationRecord.reminders = value;
+                                      _activity.reminder = value;
                                     });
                                   },
                                 ),
@@ -155,8 +167,9 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                               ],
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
                             DefaultButton(
                               text: "Guardar",
                               color: Constants.kPrimaryColor,
@@ -167,10 +180,10 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                     setState(() {
                                       _isLoading = true;
                                     });
-                                    await Provider.of<VaccinationRecord>(
+                                    await Provider.of<Activity>(
                                       context,
                                       listen: false,
-                                    ).save(_vaccinationRecord);
+                                    ).saveActivity(_activity);
                                     await Provider.of<Agenda>(context,
                                             listen: false)
                                         .fetchEvents();
@@ -202,23 +215,23 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                           final response = await Dialogs.alert(
                                             context,
                                             "¿Estás seguro que desea eliminar?",
-                                            "Se borrará el registro de esta vacuna",
+                                            "Se borrará el registro de esta actividad",
                                             "Cancelar",
                                             "Aceptar",
                                           );
-                                          setState(() {
-                                            _isLoading = true;
-                                          });
                                           if (response) {
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
                                             try {
-                                              await Provider.of<
-                                                  VaccinationRecord>(
+                                              await Provider.of<Activity>(
                                                 context,
                                                 listen: false,
-                                              ).delete(_vaccinationRecord);
+                                              ).delete(_activity);
                                               await Provider.of<Agenda>(context,
                                                       listen: false)
                                                   .fetchEvents();
+                                              Navigator.pop(context);
                                             } catch (error) {
                                               Dialogs.info(
                                                 context,
@@ -227,7 +240,6 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
                                                     .response.data["message"],
                                               );
                                             }
-                                            Navigator.pop(context);
                                           }
                                           setState(() {
                                             _isLoading = false;
@@ -256,38 +268,26 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
     );
   }
 
-  Widget buildNameFormField(String label, String hint, TextInputType tipo) {
+  Widget buildTitleFormField(String label, String hint, TextInputType tipo) {
     return InputText(
       label: label,
       hintText: hint,
       keyboardType: tipo,
       validator: validateTextNotNull,
-      value: _vaccinationRecord.vaccine,
-      onChanged: (newValue) => _vaccinationRecord.vaccine = newValue,
+      value: _activity.activityTitle,
+      onChanged: (newValue) => _activity.activityTitle = newValue,
     );
   }
 
-  Widget buildVeterinaryFormField(
-      String label, String hint, TextInputType tipo) {
+  Widget buildDetailFormField(String label, String hint, TextInputType tipo) {
     return InputText(
       label: label,
       hintText: hint,
       keyboardType: tipo,
       validator: validateTextNotNull,
-      value: _vaccinationRecord.veterinary,
-      onChanged: (newValue) => _vaccinationRecord.veterinary = newValue,
-    );
-  }
-
-  Widget buildObservationsFormField(
-      String label, String hint, TextInputType tipo) {
-    return InputText(
-      label: label,
-      hintText: hint,
-      keyboardType: tipo,
+      value: _activity.detail,
       maxLines: 10,
-      value: _vaccinationRecord.observation,
-      onChanged: (newValue) => _vaccinationRecord.observation = newValue,
+      onChanged: (newValue) => _activity.detail = newValue,
     );
   }
 }

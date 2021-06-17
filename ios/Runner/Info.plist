@@ -45,5 +45,9 @@
 	<string>Para actualizar foto de usuario o mascota necesitamos acceder a la fotografia</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Para actualizar foto de usuario o mascota necesitamos acceder a la cámara</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Necesitamos utilizar su ubicación para el reporte de mascotas</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Necesitamos utilizar su ubicación para el reporte de mascotas</string>
 </dict>
 </plist>
