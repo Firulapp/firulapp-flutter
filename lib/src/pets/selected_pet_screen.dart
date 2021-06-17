@@ -98,6 +98,26 @@ class SelectedPetScreen extends StatelessWidget {
               }
             },
           ),
+          ProfileMenu(
+            text: "Tranferir mascota",
+            icon: "assets/icons/certification.svg",
+            press: () async {
+              final response = await Dialogs.alert(
+                context,
+                "¿Estás seguro que desea quitar de adopción a ${pet.name}?",
+                "",
+                "Cancelar",
+                "Aceptar",
+              );
+              if (response) {
+                pet.status = "ADOPTADA";
+                pet.description = commentary;
+                Provider.of<Pets>(context, listen: false).petItem = pet;
+                Provider.of<Pets>(context, listen: false).savePet();
+                Navigator.pushReplacementNamed(context, PetsScreen.routeName);
+              }
+            },
+          ),
         ]),
       ),
     );

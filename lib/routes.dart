@@ -23,6 +23,7 @@ import './src/pets/lost_and_found/lost_pet/lost_pet_form.dart';
 import 'src/pets/lost_and_found/lost_pet/show_report.dart';
 import './src/pets/pets_dashboard.dart';
 import './src/pets/pets_screen_adoptions.dart';
+import './src/pets/components/adoptions/transfer_pet.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
@@ -49,6 +50,7 @@ class Routes {
     ShowReport.routeName: (context) => ShowReport(),
     PetForAdoption.routeName: (context) => PetForAdoption(),
     PetsDashboard.routeName: (context) => PetsDashboard(),
-    PetOnAdoption.routeName: (context) => PetOnAdoption()
+    PetOnAdoption.routeName: (context) => PetOnAdoption(),
+    TransferPet.routeName: (context) => TransferPet()
   };
 }

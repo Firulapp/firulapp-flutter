@@ -1,5 +1,5 @@
 class Endpoints {
-  static final baseUrl = 'http://10.0.2.2:9000/api';
+  static final baseUrl = 'http://localhost:9000/api';
   static final user = '/user';
   static final param = '/param';
   static final login = '$user/login';
