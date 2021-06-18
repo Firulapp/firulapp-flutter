@@ -11,9 +11,7 @@ import '../../../components/custom_surfix_icon.dart';
 import '../../../size_config.dart';
 import '../../../constants/constants.dart';
 import '../../mixins/validator_mixins.dart';
-import '../../../provider/session.dart';
 import '../../../provider/user.dart';
-import '../../../components/dialogs.dart';
 
 class SingFrom extends StatefulWidget {
   SingFrom({Key key}) : super(key: key);

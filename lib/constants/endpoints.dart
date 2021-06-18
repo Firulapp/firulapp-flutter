@@ -1,5 +1,3 @@
-import 'package:firulapp/src/pets/components/adoptions/transfer_pet.dart';
-
 class Endpoints {
   static final baseUrl = '';
   static final user = '/user';
