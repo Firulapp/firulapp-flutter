@@ -1,4 +1,6 @@
+import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/provider/vaccination_record.dart';
+import 'package:firulapp/src/pets/pets_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +11,7 @@ import '../../provider/pets.dart';
 import '../profile/components/profile_menu.dart';
 import './components/pet_pic.dart';
 import './components/add_pets.dart';
+import 'components/adoptions/pet_for_adoption.dart';
 
 class SelectedPetScreen extends StatelessWidget {
   static const routeName = "/selected-pet";
@@ -63,6 +66,36 @@ class SelectedPetScreen extends StatelessWidget {
                 VaccinationRecordsScreen.routeName,
                 arguments: pet,
               );
+            },
+          ),
+          ProfileMenu(
+            text: "Poner en Adopción",
+            icon: "assets/icons/casa-de-mascotas.svg",
+            press: () {
+              Navigator.of(context).pushNamed(
+                PetForAdoption.routeName,
+                arguments: pet.id,
+              );
+            },
+          ),
+          ProfileMenu(
+            text: "Quitar de Adopción",
+            icon: "assets/icons/Error.svg",
+            press: () async {
+              final response = await Dialogs.alert(
+                context,
+                "¿Estás seguro que desea quitar de adopción a ${pet.name}?",
+                "",
+                "Cancelar",
+                "Aceptar",
+              );
+              if (response) {
+                pet.status = "ADOPTADA";
+                pet.description = commentary;
+                Provider.of<Pets>(context, listen: false).petItem = pet;
+                Provider.of<Pets>(context, listen: false).savePet();
+                Navigator.pushReplacementNamed(context, PetsScreen.routeName);
+              }
             },
           ),
         ]),

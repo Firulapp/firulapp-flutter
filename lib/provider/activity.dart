@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import './pets.dart';
 import '../constants/endpoints.dart';
 import 'user.dart';
-import 'agenda.dart';
 
 class ActivityItem {
   int id;

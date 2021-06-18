@@ -13,6 +13,7 @@ class Endpoints {
   static final petSave = '$pet/save';
   static final petDelete = '$pet/delete';
   static final petByUser = '$pet/user';
+  static final petByStatus = '$pet/status';
   static final medicalRecord = '$pet/medical/record';
   static final medicalRecordByPet = '$pet/medical/record/pet';
   static final saveMedicalRecord = '$medicalRecord/save';
@@ -25,4 +26,8 @@ class Endpoints {
   static final petActivityByPet = '$petActivity/pet';
   static final savePetActivity = '$petActivity/save';
   static final userAgenda = '$user/agenda';
+  static final lostAndFoundReports = '$pet/report/open';
+  static final reportLostPet = '$pet/report/pet/lost';
+  static final reportFoundPet = '$pet/report/pet/found';
+  static final closeReport = '$pet/report/close';
 }

@@ -7,13 +7,14 @@ import './provider/breeds.dart';
 import './provider/pets.dart';
 import './routes.dart';
 import './src/theme.dart';
-import './src/home/home.dart';
+import './src/sign_in/sign_in_screen.dart';
 import './provider/user.dart';
 import './provider/city.dart';
 import './provider/session.dart';
 import './provider/species.dart';
 import './provider/medical_record.dart';
 import './provider/vaccination_record.dart';
+import './provider/reports.dart';
 
 void main() => runApp(MyApp());
 
@@ -103,6 +104,19 @@ class MyApp extends StatelessWidget {
             [],
           ),
         ),
+        ChangeNotifierProxyProvider<User, Reports>(
+          update: (context, user, report) => Reports(
+            user,
+            report == null ? {} : report.items,
+          ),
+          create: (ctx) => Reports(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
         ChangeNotifierProvider(
           create: (_) => Species(),
         ),
@@ -114,7 +128,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Firulapp',
         theme: CustomTheme.theme(),
-        initialRoute: HomeScreen.routeName,
+        initialRoute: SignInScreen.routeName,
         routes: Routes.routes,
       ),
     );

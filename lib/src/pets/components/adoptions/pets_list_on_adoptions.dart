@@ -1,28 +1,29 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
-import 'package:path_provider/path_provider.dart' as syspaths;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firulapp/src/pets/components/add_pets.dart';
+import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:provider/provider.dart';
 
-import '../../../components/dialogs.dart';
-import '../../../provider/pets.dart';
-import '../selected_pet_screen.dart';
+import '../../../../provider/pets.dart';
 
-class PetsList extends StatefulWidget {
-  PetsList({Key key}) : super(key: key);
+class PetsListAdoptions extends StatefulWidget {
+  PetsListAdoptions({Key key}) : super(key: key);
 
   @override
-  _PetsListState createState() => _PetsListState();
+  _PetsListAdoptionsState createState() => _PetsListAdoptionsState();
 }
 
-class _PetsListState extends State<PetsList> {
+class _PetsListAdoptionsState extends State<PetsListAdoptions> {
   Future _petsFuture;
   Directory tempPath;
 
   Future _obtainPetsFuture() {
-    return Provider.of<Pets>(context, listen: false).fetchPetList();
+    return Provider.of<Pets>(context, listen: false)
+        .fetchPetListByStatus(status: "ADOPTAR");
   }
 
   Future _obtainTempPath() async {
@@ -51,9 +52,9 @@ class _PetsListState extends State<PetsList> {
         } else {
           return Consumer<Pets>(
             builder: (context, providerData, _) => ListView.builder(
-              itemCount: providerData.items.length,
+              itemCount: providerData.petsByStatus.length,
               itemBuilder: (context, i) {
-                return _getListings(providerData.items[i]);
+                return _getListings(providerData.petsByStatus[i]);
               },
             ),
           );
@@ -71,8 +72,8 @@ class _PetsListState extends State<PetsList> {
       height: 100,
       child: Card(
         margin: EdgeInsets.symmetric(
-          horizontal: 30,
-          vertical: 10,
+          horizontal: 20,
+          vertical: 5,
         ),
         elevation: 6,
         child: Center(
@@ -88,32 +89,23 @@ class _PetsListState extends State<PetsList> {
                       "assets/images/default-avatar.png",
                     ),
             ),
-            title: Text(
-              "$name",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                SelectedPetScreen.routeName,
-                arguments: pet.id,
-              );
-            },
-            trailing: IconButton(
-              icon: Image.asset(
-                "assets/images/delete.png",
+            title: Center(
+              child: Column(
+                children: [
+                  Text(
+                    "$name",
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  CupertinoButton(
+                      child: Text("VER PERFIL"),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          AddPets.routeName,
+                          arguments: pet.id,
+                        );
+                      }),
+                ],
               ),
-              onPressed: () async {
-                final response = await Dialogs.alert(
-                  context,
-                  "¿Estás seguro que desea eliminar la mascota $name?",
-                  "Se eliminarán todos los datos de la mascota",
-                  "Cancelar",
-                  "Aceptar",
-                );
-                if (response) {
-                  Provider.of<Pets>(context, listen: false).deletePet(pet);
-                }
-              },
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 30),
           ),

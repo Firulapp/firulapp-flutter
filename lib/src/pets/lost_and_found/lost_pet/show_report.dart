@@ -1,40 +1,36 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firulapp/components/default_button.dart';
+import 'package:firulapp/components/dialogs.dart';
+import 'package:firulapp/components/input_text.dart';
+import 'package:firulapp/provider/breeds.dart';
+import 'package:firulapp/provider/pets.dart';
+import 'package:firulapp/provider/reports.dart';
+import 'package:firulapp/provider/species.dart';
+import 'package:firulapp/src/mixins/validator_mixins.dart';
+import 'package:firulapp/src/pets/components/pets_image.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../components/input_text.dart';
-import '../../../provider/breeds.dart';
-import '../../mixins/validator_mixins.dart';
-import '../../../components/dialogs.dart';
-import '../../../size_config.dart';
-import '../../../constants/constants.dart';
-import '../../../provider/species.dart';
-import '../../../provider/pets.dart';
-import './pets_image.dart';
+import '../../../../size_config.dart';
 
-class AddPets extends StatefulWidget {
-  static const routeName = "/pets/add";
-  AddPets({Key key}) : super(key: key);
+class ShowReport extends StatefulWidget {
+  static const routeName = "/lost_report";
 
-  MapScreenState createState() => MapScreenState();
+  @override
+  _ShowReportState createState() => _ShowReportState();
 }
 
-class MapScreenState extends State<AddPets> with ValidatorMixins {
+class _ShowReportState extends State<ShowReport> with ValidatorMixins {
   bool _status = true;
   Future _initialSpecies;
   Future _initialBreeds;
   PetItem newPet;
   PetItem _pet = new PetItem();
-  var isInit = true;
-
+  ReportItem _report = new ReportItem();
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
   int _speciesId;
-  DateTime _birthDate = DateTime.now();
-  int _age;
-  String _petStatus = PetStatus.ADOPTADA.value;
 
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
@@ -58,17 +54,17 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   @override
   void didChangeDependencies() {
     final providerBreeds = Provider.of<Breeds>(context, listen: false);
-    final id = ModalRoute.of(context).settings.arguments as int;
-    if (id != null && isInit) {
-      _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
-      _birthDate = DateTime.parse(_pet.birthDate);
-      _initialBreeds = providerBreeds.getBreeds(_pet.speciesId);
-      isInit = false;
+    _report = ModalRoute.of(context).settings.arguments as ReportItem;
+    if (_report.reportType == "MASCOTA_PERDIDA") {
+      _pet = Provider.of<Pets>(context).getLocalPetById(_report.petId);
+    } else {
+      _pet = Provider.of<Pets>(context).getLocalFoundPetById(_report.petId);
     }
+
+    _initialBreeds = providerBreeds.getBreeds(_pet.speciesId);
+
     super.didChangeDependencies();
   }
-
-  final df = new DateFormat('dd-MM-yyyy');
 
   @override
   Widget build(BuildContext context) {
@@ -96,35 +92,83 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                          padding: const EdgeInsets.only(top: 25.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  const Text(
-                                    'Datos de mascota',
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const Text(
+                                  'Datos del reporte',
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  _status ? _getEditIcon() : Container(),
-                                ],
-                              )
-                            ],
-                          )),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                       SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
+                        height: SizeConfig.getProportionateScreenHeight(25),
+                      ),
+                      buildPetStateFormField(
+                        label: "Estado",
+                        tipo: TextInputType.text,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.getProportionateScreenHeight(25),
+                      ),
+                      buildDetailFormField(
+                        "Descripción sobre la pérdida",
+                        "Ingrese el detalle sobre la pérdida de la mascota",
+                        TextInputType.multiline,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.getProportionateScreenHeight(25),
+                      ),
+                      buildMainStreetFormField(
+                        "Calle principal",
+                        "Ingrese la calle principal",
+                        TextInputType.name,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.getProportionateScreenHeight(25),
+                      ),
+                      buildSecondaryStreetFormField(
+                        "Calle secundaria",
+                        "Ingrese la calle secundaria",
+                        TextInputType.name,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const Text(
+                                  'Datos de mascota',
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.getProportionateScreenHeight(25),
+                      ),
                       buildNameFormField(
                         label: "Nombre de mascota",
                         hint: "Ingrese un nombre",
@@ -224,100 +268,38 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                           },
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: GestureDetector(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Text(
-                                df.format(_birthDate),
-                                style: TextStyle(
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.calendar_today_outlined),
-                                onPressed: () async {
-                                  await _selectDate(context);
-                                  setState(() {
-                                    _pet.birthDate =
-                                        _birthDate.toIso8601String();
-                                  });
-                                },
-                                iconSize: 40,
-                                color: Constants.kPrimaryColor,
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            _selectDate(context);
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                const Text(
-                                  'Edad',
-                                  style: TextStyle(
-                                    fontSize: 23,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text(
-                                  (calculateAge(_birthDate).toString() +
-                                      " Años"),
-                                  style: TextStyle(
-                                    fontSize: 23,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
                       SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
+                        height: SizeConfig.getProportionateScreenHeight(25),
+                      ),
                       buildDropdown(['PEQUEÑO', 'MEDIANO', 'GRANDE']),
                       SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
+                        height: SizeConfig.getProportionateScreenHeight(25),
+                      ),
                       buildPrimaryColorFormField(
                         label: "Color primario",
                         hint: "Ingrese un color",
                         tipo: TextInputType.text,
                       ),
                       SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
+                        height: SizeConfig.getProportionateScreenHeight(25),
+                      ),
                       buildSecondaryColorFormField(
                         label: "Color secundario",
                         hint: "Ingrese un color",
                         tipo: TextInputType.text,
                       ),
                       SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
+                        height: SizeConfig.getProportionateScreenHeight(25),
+                      ),
                       buildDescriptionFormField(
                         label: "Descripción",
                         hint: "Ingrese una description",
                         tipo: TextInputType.multiline,
                       ),
-                      !_status ? _getActionButtons() : Container(),
+                      _getActionButtons(),
+                      SizedBox(
+                        height: SizeConfig.getProportionateScreenHeight(25),
+                      ),
                     ],
                   ),
                 )
@@ -347,67 +329,37 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: Container(
-                  child: RaisedButton(
-                child: Text("Guardar"),
-                textColor: Colors.white,
-                color: Colors.green,
-                onPressed: () async {
-                  try {
-                    newPet = PetItem(
-                      id: _pet.id,
-                      name: _pet.name,
-                      speciesId: _pet.speciesId,
-                      breedId: _pet.breedId,
-                      birthDate: _pet.birthDate,
-                      age: _age,
-                      petSize: _pet.petSize,
-                      primaryColor: _pet.primaryColor,
-                      secondaryColor: _pet.secondaryColor,
-                      description: _pet.description,
-                      status: _petStatus,
-                      picture: _pet.picture,
-                      createdAt: _pet.createdAt,
-                    );
-                    Provider.of<Pets>(context, listen: false).petItem = newPet;
-                    Provider.of<Pets>(context, listen: false).savePet();
-                    Navigator.pop(context);
-                  } catch (e) {
-                    Dialogs.info(
-                      context,
-                      title: 'ERROR',
-                      content: e.response.data["message"],
-                    );
-                  }
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-              )),
-            ),
-            flex: 2,
-          ),
-          Expanded(
-            child: Padding(
               padding: const EdgeInsets.only(left: 10.0),
               child: Container(
-                  child: RaisedButton(
-                child: Text("Cancelar"),
-                textColor: Colors.white,
-                color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-              )),
+                child: DefaultButton(
+                  text: "Borrar",
+                  color: Colors.white,
+                  press: () async {
+                    final response = await Dialogs.alert(
+                      context,
+                      "¿Estás seguro que desea eliminar?",
+                      "Se borrará este reporte",
+                      "Cancelar",
+                      "Aceptar",
+                    );
+                    if (response) {
+                      try {
+                        await Provider.of<Reports>(
+                          context,
+                          listen: false,
+                        ).delete(_report);
+                        Navigator.pop(context);
+                      } catch (error) {
+                        Dialogs.info(
+                          context,
+                          title: 'ERROR',
+                          content: error.response.data["message"],
+                        );
+                      }
+                    }
+                  },
+                ),
+              ),
             ),
             flex: 2,
           ),
@@ -416,55 +368,19 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
     );
   }
 
-  Widget _getEditIcon() {
-    return GestureDetector(
-      child: CircleAvatar(
-        backgroundColor: Constants.kPrimaryColor,
-        radius: 20.0,
-        child: Icon(
-          Icons.edit,
-          color: Colors.white,
-          size: 16.0,
-        ),
-      ),
-      onTap: () {
-        setState(() {
-          _status = false;
-        });
-      },
+  Widget buildPetStateFormField(
+      {String label, String hint, TextInputType tipo}) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      validator: validateTextNotNull,
+      keyboardType: tipo,
+      maxLines: 10,
+      value: _report.reportType,
+      onChanged: (newValue) => _report.reportType = newValue,
+      enabled: !_status,
+      autofocus: !_status,
     );
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime pickedDate = await showDatePicker(
-      context: context,
-      initialDate: _birthDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    );
-    if (pickedDate != null && pickedDate != _birthDate)
-      setState(() {
-        _birthDate = pickedDate;
-      });
-  }
-
-  //Calculate age for the backend
-  calculateAge(DateTime birthDate) {
-    DateTime currentDate = DateTime.now();
-    int age = currentDate.year - birthDate.year;
-    int month1 = currentDate.month;
-    int month2 = birthDate.month;
-    if (month2 > month1) {
-      age--;
-    } else if (month1 == month2) {
-      int day1 = currentDate.day;
-      int day2 = birthDate.day;
-      if (day2 > day1) {
-        age--;
-      }
-    }
-    _age = age; // aqui deberia actualizar el objeto de la mascotas
-    return age;
   }
 
   Widget buildNameFormField({String label, String hint, TextInputType tipo}) {
@@ -520,6 +436,40 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
       onChanged: (newValue) => _pet.description = newValue,
       enabled: !_status,
       autofocus: !_status,
+    );
+  }
+
+  Widget buildMainStreetFormField(
+      String label, String hint, TextInputType tipo) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      value: _report.mainStreet,
+      onChanged: (newValue) => _report.mainStreet = newValue,
+    );
+  }
+
+  Widget buildSecondaryStreetFormField(
+      String label, String hint, TextInputType tipo) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      value: _report.secondaryStreet,
+      onChanged: (newValue) => _report.secondaryStreet = newValue,
+    );
+  }
+
+  Widget buildDetailFormField(String label, String hint, TextInputType tipo) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      validator: validateTextNotNull,
+      value: _report.description,
+      maxLines: 10,
+      onChanged: (newValue) => _report.description = newValue,
     );
   }
 

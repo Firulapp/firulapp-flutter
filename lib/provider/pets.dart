@@ -16,7 +16,7 @@ class PetItem with ChangeNotifier {
   String address;
   String primaryColor;
   String secondaryColor;
-  bool status;
+  String status;
   int speciesId;
   String picture;
   String description;
@@ -43,6 +43,8 @@ class PetItem with ChangeNotifier {
     this.createdBy,
   });
 
+  String get staus => status;
+
   //https://carlosamillan.medium.com/parseando-json-complejo-en-flutter-18d46c0eb045
   factory PetItem.fromJson(Map<String, dynamic> parsedJson) {
     return PetItem(
@@ -66,11 +68,16 @@ class PetItem with ChangeNotifier {
   }
 }
 
+enum PetStatus { ADOPTAR, APADRINAR, APADRINADA, ADOPTADA, PERDIDA, ENCONTRADA }
+
 class Pets with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
   PetItem _petItem;
   final User userData;
   List<PetItem> _items = [];
+  List<PetItem> _petsByStatus = [];
+  List<PetItem> _foundPets = [];
+  List<PetItem> _allPets = []; //usado para filtrar mascotas
 
   Pets(this.userData, petItem);
 
@@ -84,13 +91,22 @@ class Pets with ChangeNotifier {
     notifyListeners();
   }
 
-  // Devuelve solo las mascotas con status True
-  List<PetItem> get enablePets => _items.where((e) => e.status).toList();
+  set petsByStatus(List<PetItem> list) {
+    _petsByStatus = list;
+    notifyListeners();
+  }
+
+  List<PetItem> get petsByStatus => [..._petsByStatus];
+
   // devuelve todas las mascotas
   List<PetItem> get items => [..._items];
 
   PetItem getLocalPetById(int id) {
     return _items.firstWhere((pet) => pet.id == id);
+  }
+
+  PetItem getLocalFoundPetById(int id) {
+    return _foundPets.firstWhere((pet) => pet.id == id);
   }
 
   get petItem => _petItem;
@@ -134,9 +150,10 @@ class Pets with ChangeNotifier {
     }
   }
 
-  Future<void> getPetById() async {
+  Future<void> getPetById(int optionalId) async {
+    int id = optionalId == null ? _petItem.id : optionalId;
     try {
-      final response = await this._dio.get('${Endpoints.pet}/${_petItem.id}');
+      final response = await this._dio.get('${Endpoints.pet}/$id');
       final petResponse = response.data["dto"];
       var pet = PetItem(
         id: petResponse["id"],
@@ -167,28 +184,30 @@ class Pets with ChangeNotifier {
       final response =
           await this._dio.get('${Endpoints.pet}/user/${userData.userData.id}');
       final List<PetItem> loadedPets = [];
-      if (_items.isEmpty) {
+      if (!response.data['list'].isEmpty) {
         response.data['list'].forEach((pet) {
-          loadedPets.add(PetItem(
-            id: pet["id"],
-            breedId: pet["breedId"],
-            speciesId: pet["speciesId"],
-            name: pet["name"],
-            birthDate: pet["birthDate"],
-            age: pet["age"],
-            petSize: pet["petSize"],
-            city: pet["city"],
-            address: pet["address"],
-            primaryColor: pet["primaryColor"],
-            secondaryColor: pet["secondaryColor"],
-            status: pet["status"],
-            picture: pet["picture"],
-            description: pet["description"],
-            createdAt: pet["createdAt"],
-            createdBy: pet["createdBy"],
-          ));
+          _allPets.add(PetItem.fromJson(pet));
+          if (pet["status"] != "ENCONTRADA") {
+            loadedPets.add(PetItem.fromJson(pet));
+          }
         });
         items = loadedPets;
+        notifyListeners();
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> fetchPetListByStatus({String status = "ADOPTAR"}) async {
+    try {
+      final response = await this._dio.get('${Endpoints.petByStatus}/$status');
+      final List<PetItem> loadedPets = [];
+      if (_items.isEmpty) {
+        response.data['list'].forEach((pet) {
+          loadedPets.add(PetItem.fromJson(pet));
+        });
+        petsByStatus = loadedPets;
         notifyListeners();
       }
     } catch (e) {
@@ -227,6 +246,38 @@ class Pets with ChangeNotifier {
     } catch (error) {
       print(error.toString());
       throw error.toString();
+    }
+  }
+
+  Future fetchFoundPetList() async {
+    _foundPets = [];
+    await fetchPetList();
+    _allPets.forEach((pet) {
+      if (pet.status == "ENCONTRADA") {
+        _foundPets.add(pet);
+      }
+    });
+    notifyListeners();
+  }
+}
+
+extension PetsExtension on PetStatus {
+  String get value {
+    switch (this) {
+      case PetStatus.ADOPTADA:
+        return 'ADOPTADA';
+      case PetStatus.ADOPTAR:
+        return 'ADOPTAR';
+      case PetStatus.APADRINADA:
+        return 'APADRINADA';
+      case PetStatus.APADRINAR:
+        return 'APADRINAR';
+      case PetStatus.ENCONTRADA:
+        return 'ENCONTRADA';
+      case PetStatus.PERDIDA:
+        return 'PERDIDA';
+      default:
+        return null;
     }
   }
 }
