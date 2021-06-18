@@ -1,5 +1,6 @@
 import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/provider/vaccination_record.dart';
+import 'package:firulapp/src/pets/components/adoptions/transfer_pet.dart';
 import 'package:firulapp/src/pets/pets_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -101,21 +102,11 @@ class SelectedPetScreen extends StatelessWidget {
           ProfileMenu(
             text: "Tranferir mascota",
             icon: "assets/icons/certification.svg",
-            press: () async {
-              final response = await Dialogs.alert(
-                context,
-                "¿Estás seguro que desea quitar de adopción a ${pet.name}?",
-                "",
-                "Cancelar",
-                "Aceptar",
+            press: () {
+              Navigator.of(context).pushNamed(
+                TransferPet.routeName,
+                arguments: pet.id,
               );
-              if (response) {
-                pet.status = "ADOPTADA";
-                pet.description = commentary;
-                Provider.of<Pets>(context, listen: false).petItem = pet;
-                Provider.of<Pets>(context, listen: false).savePet();
-                Navigator.pushReplacementNamed(context, PetsScreen.routeName);
-              }
             },
           ),
         ]),

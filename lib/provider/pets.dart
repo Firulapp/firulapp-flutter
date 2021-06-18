@@ -259,6 +259,20 @@ class Pets with ChangeNotifier {
     });
     notifyListeners();
   }
+
+  Future<void> tranferPet(String userName, int petId) async {
+    try {
+      final response = await this
+          ._dio
+          .post('${Endpoints.transferPet}/$petId/user/$userName');
+      if (response.data["success"]) {
+        items = [];
+        fetchPetList();
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
 }
 
 extension PetsExtension on PetStatus {

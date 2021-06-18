@@ -1,5 +1,7 @@
+import 'package:firulapp/src/pets/components/adoptions/transfer_pet.dart';
+
 class Endpoints {
-  static final baseUrl = 'http://localhost:9000/api';
+  static final baseUrl = '';
   static final user = '/user';
   static final param = '/param';
   static final login = '$user/login';
@@ -30,4 +32,5 @@ class Endpoints {
   static final reportLostPet = '$pet/report/pet/lost';
   static final reportFoundPet = '$pet/report/pet/found';
   static final closeReport = '$pet/report/close';
+  static final transferPet = '$pet/transfer/';
 }
