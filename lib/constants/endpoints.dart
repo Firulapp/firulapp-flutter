@@ -1,5 +1,5 @@
 class Endpoints {
-  static final baseUrl = '';
+  static final baseUrl = 'https://firulapp.sodep.com.py/api';
   static final user = '/user';
   static final param = '/param';
   static final login = '$user/login';
