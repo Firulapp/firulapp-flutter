@@ -45,7 +45,9 @@ class _SingFromState extends State<SingFrom>
       }
     } catch (error) {
       String message;
-      if (error.response.data["status"] == 401) {
+      if (error.error.osError.message != null) {
+        message = error.error.osError.message;
+      } else if (error.response.data["status"] == 401) {
         message = "Servidor no disponible, vuelva a intentar";
       } else {
         message = error.response.data["message"];
@@ -81,7 +83,9 @@ class _SingFromState extends State<SingFrom>
         );
       } catch (error) {
         String message;
-        if (error.response.data["status"] == 500) {
+        if (error.message != null) {
+          message = error.message;
+        } else if (error.response.data["status"] == 500) {
           message = "Usuario incorrecto o inexistente";
         } else if (error.response.data != null) {
           message = error.response.data["message"];
