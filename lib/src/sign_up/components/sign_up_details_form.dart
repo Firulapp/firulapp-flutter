@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/city.dart';
-import '../../home/home.dart';
+import '../../sign_in/sign_in_screen.dart';
 import '../../../provider/session.dart';
 import '../../../provider/user.dart';
 import '../../../components/dialogs.dart';
@@ -215,7 +215,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
                       await Provider.of<Session>(context, listen: false)
                           .register(userData: _user.userData);
                       Navigator.pushNamedAndRemoveUntil(
-                          context, HomeScreen.routeName, (_) => false);
+                          context, SignInScreen.routeName, (_) => false);
                     } catch (error) {
                       Dialogs.info(
                         context,
