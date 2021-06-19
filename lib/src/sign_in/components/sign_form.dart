@@ -69,7 +69,6 @@ class _SingFromState extends State<SingFrom>
     });
     final isOK = _formKey.currentState.validate();
     _formKey.currentState.save();
-    final session = Provider.of<Session>(context, listen: false);
     if (isOK) {
       try {
         await Provider.of<Session>(context, listen: false).login(

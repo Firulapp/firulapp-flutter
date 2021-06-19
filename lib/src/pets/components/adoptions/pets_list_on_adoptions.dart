@@ -32,6 +32,7 @@ class _PetsListAdoptionsState extends State<PetsListAdoptions> {
 
   @override
   void initState() {
+    Provider.of<Pets>(context, listen: false).fetchPetList();
     _petsFuture = _obtainPetsFuture();
     _obtainTempPath();
     super.initState();

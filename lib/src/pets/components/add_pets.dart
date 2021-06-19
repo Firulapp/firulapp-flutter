@@ -317,6 +317,8 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                         hint: "Ingrese una description",
                         tipo: TextInputType.multiline,
                       ),
+                      SizedBox(
+                          height: SizeConfig.getProportionateScreenHeight(25)),
                       !_status ? _getActionButtons() : Container(),
                     ],
                   ),
