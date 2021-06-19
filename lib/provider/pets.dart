@@ -203,13 +203,11 @@ class Pets with ChangeNotifier {
     try {
       final response = await this._dio.get('${Endpoints.petByStatus}/$status');
       final List<PetItem> loadedPets = [];
-      if (_items.isEmpty) {
-        response.data['list'].forEach((pet) {
-          loadedPets.add(PetItem.fromJson(pet));
-        });
-        petsByStatus = loadedPets;
-        notifyListeners();
-      }
+      response.data['list'].forEach((pet) {
+        loadedPets.add(PetItem.fromJson(pet));
+      });
+      petsByStatus = loadedPets;
+      notifyListeners();
     } catch (e) {
       throw e;
     }
@@ -258,6 +256,20 @@ class Pets with ChangeNotifier {
       }
     });
     notifyListeners();
+  }
+
+  Future<void> tranferPet(String userName, int petId) async {
+    try {
+      final response = await this
+          ._dio
+          .post('${Endpoints.transferPet}/$petId/user/$userName');
+      if (response.data["success"]) {
+        items = [];
+        fetchPetList();
+      }
+    } catch (e) {
+      throw e;
+    }
   }
 }
 

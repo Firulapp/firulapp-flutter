@@ -1,5 +1,6 @@
 import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/provider/vaccination_record.dart';
+import 'package:firulapp/src/pets/components/adoptions/transfer_pet.dart';
 import 'package:firulapp/src/pets/pets_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -96,6 +97,16 @@ class SelectedPetScreen extends StatelessWidget {
                 Provider.of<Pets>(context, listen: false).savePet();
                 Navigator.pushReplacementNamed(context, PetsScreen.routeName);
               }
+            },
+          ),
+          ProfileMenu(
+            text: "Tranferir mascota",
+            icon: "assets/icons/certification.svg",
+            press: () {
+              Navigator.of(context).pushNamed(
+                TransferPet.routeName,
+                arguments: pet.id,
+              );
             },
           ),
         ]),

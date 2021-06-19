@@ -30,4 +30,5 @@ class Endpoints {
   static final reportLostPet = '$pet/report/pet/lost';
   static final reportFoundPet = '$pet/report/pet/found';
   static final closeReport = '$pet/report/close';
+  static final transferPet = '$pet/transfer/';
 }

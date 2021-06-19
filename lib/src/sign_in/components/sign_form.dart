@@ -11,9 +11,7 @@ import '../../../components/custom_surfix_icon.dart';
 import '../../../size_config.dart';
 import '../../../constants/constants.dart';
 import '../../mixins/validator_mixins.dart';
-import '../../../provider/session.dart';
 import '../../../provider/user.dart';
-import '../../../components/dialogs.dart';
 
 class SingFrom extends StatefulWidget {
   SingFrom({Key key}) : super(key: key);
@@ -47,7 +45,9 @@ class _SingFromState extends State<SingFrom>
       }
     } catch (error) {
       String message;
-      if (error.response.data["status"] == 401) {
+      if (error.error.osError.message != null) {
+        message = error.error.osError.message;
+      } else if (error.response.data["status"] == 401) {
         message = "Servidor no disponible, vuelva a intentar";
       } else {
         message = error.response.data["message"];
@@ -69,7 +69,6 @@ class _SingFromState extends State<SingFrom>
     });
     final isOK = _formKey.currentState.validate();
     _formKey.currentState.save();
-    final session = Provider.of<Session>(context, listen: false);
     if (isOK) {
       try {
         await Provider.of<Session>(context, listen: false).login(
@@ -83,7 +82,9 @@ class _SingFromState extends State<SingFrom>
         );
       } catch (error) {
         String message;
-        if (error.response.data["status"] == 500) {
+        if (error.message != null) {
+          message = error.message;
+        } else if (error.response.data["status"] == 500) {
           message = "Usuario incorrecto o inexistente";
         } else if (error.response.data != null) {
           message = error.response.data["message"];
