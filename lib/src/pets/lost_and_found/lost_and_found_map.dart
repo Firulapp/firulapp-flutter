@@ -29,6 +29,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
   LocationData _location;
   static LatLng _initialPosition;
   GoogleMapController _controller;
+  var _isLoading = true;
 
   void _getUserLocation() async {
     _location = await _locationTracker.getLocation();
@@ -37,6 +38,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
       _locationSubscription.cancel();
     }
     setState(() {
+      _isLoading = false;
       _initialPosition = LatLng(_location.latitude, _location.longitude);
     });
   }
@@ -113,15 +115,17 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
       appBar: AppBar(
         title: Text('Firulapp'),
       ),
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: _initialPosition,
-          zoom: 16.5,
-        ),
-        markers: _markers,
-        myLocationEnabled: true,
-        onMapCreated: _onMapCreated,
-      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: _initialPosition,
+                zoom: 16.5,
+              ),
+              markers: _markers,
+              myLocationEnabled: true,
+              onMapCreated: _onMapCreated,
+            ),
       floatingActionButton: FloatingActionButton.extended(
         elevation: 0,
         onPressed: _showAddDialog,
