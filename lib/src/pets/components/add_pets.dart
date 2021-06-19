@@ -29,6 +29,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   PetItem newPet;
   PetItem _pet = new PetItem();
   var isInit = true;
+  var _isLoading = true;
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
   int _speciesId;
@@ -65,6 +66,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
       _initialBreeds = providerBreeds.getBreeds(_pet.speciesId);
       isInit = false;
     }
+    _isLoading = false;
     super.didChangeDependencies();
   }
 
@@ -77,256 +79,270 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
         appBar: AppBar(
           title: Text("Agregar Mascota"),
         ),
-        body: ListView(
-          padding: const EdgeInsets.only(left: 35.0, right: 25.0),
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Container(
-                  child: PetImage(
-                    _selectImage,
-                    _pet.picture,
-                    _status,
-                  ),
-                ),
-                SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+        body: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : ListView(
+                padding: const EdgeInsets.only(left: 35.0, right: 25.0),
+                children: <Widget>[
+                  Column(
                     children: <Widget>[
-                      Padding(
-                          padding: const EdgeInsets.only(top: 25.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  const Text(
-                                    'Datos de mascota',
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  _status ? _getEditIcon() : Container(),
-                                ],
-                              )
-                            ],
-                          )),
+                      Container(
+                        child: PetImage(
+                          _selectImage,
+                          _pet.picture,
+                          _status,
+                        ),
+                      ),
                       SizedBox(
                           height: SizeConfig.getProportionateScreenHeight(25)),
-                      buildNameFormField(
-                        label: "Nombre de mascota",
-                        hint: "Ingrese un nombre",
-                        tipo: TextInputType.text,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: FutureBuilder(
-                            future: _initialSpecies,
-                            builder: (_, dataSnapshot) {
-                              if (dataSnapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                  child: Text("Loading..."),
-                                );
-                              } else {
-                                return Consumer<Species>(
-                                  builder: (ctx, listSpecies, _) =>
-                                      DropdownButtonFormField(
-                                    hint: _speciesId == null
-                                        ? Text('Elija una especie')
-                                        : null,
-                                    disabledHint: _pet.speciesId != null
-                                        ? Text(listSpecies.items
-                                            .firstWhere((item) =>
-                                                item.id == _pet.speciesId)
-                                            .name)
-                                        : null,
-                                    items: listSpecies.items
-                                        .map((e) => DropdownMenuItem(
-                                              value: e.id,
-                                              child: Text(e.name),
-                                            ))
-                                        .toList(),
-                                    onChanged: !_status
-                                        ? (v) => setState(() {
-                                              if (_pet.speciesId != v) {
-                                                _pet.breedId = null;
-                                                _initialBreeds =
-                                                    providerBreeds.getBreeds(v);
-                                              }
-                                              _pet.speciesId = v;
-                                            })
-                                        : null,
-                                    value: _pet.speciesId,
-                                    isExpanded: true,
-                                  ),
-                                );
-                              }
-                            }),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: FutureBuilder(
-                          future: _initialBreeds,
-                          builder: (_, dataSnapshot) {
-                            if (dataSnapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: Text("Loading..."),
-                              );
-                            } else {
-                              if (dataSnapshot.error != null) {
-                                return Center(
-                                  child: Text('Algo salio mal'),
-                                );
-                              } else {
-                                return Consumer<Breeds>(
-                                  builder: (ctx, listBreeds, _) =>
-                                      DropdownButtonFormField(
-                                    hint: _pet.breedId == null
-                                        ? Text('Eliga una raza')
-                                        : null,
-                                    disabledHint: _pet.breedId != null
-                                        ? Text(listBreeds.items
-                                            .firstWhere((item) =>
-                                                item.id == _pet.breedId)
-                                            .name)
-                                        : null,
-                                    items: listBreeds.items
-                                        .map((e) => DropdownMenuItem(
-                                              value: e.id,
-                                              child: Text(e.name),
-                                            ))
-                                        .toList(),
-                                    onChanged: !_status
-                                        ? (v) => setState(() {
-                                              _pet.breedId = v;
-                                            })
-                                        : null,
-                                    value: _pet.breedId,
-                                    isExpanded: true,
-                                  ),
-                                );
-                              }
-                            }
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: GestureDetector(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Text(
-                                df.format(_birthDate),
-                                style: TextStyle(
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.calendar_today_outlined),
-                                onPressed: () async {
-                                  await _selectDate(context);
-                                  setState(() {
-                                    _pet.birthDate =
-                                        _birthDate.toIso8601String();
-                                  });
-                                },
-                                iconSize: 40,
-                                color: Constants.kPrimaryColor,
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            _selectDate(context);
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
+                      Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                const Text(
-                                  'Edad',
-                                  style: TextStyle(
-                                    fontSize: 23,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                            Padding(
+                                padding: const EdgeInsets.only(top: 25.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: <Widget>[
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        const Text(
+                                          'Datos de mascota',
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        _status ? _getEditIcon() : Container(),
+                                      ],
+                                    )
+                                  ],
+                                )),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
+                            buildNameFormField(
+                              label: "Nombre de mascota",
+                              hint: "Ingrese un nombre",
+                              tipo: TextInputType.text,
                             ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text(
-                                  (calculateAge(_birthDate).toString() +
-                                      " Años"),
-                                  style: TextStyle(
-                                    fontSize: 23,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 25.0),
+                              child: FutureBuilder(
+                                  future: _initialSpecies,
+                                  builder: (_, dataSnapshot) {
+                                    if (dataSnapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const Center(
+                                        child: Text("Loading..."),
+                                      );
+                                    } else {
+                                      return Consumer<Species>(
+                                        builder: (ctx, listSpecies, _) =>
+                                            DropdownButtonFormField(
+                                          hint: _speciesId == null
+                                              ? Text('Elija una especie')
+                                              : null,
+                                          disabledHint: _pet.speciesId != null
+                                              ? Text(listSpecies.items
+                                                  .firstWhere((item) =>
+                                                      item.id == _pet.speciesId)
+                                                  .name)
+                                              : null,
+                                          items: listSpecies.items
+                                              .map((e) => DropdownMenuItem(
+                                                    value: e.id,
+                                                    child: Text(e.name),
+                                                  ))
+                                              .toList(),
+                                          onChanged: !_status
+                                              ? (v) => setState(() {
+                                                    if (_pet.speciesId != v) {
+                                                      _pet.breedId = null;
+                                                      _initialBreeds =
+                                                          providerBreeds
+                                                              .getBreeds(v);
+                                                    }
+                                                    _pet.speciesId = v;
+                                                  })
+                                              : null,
+                                          value: _pet.speciesId,
+                                          isExpanded: true,
+                                        ),
+                                      );
+                                    }
+                                  }),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 25.0),
+                              child: FutureBuilder(
+                                future: _initialBreeds,
+                                builder: (_, dataSnapshot) {
+                                  if (dataSnapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: Text("Loading..."),
+                                    );
+                                  } else {
+                                    if (dataSnapshot.error != null) {
+                                      return Center(
+                                        child: Text('Algo salio mal'),
+                                      );
+                                    } else {
+                                      return Consumer<Breeds>(
+                                        builder: (ctx, listBreeds, _) =>
+                                            DropdownButtonFormField(
+                                          hint: _pet.breedId == null
+                                              ? Text('Eliga una raza')
+                                              : null,
+                                          disabledHint: _pet.breedId != null
+                                              ? Text(listBreeds.items
+                                                  .firstWhere((item) =>
+                                                      item.id == _pet.breedId)
+                                                  .name)
+                                              : null,
+                                          items: listBreeds.items
+                                              .map((e) => DropdownMenuItem(
+                                                    value: e.id,
+                                                    child: Text(e.name),
+                                                  ))
+                                              .toList(),
+                                          onChanged: !_status
+                                              ? (v) => setState(() {
+                                                    _pet.breedId = v;
+                                                  })
+                                              : null,
+                                          value: _pet.breedId,
+                                          isExpanded: true,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 25.0),
+                              child: GestureDetector(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: <Widget>[
+                                    Text(
+                                      df.format(_birthDate),
+                                      style: TextStyle(
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.calendar_today_outlined),
+                                      onPressed: () async {
+                                        await _selectDate(context);
+                                        setState(() {
+                                          _pet.birthDate =
+                                              _birthDate.toIso8601String();
+                                        });
+                                      },
+                                      iconSize: 40,
+                                      color: Constants.kPrimaryColor,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            )
+                                onTap: () {
+                                  _selectDate(context);
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 25.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      const Text(
+                                        'Edad',
+                                        style: TextStyle(
+                                          fontSize: 23,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(
+                                        (calculateAge(_birthDate).toString() +
+                                            " Años"),
+                                        style: TextStyle(
+                                          fontSize: 23,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
+                            buildDropdown(['PEQUEÑO', 'MEDIANO', 'GRANDE']),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
+                            buildPrimaryColorFormField(
+                              label: "Color primario",
+                              hint: "Ingrese un color",
+                              tipo: TextInputType.text,
+                            ),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
+                            buildSecondaryColorFormField(
+                              label: "Color secundario",
+                              hint: "Ingrese un color",
+                              tipo: TextInputType.text,
+                            ),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
+                            buildDescriptionFormField(
+                              label: "Descripción",
+                              hint: "Ingrese una description",
+                              tipo: TextInputType.multiline,
+                            ),
+                            SizedBox(
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
+                            !_status ? _getActionButtons() : Container(),
                           ],
                         ),
-                      ),
-                      SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
-                      buildDropdown(['PEQUEÑO', 'MEDIANO', 'GRANDE']),
-                      SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
-                      buildPrimaryColorFormField(
-                        label: "Color primario",
-                        hint: "Ingrese un color",
-                        tipo: TextInputType.text,
-                      ),
-                      SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
-                      buildSecondaryColorFormField(
-                        label: "Color secundario",
-                        hint: "Ingrese un color",
-                        tipo: TextInputType.text,
-                      ),
-                      SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
-                      buildDescriptionFormField(
-                        label: "Descripción",
-                        hint: "Ingrese una description",
-                        tipo: TextInputType.multiline,
-                      ),
-                      SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
-                      !_status ? _getActionButtons() : Container(),
+                      )
                     ],
                   ),
-                )
-              ],
-            ),
-          ],
-        ));
+                ],
+              ));
   }
 
   @override
