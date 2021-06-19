@@ -5,6 +5,7 @@ import '../../../size_config.dart';
 import '../../../constants/constants.dart';
 import '../../agenda/agenda_screen.dart';
 import '../../pets/pets_dashboard.dart';
+import '../../pet_services/service_categories_screen.dart';
 
 class Body extends StatelessWidget {
   @override
@@ -46,7 +47,7 @@ class Body extends StatelessWidget {
                     sizeConfig: sizeConfig,
                     label: 'Servicios',
                     icon: Icons.store,
-                    routeName: "",
+                    routeName: ServiceCategoriesScreen.routeName,
                     color: Constants.kPrimaryColor,
                   ),
                   SizedBox(
