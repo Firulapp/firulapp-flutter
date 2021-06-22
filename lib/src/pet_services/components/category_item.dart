@@ -1,4 +1,5 @@
 import 'package:firulapp/constants/constants.dart';
+import 'package:firulapp/src/pet_services/selected_category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -11,17 +12,15 @@ class CategoryItem extends StatelessWidget {
 
   CategoryItem(this.id, this.title, this.icon);
 
-  void _categorySelected() {
-    print("Seleccionó $title");
-  }
-
   @override
   Widget build(BuildContext context) {
     final SizeConfig sizeConfig = SizeConfig();
     return Column(
       children: [
         RawMaterialButton(
-          onPressed: () => _categorySelected(),
+          onPressed: () {
+            Navigator.of(context).pushNamed(SelectedCategoryScreen.routeName);
+          },
           fillColor: Constants.kPrimaryLightColor,
           child: SvgPicture.asset(
             icon,

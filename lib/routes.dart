@@ -25,6 +25,7 @@ import './src/pets/pets_dashboard.dart';
 import './src/pets/pets_screen_adoptions.dart';
 import './src/pets/components/adoptions/transfer_pet.dart';
 import './src/pet_services/service_categories_screen.dart';
+import 'src/pet_services/selected_category_screen.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
@@ -54,5 +55,6 @@ class Routes {
     PetOnAdoption.routeName: (context) => PetOnAdoption(),
     TransferPet.routeName: (context) => TransferPet(),
     ServiceCategoriesScreen.routeName: (context) => ServiceCategoriesScreen(),
+    SelectedCategoryScreen.routeName: (context) => SelectedCategoryScreen(),
   };
 }
