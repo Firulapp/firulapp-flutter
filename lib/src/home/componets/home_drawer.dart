@@ -40,7 +40,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context, listen: false);
+    final user = Provider.of<User>(context, listen: true).userData;
     return Drawer(
       elevation: 10.0,
       child: ListView(
@@ -48,8 +48,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text("${user.userData.name} ${user.userData.surname}"),
-            accountEmail: Text("${user.userData.mail}"),
+            accountName: Text("${user.name} ${user.surname}"),
+            accountEmail: Text("${user.mail}"),
             currentAccountPicture: FutureBuilder(
                 future: _initialImage,
                 builder: (_, dataSnapshot) {
