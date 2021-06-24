@@ -106,6 +106,10 @@ class Pets with ChangeNotifier {
     return _items.firstWhere((pet) => pet.id == id);
   }
 
+  PetItem getLocalPetInAdoptionById(int id) {
+    return _petsByStatus.firstWhere((pet) => pet.id == id);
+  }
+
   PetItem getLocalFoundPetById(int id) {
     return _foundPets.firstWhere((pet) => pet.id == id);
   }
