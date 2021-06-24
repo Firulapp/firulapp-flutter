@@ -252,10 +252,12 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                       icon: Icon(Icons.calendar_today_outlined),
                                       onPressed: () async {
                                         await _selectDate(context);
-                                        setState(() {
-                                          _pet.birthDate =
-                                              _birthDate.toIso8601String();
-                                        });
+                                        setState(
+                                          () {
+                                            _pet.birthDate =
+                                                _birthDate.toIso8601String();
+                                          },
+                                        );
                                       },
                                       iconSize: 40,
                                       color: Constants.kPrimaryColor,
@@ -305,12 +307,14 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                               ),
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
                             buildDropdown(['PEQUEÑO', 'MEDIANO', 'GRANDE']),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
                             buildPrimaryColorFormField(
                               label: "Color primario",
                               hint: "Ingrese un color",
@@ -325,16 +329,18 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                               tipo: TextInputType.text,
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
                             buildDescriptionFormField(
                               label: "Descripción",
                               hint: "Ingrese una description",
                               tipo: TextInputType.multiline,
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
                             !_status ? _getActionButtons() : Container(),
                           ],
                         ),
@@ -373,6 +379,14 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                 color: Colors.green,
                 onPressed: () async {
                   try {
+                    if (_birthDate == null) {
+                      Dialogs.info(
+                        context,
+                        title: "ERROR",
+                        content: "Debe seleccionar la fecha de nacimiento",
+                      );
+                      return;
+                    }
                     newPet = PetItem(
                       id: _pet.id,
                       name: _pet.name,

@@ -191,6 +191,15 @@ class _BodyState extends State<Body> with ValidatorMixins {
                   setState(() {
                     _isLoading = true;
                   });
+                  if (_birthDate == null) {
+                    Dialogs.info(
+                      context,
+                      title: "ERROR",
+                      content: "Debe seleccionar la fecha de nacimiento",
+                    );
+                    return;
+                  }
+
                   final isOK = _formKey.currentState.validate();
                   if (isOK) {
                     try {
