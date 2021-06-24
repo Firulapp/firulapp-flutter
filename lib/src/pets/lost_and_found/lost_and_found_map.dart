@@ -64,6 +64,7 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
   void _onMapCreated(GoogleMapController cntl) async {
     _controller = cntl;
     await Provider.of<Pets>(context, listen: false).fetchFoundPetList();
+    await Provider.of<Pets>(context, listen: false).fetchLostPetList();
     _controller.animateCamera(
       CameraUpdate.newCameraPosition(
         new CameraPosition(
