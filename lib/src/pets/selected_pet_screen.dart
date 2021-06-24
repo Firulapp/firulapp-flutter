@@ -91,11 +91,10 @@ class SelectedPetScreen extends StatelessWidget {
                 "Aceptar",
               );
               if (response) {
-                pet.status = "ADOPTADA";
+                pet.status = "NORMAL";
                 pet.description = commentary;
                 Provider.of<Pets>(context, listen: false).petItem = pet;
                 Provider.of<Pets>(context, listen: false).savePet();
-                Navigator.pushReplacementNamed(context, PetsScreen.routeName);
               }
             },
           ),

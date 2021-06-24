@@ -50,7 +50,7 @@ class PetForAdoption extends StatelessWidget {
                 pet.description = commentary;
                 Provider.of<Pets>(context, listen: false).petItem = pet;
                 Provider.of<Pets>(context, listen: false).savePet();
-                Navigator.pushReplacementNamed(context, PetsScreen.routeName);
+                Navigator.pop(context);
               }
             },
           )
