@@ -26,6 +26,7 @@ import './src/pets/components/adoptions/transfer_pet.dart';
 import './src/pet_services/service_categories_screen.dart';
 import './src/pet_services/selected_category_screen.dart';
 import './src/pets/components/adoptions/pet_in_adoption.dart';
+import './src/pet_services/pet_service_form.dart';
 import './src/pets/components/adoptions/pet_for_adoption.dart';
 import './src/sign_up/organization/organization_sign_up_screen.dart';
 
@@ -59,6 +60,7 @@ class Routes {
     ServiceCategoriesScreen.routeName: (context) => ServiceCategoriesScreen(),
     SelectedCategoryScreen.routeName: (context) => SelectedCategoryScreen(),
     PetInAdoption.routeName: (context) => PetInAdoption(),
+    PetServiceForm.routeName: (context) => PetServiceForm(),
     OrganizationSignUpScreen.routeName: (context) => OrganizationSignUpScreen(),
   };
 }

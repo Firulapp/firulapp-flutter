@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../size_config.dart';
 import './components/category_item.dart' as widget;
-import '../../provider/pet-service.dart';
+import '../../provider/pet_service.dart';
+import './pet_service_form.dart';
 
 class ServiceCategoriesScreen extends StatelessWidget {
   static const routeName = "/services-screen1";
@@ -17,6 +18,14 @@ class ServiceCategoriesScreen extends StatelessWidget {
         ),
         body: Column(
           children: [
+            TextButton.icon(
+              label: const Text('Ofrecer un servicio'),
+              icon: Icon(
+                Icons.add,
+              ),
+              onPressed: () =>
+                  Navigator.pushNamed(context, PetServiceForm.routeName),
+            ),
             Text(
               "Seleccione una categoría",
               style: TextStyle(
