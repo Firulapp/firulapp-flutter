@@ -25,8 +25,9 @@ import './src/pets/pets_dashboard.dart';
 import './src/pets/pets_screen_adoptions.dart';
 import './src/pets/components/adoptions/transfer_pet.dart';
 import './src/pet_services/service_categories_screen.dart';
-import 'src/pet_services/selected_category_screen.dart';
-import 'src/pets/components/adoptions/pet_in_adoption.dart';
+import './src/pet_services/selected_category_screen.dart';
+import './src/pets/components/adoptions/pet_in_adoption.dart';
+import './src/pet_services/pet_service_form.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
@@ -58,5 +59,6 @@ class Routes {
     ServiceCategoriesScreen.routeName: (context) => ServiceCategoriesScreen(),
     SelectedCategoryScreen.routeName: (context) => SelectedCategoryScreen(),
     PetInAdoption.routeName: (context) => PetInAdoption(),
+    PetServiceForm.routeName: (context) => PetServiceForm(),
   };
 }

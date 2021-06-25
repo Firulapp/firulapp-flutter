@@ -100,8 +100,9 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                               ],
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
                             buildVeterinaryFormField(
                               "Veterinaria",
                               "Ingrese el nombre de la veterinaria",
