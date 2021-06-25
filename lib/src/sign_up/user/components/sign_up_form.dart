@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../provider/user.dart';
-import '../../sign_up/components/sign_up_details_form.dart';
-import '../../../constants/constants.dart';
-import '../../mixins/validator_mixins.dart';
-import '../../../components/custom_surfix_icon.dart';
-import '../../../components/default_button.dart';
-import '../../../components/input_text.dart';
-import '../../../size_config.dart';
+import 'package:firulapp/components/default_button.dart';
+import 'package:firulapp/constants/constants.dart';
+import 'package:firulapp/provider/user.dart';
+import 'package:firulapp/size_config.dart';
+import 'package:firulapp/src/sign_up/user/components/sign_up_details_form.dart';
+import 'package:firulapp/src/mixins/validator_mixins.dart';
+import 'package:firulapp/components/custom_surfix_icon.dart';
+import 'package:firulapp/components/input_text.dart';
 
 class SignUpForm extends StatefulWidget {
   @override

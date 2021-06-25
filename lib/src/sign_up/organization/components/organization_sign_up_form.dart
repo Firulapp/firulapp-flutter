@@ -1,58 +1,35 @@
+import 'package:firulapp/components/dialogs.dart';
+import 'package:firulapp/provider/session.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firulapp/components/custom_surfix_icon.dart';
+import 'package:firulapp/components/default_button.dart';
+import 'package:firulapp/components/input_text.dart';
+import 'package:firulapp/constants/constants.dart';
+import 'package:firulapp/provider/user.dart';
+import 'package:firulapp/src/mixins/validator_mixins.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:firulapp/provider/city.dart';
+import '../../../../size_config.dart';
 
-import '../../../provider/city.dart';
-import '../../sign_in/sign_in_screen.dart';
-import '../../../provider/session.dart';
-import '../../../provider/user.dart';
-import '../../../components/dialogs.dart';
-import '../../../components/default_button.dart';
-import '../../../components/input_text.dart';
-import '../../mixins/validator_mixins.dart';
-import '../../../size_config.dart';
-import '../../../constants/constants.dart';
+class OrganizationSignUpForm extends StatefulWidget {
+  @override
+  _SignUpFormState createState() => _SignUpFormState();
+}
 
-class SignUpDetailsForm extends StatelessWidget {
-  static const routeName = "/sign_up/step2";
+class _SignUpFormState extends State<OrganizationSignUpForm>
+    with ValidatorMixins {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    final SizeConfig sizeConfig = SizeConfig();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Sign Up"),
-      ),
-      body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: sizeConfig.wp(4.5),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: sizeConfig.hp(4)), // 4%
-                  Text("Registrar Cuenta", style: Constants.headingStyle),
-                  Text("Complete sus datos",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: sizeConfig.wp(4),
-                      )),
-                  SizedBox(height: sizeConfig.hp(6)),
-                  Body(),
-                  SizedBox(height: sizeConfig.hp(5)),
-                  Text(
-                    'Al continuar, confirma que está de acuerdo \ncon nuestros Términos y condiciónes',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: sizeConfig.hp(1.7)),
-                  ),
-                  SizedBox(height: sizeConfig.hp(2)),
-                ],
-              ),
-            ),
-          ),
-        ),
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Body(),
+        ],
       ),
     );
   }
@@ -65,6 +42,9 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> with ValidatorMixins {
   final _formKey = GlobalKey<FormState>();
+  String _email;
+  String _password;
+  String _confirmPassword;
   String _username;
   String _name;
   String _surname;
@@ -103,14 +83,18 @@ class _BodyState extends State<Body> with ValidatorMixins {
   @override
   Widget build(BuildContext context) {
     var _isLoading = false;
-    final _userCredentials =
-        ModalRoute.of(context).settings.arguments as UserCredentials;
     final _user = Provider.of<User>(context, listen: false);
     return _isLoading
         ? CircularProgressIndicator()
         : Form(
             key: _formKey,
             child: Column(children: [
+              buildEmailFormField(),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
+              buildPasswordFormField(),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(30)),
+              buildConformPassFormField(),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(40)),
               buildUsernameFormField(
                 "Usuario",
                 "Ingrese un nombre de usuario",
@@ -222,9 +206,9 @@ class _BodyState extends State<Body> with ValidatorMixins {
                         UserData(
                           id: null,
                           userId: null,
-                          mail: _userCredentials.mail,
-                          encryptedPassword: _userCredentials.encryptedPassword,
-                          confirmPassword: _userCredentials.confirmPassword,
+                          mail: _email,
+                          encryptedPassword: _password,
+                          confirmPassword: _confirmPassword,
                           userName: _username,
                           birthDate: _birthDate,
                           city: _city,
@@ -234,12 +218,13 @@ class _BodyState extends State<Body> with ValidatorMixins {
                           surname: _surname,
                           notifications: true,
                           profilePicture: null,
+                          userType: 'ORGANIZATION',
                         ),
                       );
                       await Provider.of<Session>(context, listen: false)
                           .register(userData: _user.userData);
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, SignInScreen.routeName, (_) => false);
+                      // Navigator.pushNamedAndRemoveUntil(
+                      //     context, SignInScreen.routeName, (_) => false);
                     } catch (error) {
                       Dialogs.info(
                         context,
@@ -255,6 +240,51 @@ class _BodyState extends State<Body> with ValidatorMixins {
               ),
             ]),
           );
+  }
+
+  Widget buildConformPassFormField() {
+    return InputText(
+        label: "Confirmar Contraseña",
+        hintText: "Re-ingrese su contraseña",
+        obscureText: true,
+        onSaved: (newValue) => _confirmPassword = newValue,
+        onChanged: (value) {
+          if (value.isNotEmpty && _password == _confirmPassword) {
+            return Constants.kMatchPassError;
+          }
+          _confirmPassword = value;
+        },
+        validator: (value) {
+          if (value.isEmpty) {
+            return Constants.kPassNullError;
+          } else if ((_password != value)) {
+            return Constants.kMatchPassError;
+          }
+          return null;
+        },
+        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"));
+  }
+
+  Widget buildPasswordFormField() {
+    return InputText(
+      label: "Contraseña",
+      hintText: "Ingresa tu contraseña",
+      obscureText: true,
+      onChanged: (value) => _password = value,
+      validator: validatePassword,
+      suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
+    );
+  }
+
+  Widget buildEmailFormField() {
+    return InputText(
+      label: "Correo",
+      hintText: "Ingrese su correo",
+      keyboardType: TextInputType.emailAddress,
+      onChanged: (newValue) => _email = newValue,
+      validator: validateEmail,
+      suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
+    );
   }
 
   Widget buildUsernameFormField(String label, String hint, TextInputType tipo) {
@@ -330,6 +360,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
     });
     return DropdownButtonFormField(
       items: _typeOptions,
+      value: 'RUC',
       onChanged: (newValue) => _documentType = newValue,
       hint: const Text("Tipo de documento"),
     );

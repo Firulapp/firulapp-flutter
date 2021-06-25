@@ -49,6 +49,8 @@ class UserData {
     this.profilePicture,
     this.notifications,
     this.birthDate,
+    this.userType,
+    this.enabled,
   });
 }
 
