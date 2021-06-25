@@ -233,78 +233,112 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                 },
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25.0),
-                              child: GestureDetector(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: <Widget>[
-                                    Text(
-                                      df.format(_birthDate),
-                                      style: TextStyle(
-                                        fontSize: 23,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.calendar_today_outlined),
-                                      onPressed: () async {
-                                        await _selectDate(context);
-                                        setState(
-                                          () {
-                                            _pet.birthDate =
-                                                _birthDate.toIso8601String();
-                                          },
-                                        );
-                                      },
-                                      iconSize: 40,
-                                      color: Constants.kPrimaryColor,
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  _selectDate(context);
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      const Text(
-                                        'Edad',
-                                        style: TextStyle(
-                                          fontSize: 23,
-                                          fontWeight: FontWeight.bold,
+                            GestureDetector(
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 25.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: <Widget>[
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: <Widget>[
+                                            const Text(
+                                              'Fecha de Nacimiento',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    Constants.kSecondaryColor,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text(
-                                        (calculateAge(_birthDate).toString() +
-                                            " Años"),
-                                        style: TextStyle(
-                                          fontSize: 23,
-                                          fontWeight: FontWeight.bold,
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: <Widget>[
+                                        Text(
+                                          df.format(_birthDate),
+                                          style: TextStyle(
+                                            fontSize: 23,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )
+                                        IconButton(
+                                          icon: Icon(
+                                              Icons.calendar_today_outlined),
+                                          onPressed: () async {
+                                            await _selectDate(context);
+                                            setState(
+                                              () {
+                                                _pet.birthDate = _birthDate
+                                                    .toIso8601String();
+                                              },
+                                            );
+                                          },
+                                          iconSize: 40,
+                                          color: Constants.kPrimaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: <Widget>[
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            const Text(
+                                              'Edad',
+                                              style: TextStyle(
+                                                fontSize: 23,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Text(
+                                              (calculateAge(_birthDate)
+                                                      .toString() +
+                                                  " Años"),
+                                              style: TextStyle(
+                                                fontSize: 23,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
+                              onTap: () {
+                                _selectDate(context);
+                              },
                             ),
                             SizedBox(
                               height:
@@ -379,7 +413,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                 color: Colors.green,
                 onPressed: () async {
                   try {
-                    if (_birthDate == null) {
+                    if (_pet.birthDate == null) {
                       Dialogs.info(
                         context,
                         title: "ERROR",
@@ -403,7 +437,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                       createdAt: _pet.createdAt,
                     );
                     Provider.of<Pets>(context, listen: false).petItem = newPet;
-                    Provider.of<Pets>(context, listen: false).savePet();
+                    // Provider.of<Pets>(context, listen: false).savePet();
                     Navigator.pop(context);
                   } catch (e) {
                     Dialogs.info(
