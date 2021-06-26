@@ -1,11 +1,12 @@
-import 'package:firulapp/components/dialogs.dart';
-import 'package:firulapp/provider/species.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import 'package:firulapp/components/dialogs.dart';
+import 'package:firulapp/provider/species.dart';
+import 'package:firulapp/provider/user.dart';
 import 'package:firulapp/components/input_text.dart';
 import 'package:firulapp/provider/pet_service.dart';
 import 'package:firulapp/src/mixins/validator_mixins.dart';
-import 'package:provider/provider.dart';
 import '../../components/default_button.dart';
 import '../../size_config.dart';
 import '../../constants/constants.dart';
@@ -44,6 +45,11 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
 
   @override
   Widget build(BuildContext context) {
+    final serviceId = ModalRoute.of(context).settings.arguments as String;
+    if (serviceId != null) {
+      //TODO: fethcServicio para editar
+    }
+    final user = Provider.of<User>(context, listen: true).userData;
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
@@ -136,9 +142,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                   SizeConfig.getProportionateScreenHeight(25),
                             ),
                             buildContactFormField(
-                              "Contacto",
-                              TextInputType.name,
-                            ),
+                                "Contacto", TextInputType.name, user.mail),
                             SizedBox(
                               height:
                                   SizeConfig.getProportionateScreenHeight(25),
@@ -229,12 +233,12 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     );
   }
 
-  Widget buildContactFormField(String label, TextInputType tipo) {
+  Widget buildContactFormField(String label, TextInputType tipo, String mail) {
     return InputText(
       label: label,
       keyboardType: tipo,
       validator: validateTextNotNull,
-      value: "correodelamigo@gmail.com",
+      value: mail,
       enabled: false,
     );
   }
