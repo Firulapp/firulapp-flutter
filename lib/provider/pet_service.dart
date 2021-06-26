@@ -57,5 +57,10 @@ class CategoryItem {
       title: 'Veterinaria',
       icon: 'assets/icons/vet.svg',
     ),
+    CategoryItem(
+      id: '0',
+      title: 'Mis Servicios',
+      icon: 'assets/icons/businessman.svg',
+    ),
   ];
 }
