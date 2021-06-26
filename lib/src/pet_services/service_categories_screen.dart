@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../size_config.dart';
 import './components/category_item.dart' as widget;
-import '../../provider/pet-service.dart';
+import '../../provider/pet_service.dart';
+import './pet_service_form.dart';
 
 class ServiceCategoriesScreen extends StatelessWidget {
   static const routeName = "/services-screen1";
@@ -15,6 +16,15 @@ class ServiceCategoriesScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Servicios"),
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          elevation: 0,
+          onPressed: () =>
+              Navigator.pushNamed(context, PetServiceForm.routeName),
+          backgroundColor: Color(0xE6FDBE83),
+          label: Text('Ofrecer servicio'),
+          icon: Icon(Icons.add),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Column(
           children: [
             Text(

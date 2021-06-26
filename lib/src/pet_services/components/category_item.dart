@@ -21,10 +21,14 @@ class CategoryItem extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pushNamed(SelectedCategoryScreen.routeName);
           },
-          fillColor: Constants.kPrimaryLightColor,
+          fillColor: id != "0"
+              ? Constants.kPrimaryLightColor
+              : Constants.kPrimaryColor,
           child: SvgPicture.asset(
             icon,
-            color: Constants.kPrimaryColor,
+            color: id != "0"
+                ? Constants.kPrimaryColor
+                : Constants.kPrimaryLightColor,
             width: 50,
             fit: BoxFit.cover,
           ),

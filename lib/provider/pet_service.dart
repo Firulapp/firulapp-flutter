@@ -1,16 +1,16 @@
 class PetServiceItem {
-  final String id;
-  final int userId;
-  final String category;
-  final String title;
-  final String address;
-  final bool status;
-  final String description;
-  final String contact;
-  final String email;
-  final double price;
+  String id;
+  int userId;
+  String category;
+  String title;
+  String address;
+  bool status;
+  String description;
+  String contact;
+  String email;
+  double price;
 
-  const PetServiceItem({
+  PetServiceItem({
     this.id,
     this.userId,
     this.category,
@@ -22,35 +22,6 @@ class PetServiceItem {
     this.status,
     this.price,
   });
-
-  static const DUMMY_SERVICES = {
-    "0": [
-      {
-        "dog": [
-          PetServiceItem(
-            id: "0",
-            title: "",
-            address: "",
-            contact: "",
-            description: "",
-            email: "",
-            price: 15000.00,
-            userId: 1,
-          ),
-          PetServiceItem(
-            id: "0",
-            title: "Baño de perros",
-            address: "",
-            contact: "",
-            description: "",
-            email: "",
-            price: 15000.00,
-            userId: 1,
-          )
-        ]
-      }
-    ],
-  };
 }
 
 class CategoryItem {
@@ -85,6 +56,11 @@ class CategoryItem {
       id: '5',
       title: 'Veterinaria',
       icon: 'assets/icons/vet.svg',
+    ),
+    CategoryItem(
+      id: '0',
+      title: 'Mis Servicios',
+      icon: 'assets/icons/businessman.svg',
     ),
   ];
 }
