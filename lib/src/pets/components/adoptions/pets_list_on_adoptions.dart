@@ -5,7 +5,6 @@ import 'package:firulapp/src/pets/components/adoptions/pet_in_adoption.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:firulapp/src/pets/components/add_pets.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:provider/provider.dart';
 

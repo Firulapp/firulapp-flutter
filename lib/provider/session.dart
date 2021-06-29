@@ -56,7 +56,8 @@ class Session extends ChangeNotifier {
           "email": userData.mail,
           "encryptedPassword": userData.encryptedPassword,
           "confirmPassword": userData.confirmPassword,
-          "userType": userData.userType
+          "userType": userData.userType,
+          "enabled": userData.enabled
         },
       );
       final user = response.data["dto"];

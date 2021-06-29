@@ -107,12 +107,6 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 TextInputType.name,
               ),
               SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
-              buildSurnameFormField(
-                "Apellido",
-                "Ingrese su apellido",
-                TextInputType.name,
-              ),
-              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               buildDropdown(
                 _user.getDocumentTypeOptions(),
               ),
@@ -191,11 +185,11 @@ class _BodyState extends State<Body> with ValidatorMixins {
                   setState(() {
                     _isLoading = true;
                   });
-                  if (_birthDate == null) {
+                  if (_document == null) {
                     Dialogs.info(
                       context,
                       title: "ERROR",
-                      content: "Debe seleccionar la fecha de nacimiento",
+                      content: "Debe completar un RUC",
                     );
                     return;
                   }
@@ -210,15 +204,15 @@ class _BodyState extends State<Body> with ValidatorMixins {
                           encryptedPassword: _password,
                           confirmPassword: _confirmPassword,
                           userName: _username,
-                          birthDate: _birthDate,
+                          birthDate: null,
                           city: _city,
                           documentType: _documentType,
                           document: _document,
                           name: _name,
-                          surname: _surname,
+                          surname: null,
                           notifications: true,
                           profilePicture: null,
-                          userType: 'ORGANIZATION',
+                          userType: 'ORGANIZACION',
                         ),
                       );
                       await Provider.of<Session>(context, listen: false)
@@ -324,16 +318,6 @@ class _BodyState extends State<Body> with ValidatorMixins {
       keyboardType: tipo,
       validator: validateTextNotNull,
       onChanged: (newValue) => _name = newValue,
-    );
-  }
-
-  Widget buildSurnameFormField(String label, String hint, TextInputType tipo) {
-    return InputText(
-      label: label,
-      hintText: hint,
-      keyboardType: tipo,
-      validator: validateTextNotNull,
-      onChanged: (newValue) => _surname = newValue,
     );
   }
 

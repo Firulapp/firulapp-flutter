@@ -30,7 +30,7 @@ class UserData {
   int city;
   String birthDate;
   String profilePicture;
-  String userType = 'APP';
+  String userType = 'APP'; //ADMIN, APP, ORGANIZACION
   bool enabled = true;
   bool notifications;
 

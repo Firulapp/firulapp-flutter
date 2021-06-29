@@ -234,6 +234,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
                           surname: _surname,
                           notifications: true,
                           profilePicture: null,
+                          userType: 'APP',
                         ),
                       );
                       await Provider.of<Session>(context, listen: false)
