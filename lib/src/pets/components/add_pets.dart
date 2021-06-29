@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firulapp/components/default_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -375,7 +376,84 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                               height:
                                   SizeConfig.getProportionateScreenHeight(25),
                             ),
-                            !_status ? _getActionButtons() : Container(),
+                            !_status
+                                ? Column(
+                                    children: [
+                                      DefaultButton(
+                                        text: "Guardar",
+                                        color: Constants.kPrimaryColor,
+                                        press: () async {
+                                          try {
+                                            if (_pet.birthDate == null) {
+                                              Dialogs.info(
+                                                context,
+                                                title: "ERROR",
+                                                content:
+                                                    "Debe seleccionar la fecha de nacimiento",
+                                              );
+                                              return;
+                                            }
+                                            newPet = PetItem(
+                                              id: _pet.id,
+                                              name: _pet.name,
+                                              speciesId: _pet.speciesId,
+                                              breedId: _pet.breedId,
+                                              birthDate: _pet.birthDate,
+                                              age: _age,
+                                              petSize: _pet.petSize,
+                                              primaryColor: _pet.primaryColor,
+                                              secondaryColor:
+                                                  _pet.secondaryColor,
+                                              description: _pet.description,
+                                              status: _petStatus,
+                                              picture: _pet.picture,
+                                              createdAt: _pet.createdAt,
+                                            );
+                                            Provider.of<Pets>(context,
+                                                    listen: false)
+                                                .petItem = newPet;
+                                            // Provider.of<Pets>(context, listen: false).savePet();
+                                            Navigator.pop(context);
+                                          } catch (e) {
+                                            Dialogs.info(
+                                              context,
+                                              title: 'ERROR',
+                                              content:
+                                                  e.response.data["message"],
+                                            );
+                                          }
+                                          setState(() {
+                                            _status = true;
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                          });
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: SizeConfig
+                                            .getProportionateScreenHeight(25),
+                                      ),
+                                      DefaultButton(
+                                        text: "Cancelar",
+                                        color: Colors.white,
+                                        press: () async {
+                                          setState(() {
+                                            _status = true;
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                          });
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: SizeConfig
+                                            .getProportionateScreenHeight(25),
+                                      ),
+                                    ],
+                                  )
+                                : Container(),
                           ],
                         ),
                       )
@@ -394,92 +472,6 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
 
   void _selectImage(File pickedImage) {
     _pet.picture = base64Encode(pickedImage.readAsBytesSync());
-  }
-
-  Widget _getActionButtons() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 45.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: Container(
-                  child: RaisedButton(
-                child: Text("Guardar"),
-                textColor: Colors.white,
-                color: Colors.green,
-                onPressed: () async {
-                  try {
-                    if (_pet.birthDate == null) {
-                      Dialogs.info(
-                        context,
-                        title: "ERROR",
-                        content: "Debe seleccionar la fecha de nacimiento",
-                      );
-                      return;
-                    }
-                    newPet = PetItem(
-                      id: _pet.id,
-                      name: _pet.name,
-                      speciesId: _pet.speciesId,
-                      breedId: _pet.breedId,
-                      birthDate: _pet.birthDate,
-                      age: _age,
-                      petSize: _pet.petSize,
-                      primaryColor: _pet.primaryColor,
-                      secondaryColor: _pet.secondaryColor,
-                      description: _pet.description,
-                      status: _petStatus,
-                      picture: _pet.picture,
-                      createdAt: _pet.createdAt,
-                    );
-                    Provider.of<Pets>(context, listen: false).petItem = newPet;
-                    // Provider.of<Pets>(context, listen: false).savePet();
-                    Navigator.pop(context);
-                  } catch (e) {
-                    Dialogs.info(
-                      context,
-                      title: 'ERROR',
-                      content: e.response.data["message"],
-                    );
-                  }
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-              )),
-            ),
-            flex: 2,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: Container(
-                  child: RaisedButton(
-                child: Text("Cancelar"),
-                textColor: Colors.white,
-                color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-              )),
-            ),
-            flex: 2,
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _getEditIcon() {
