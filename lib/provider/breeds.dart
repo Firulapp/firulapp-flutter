@@ -1,3 +1,4 @@
+import 'package:firulapp/components/dropdown/listtile_item.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
@@ -34,6 +35,13 @@ class Breeds with ChangeNotifier {
     return _items.where((e) => e.status).toList();
   }
 
+  BreedsItem getLocalBreedsItemById(int id) {
+    return enableSpecie.firstWhere(
+      (breed) => breed.id == id,
+      orElse: () => null,
+    );
+  }
+
   set items(List<BreedsItem> list) {
     _items = list;
     notifyListeners();
@@ -63,5 +71,13 @@ class Breeds with ChangeNotifier {
     } catch (e) {
       throw e;
     }
+  }
+
+  List<ListTileItem> toGenericFormItem() {
+    List<ListTileItem> genericItems = [];
+    _items.forEach((element) {
+      genericItems.add(ListTileItem(element.id, element.name));
+    });
+    return genericItems;
   }
 }
