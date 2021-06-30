@@ -54,8 +54,38 @@ class UserData {
   });
 }
 
+class OrganizationData {
+  int id;
+  int userId;
+  String type; // VETERINARIA, UNIPERSONAL, ONG, ENTIDAD_PUBLICA, TIENDA, OTRO
+  String organizationName;
+  String ruc;
+  String email;
+  String description;
+  bool status;
+  String createdAt;
+  String createdBy;
+  String modifiedAt;
+  String modifiedBy;
+
+  OrganizationData({
+    this.id,
+    this.userId,
+    this.type,
+    this.organizationName,
+    this.ruc,
+    this.email,
+    this.description,
+    this.status,
+    this.createdBy,
+    this.modifiedAt,
+    this.modifiedBy,
+  });
+}
+
 class User with ChangeNotifier {
   UserData _userData;
+  OrganizationData _organizationData;
   final UserSession session;
 
   User(_userData, this.session);
@@ -66,12 +96,21 @@ class User with ChangeNotifier {
     return _userData;
   }
 
+  OrganizationData get organizationData {
+    return _organizationData;
+  }
+
   List<String> getDocumentTypeOptions() {
     return ['CI', 'RUC', 'Pasaporte'];
   }
 
   void addUser(UserData userData) {
     _userData = userData;
+    notifyListeners();
+  }
+
+  void addOrganization(OrganizationData organizationData) {
+    _organizationData = organizationData;
     notifyListeners();
   }
 

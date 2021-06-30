@@ -107,6 +107,12 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 TextInputType.name,
               ),
               SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
+              buildSurnameFormField(
+                "Teléfono",
+                "0981-123456",
+                TextInputType.name,
+              ),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               buildDropdown(
                 _user.getDocumentTypeOptions(),
               ),
@@ -136,46 +142,6 @@ class _BodyState extends State<Body> with ValidatorMixins {
                     ),
                   );
                 },
-              ),
-              SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
-              GestureDetector(
-                child: Column(
-                  children: [
-                    const Text(
-                      'Fecha de Nacimiento',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Constants.kSecondaryColor,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.calendar_today_outlined),
-                          onPressed: () => _selectDate(context),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              df.format(currentDate),
-                              style: TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                onTap: () => _selectDate(context),
               ),
               SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
               DefaultButton(
@@ -215,8 +181,20 @@ class _BodyState extends State<Body> with ValidatorMixins {
                           userType: 'ORGANIZACION',
                         ),
                       );
+                      _user.addOrganization(
+                        OrganizationData(
+                          id: null,
+                          userId: null,
+                          type: "VETERINARIA",
+                          organizationName: "",
+                          email: _email,
+                          description: "",
+                          ruc: _document,
+                          status: null,
+                        ),
+                      );
                       await Provider.of<Session>(context, listen: false)
-                          .register(userData: _user.userData);
+                          .registerOrganizacion(userData: _user.userData, organizationData: );
                       // Navigator.pushNamedAndRemoveUntil(
                       //     context, SignInScreen.routeName, (_) => false);
                     } catch (error) {

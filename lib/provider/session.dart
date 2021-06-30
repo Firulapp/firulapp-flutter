@@ -73,6 +73,54 @@ class Session extends ChangeNotifier {
     }
   }
 
+  Future<void> registerOrganizacion({
+    @required UserData userData,
+    @required OrganizationData organizationData,
+  }) async {
+    try {
+      final response = await this._dio.post(
+        Endpoints.organization,
+        data: {
+          "profileDto": {
+            "id": null,
+            "userId": null,
+            "document": userData.document,
+            "documentType": userData.documentType,
+            "name": userData.name,
+            "surname": userData.surname,
+            "city": userData.city,
+            "profilePicture": userData.profilePicture,
+            "birthDate": userData.birthDate,
+            "notifications": userData.notifications,
+            "username": userData.userName,
+            "email": userData.mail,
+            "encryptedPassword": userData.encryptedPassword,
+            "confirmPassword": userData.confirmPassword,
+            "userType": userData.userType
+          },
+          "organizationDto": {
+            "id": organizationData.id,
+            "userId": organizationData.id,
+            "type": organizationData.type,
+            "organizationName": organizationData.organizationName,
+            "description": organizationData.description,
+            "status": organizationData.status,
+          },
+        },
+      );
+      final user = response.data["dto"];
+      _userSession = UserSession(
+        id: user["id"].toString(),
+        deviceId: user["deviceId"].toString(),
+        userId: user["userId"].toString(),
+      );
+      await setSession();
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   Future<void> login({
     @required String email,
     @required String password,
