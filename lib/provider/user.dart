@@ -106,6 +106,17 @@ class User with ChangeNotifier {
     return ['CI', 'RUC', 'Pasaporte'];
   }
 
+  List<String> getOrganizationTypeOptions() {
+    return [
+      'VETERINARIA',
+      'UNIPERSONAL',
+      'ONG',
+      'ENTIDAD_PUBLICA',
+      'TIENDA',
+      'OTRO'
+    ];
+  }
+
   void addUser(UserData userData) {
     _userData = userData;
     notifyListeners();

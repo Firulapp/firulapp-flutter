@@ -48,8 +48,8 @@ class _BodyState extends State<Body> with ValidatorMixins {
   String _username;
   String _name;
   String _phoneNumber;
-  String _description;
-  String _documentType;
+  String _description = "";
+  String _documentType = 'RUC';
   String _document;
   String _type;
   int _city;
@@ -99,13 +99,17 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 TextInputType.name,
               ),
               SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
+              buildDropdownTypeOrganization(
+                _user.getOrganizationTypeOptions(),
+              ),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               buildDropdown(
                 _user.getDocumentTypeOptions(),
               ),
               SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
               buildDocumentFormField(
-                "Documento de identidad",
-                "Ingrese su documento",
+                "Numero de RUC",
+                "Ingrese su RUC",
                 TextInputType.number,
               ),
               SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
@@ -128,6 +132,12 @@ class _BodyState extends State<Body> with ValidatorMixins {
                     ),
                   );
                 },
+              ),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
+              buildDescriptionFormField(
+                label: "Descripción",
+                hint: "Ingrese una description",
+                tipo: TextInputType.multiline,
               ),
               SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
               DefaultButton(
@@ -315,6 +325,36 @@ class _BodyState extends State<Body> with ValidatorMixins {
       value: 'RUC',
       onChanged: (newValue) => _documentType = newValue,
       hint: const Text("Tipo de documento"),
+    );
+  }
+
+  DropdownButtonFormField buildDropdownTypeOrganization(
+      List<String> documentType) {
+    List<DropdownMenuItem> _typeOptions = [];
+    documentType.forEach((type) {
+      _typeOptions.add(
+        DropdownMenuItem(
+          child: Text(type),
+          value: type,
+        ),
+      );
+    });
+    return DropdownButtonFormField(
+      items: _typeOptions,
+      onChanged: (newValue) => _type = newValue,
+      hint: const Text("Tipo de Organizacion"),
+    );
+  }
+
+  Widget buildDescriptionFormField(
+      {String label, String hint, TextInputType tipo}) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      maxLines: 100,
+      value: _description,
+      onChanged: (newValue) => _description = newValue,
     );
   }
 }
