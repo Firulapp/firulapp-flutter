@@ -1,5 +1,6 @@
 import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/provider/session.dart';
+import 'package:firulapp/src/home/home.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firulapp/components/custom_surfix_icon.dart';
@@ -8,7 +9,6 @@ import 'package:firulapp/components/input_text.dart';
 import 'package:firulapp/constants/constants.dart';
 import 'package:firulapp/provider/user.dart';
 import 'package:firulapp/src/mixins/validator_mixins.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:firulapp/provider/city.dart';
 import '../../../../size_config.dart';
@@ -47,13 +47,13 @@ class _BodyState extends State<Body> with ValidatorMixins {
   String _confirmPassword;
   String _username;
   String _name;
-  String _surname;
+  String _phoneNumber;
+  String _description;
   String _documentType;
   String _document;
+  String _type;
   int _city;
-  String _birthDate;
-  final df = new DateFormat('dd-MM-yyyy');
-  DateTime currentDate = DateTime.now();
+
   Future _citiesFuture;
 
   Future _obtainCitiesFuture() {
@@ -64,20 +64,6 @@ class _BodyState extends State<Body> with ValidatorMixins {
   void initState() {
     _citiesFuture = _obtainCitiesFuture();
     super.initState();
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime pickedDate = await showDatePicker(
-      context: context,
-      initialDate: currentDate,
-      firstDate: DateTime(1940),
-      lastDate: DateTime.now(),
-    );
-    if (pickedDate != null && pickedDate != currentDate)
-      setState(() {
-        currentDate = pickedDate;
-        _birthDate = currentDate.toIso8601String();
-      });
   }
 
   @override
@@ -107,7 +93,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 TextInputType.name,
               ),
               SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
-              buildSurnameFormField(
+              buildPhoneNumberFormField(
                 "Teléfono",
                 "0981-123456",
                 TextInputType.name,
@@ -170,6 +156,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
                           encryptedPassword: _password,
                           confirmPassword: _confirmPassword,
                           userName: _username,
+                          phoneNumber: _phoneNumber,
                           birthDate: null,
                           city: _city,
                           documentType: _documentType,
@@ -185,18 +172,21 @@ class _BodyState extends State<Body> with ValidatorMixins {
                         OrganizationData(
                           id: null,
                           userId: null,
-                          type: "VETERINARIA",
-                          organizationName: "",
+                          type: _type,
+                          organizationName: _name,
                           email: _email,
-                          description: "",
+                          description: _description,
                           ruc: _document,
                           status: null,
                         ),
                       );
                       await Provider.of<Session>(context, listen: false)
-                          .registerOrganizacion(userData: _user.userData, organizationData: );
-                      // Navigator.pushNamedAndRemoveUntil(
-                      //     context, SignInScreen.routeName, (_) => false);
+                          .registerOrganizacion(
+                        userData: _user.userData,
+                        organizationData: _user.organizationData,
+                      );
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, HomeScreen.routeName, (_) => false);
                     } catch (error) {
                       Dialogs.info(
                         context,
@@ -299,14 +289,14 @@ class _BodyState extends State<Body> with ValidatorMixins {
     );
   }
 
-  Widget buildBirthdateFormField(
+  Widget buildPhoneNumberFormField(
       String label, String hint, TextInputType tipo) {
     return InputText(
       label: label,
       hintText: hint,
       keyboardType: tipo,
       validator: validateTextNotNull,
-      onChanged: (newValue) => _birthDate = newValue,
+      onChanged: (newValue) => _phoneNumber = newValue,
     );
   }
 

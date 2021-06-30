@@ -25,6 +25,7 @@ class UserData {
   String mail;
   String name;
   String surname;
+  String phoneNumber;
   String document;
   String documentType;
   int city;
@@ -44,6 +45,7 @@ class UserData {
     this.name,
     this.surname,
     this.document,
+    this.phoneNumber,
     this.documentType,
     this.city,
     this.profilePicture,
