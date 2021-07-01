@@ -79,7 +79,7 @@ class Session extends ChangeNotifier {
   }) async {
     try {
       final response = await this._dio.post(
-        Endpoints.organization,
+        Endpoints.organizationSingUp,
         data: {
           "profileDto": {
             "id": null,
