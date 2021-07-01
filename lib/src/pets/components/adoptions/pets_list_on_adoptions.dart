@@ -111,22 +111,6 @@ class _PetsListAdoptionsState extends State<PetsListAdoptions> {
                 ],
               ),
             ),
-            trailing: IconButton(
-              icon: Icon(Icons.label_important_rounded),
-              onPressed: () async {
-                final response = await Dialogs.alert(
-                  context,
-                  "¿Desea solicitar adopcion de ${pet.name}?",
-                  "",
-                  "Cancelar",
-                  "Aceptar",
-                );
-                if (response) {
-                  Provider.of<Pets>(context, listen: false)
-                      .requestAdoption(pet.id);
-                }
-              },
-            ),
             contentPadding: EdgeInsets.symmetric(horizontal: 30),
           ),
         ),
