@@ -115,6 +115,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 "Ingrese su RUC",
                 TextInputType.number,
               ),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
               FutureBuilder(
                 future: _citiesFuture,
                 builder: (_, dataSnapshot) {
@@ -257,14 +258,6 @@ class _BodyState extends State<Body> with ValidatorMixins {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 5,
-            ),
-          ),
-          SizedBox(height: SizeConfig().hp(2)),
           Card(
             margin: EdgeInsets.zero,
             child: child,

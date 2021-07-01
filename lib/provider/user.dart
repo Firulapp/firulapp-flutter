@@ -32,7 +32,7 @@ class UserData {
   String birthDate;
   String profilePicture;
   String userType = 'APP'; //ADMIN, APP, ORGANIZACION
-  bool enabled = true;
+  bool enabled;
   bool notifications;
 
   UserData({
@@ -141,10 +141,12 @@ class User with ChangeNotifier {
         document: userResponse["document"],
         documentType: userResponse["documentType"],
         profilePicture: userResponse["profilePicture"],
+        userType: userResponse["userType"],
         birthDate: userResponse["birthDate"],
         notifications: userResponse["notifications"],
         userName: userResponse["username"],
         mail: userResponse["email"],
+        enabled: userResponse["enabled"],
       );
       addUser(userData);
     } catch (error) {
@@ -153,6 +155,35 @@ class User with ChangeNotifier {
   }
 
   Future<void> saveUser() async {
+    try {
+      await this._dio.post(
+        '${Endpoints.updateUser}',
+        data: {
+          "id": userData.id,
+          "userId": userData.userId,
+          "document": userData.document,
+          "documentType": userData.documentType,
+          "name": userData.name,
+          "surname": userData.surname,
+          "city": userData.city,
+          "profilePicture": userData.profilePicture,
+          "birthDate": userData.birthDate,
+          "notifications": userData.notifications,
+          "username": userData.userName,
+          "email": userData.mail,
+          "encryptedPassword": userData.encryptedPassword,
+          "confirmPassword": userData.confirmPassword,
+          "userType": userData.userType,
+          "enabled": true
+        },
+      );
+      addUser(userData);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> saveUserOrganizacion() async {
     try {
       await this._dio.post(
         '${Endpoints.updateUser}',
