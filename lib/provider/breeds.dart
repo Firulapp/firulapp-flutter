@@ -75,7 +75,7 @@ class Breeds with ChangeNotifier {
 
   List<ListTileItem> toGenericFormItem() {
     List<ListTileItem> genericItems = [];
-    _items.forEach((element) {
+    items.forEach((element) {
       genericItems.add(ListTileItem(element.id, element.name));
     });
     return genericItems;

@@ -411,6 +411,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
         MaterialPageRoute(
           builder: (context) => ItemSelectionScreen(
             allItems: species,
+            subject: 'Especie',
           ),
         ),
       ) as ListTileItem;
@@ -457,6 +458,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
         MaterialPageRoute(
           builder: (context) => ItemSelectionScreen(
             allItems: breeds,
+            subject: 'Raza',
           ),
         ),
       ) as ListTileItem;

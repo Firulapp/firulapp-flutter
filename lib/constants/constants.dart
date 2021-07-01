@@ -5,11 +5,6 @@ import '../size_config.dart';
 class Constants {
   static const kPrimaryColor = Color(0xFFFDBE83);
   static const kPrimaryLightColor = Color(0xFFFFECDF);
-  static var kPrimaryGradientColor = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: <Color>[Color(0xFFFFA53E), Color(0xFFFF7643)],
-  );
   static const lightBackgroundColor = Color(0XFFFFFAF6);
   static const kSecondaryColor = Color(0xFF00A2D3);
   static const kTextColor = Color(0xFF757575);
