@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firulapp/components/default_button.dart';
+import 'package:firulapp/components/dropdown/item_selection_screen.dart';
+import 'package:firulapp/components/dropdown/listtile_item.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +35,8 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   var _isLoading = true;
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
-  int _speciesId;
+  SpeciesItem _speciesItem;
+  BreedsItem _breedsItem;
   DateTime _birthDate = DateTime.now();
   int _age;
   String _petStatus = PetStatus.ADOPTADA.value;
@@ -75,392 +78,458 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
 
   @override
   Widget build(BuildContext context) {
-    final providerBreeds = Provider.of<Breeds>(context, listen: false);
     return new Scaffold(
-        appBar: AppBar(
-          title: Text("Agregar Mascota"),
-        ),
-        body: _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : ListView(
-                padding: const EdgeInsets.only(left: 35.0, right: 25.0),
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        child: PetImage(
-                          _selectImage,
-                          _pet.picture,
-                          _status,
-                        ),
+      appBar: AppBar(
+        title: Text("Agregar Mascota"),
+      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView(
+              padding: const EdgeInsets.only(left: 35.0, right: 25.0),
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Container(
+                      child: PetImage(
+                        _selectImage,
+                        _pet.picture,
+                        _status,
                       ),
-                      SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25)),
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                                padding: const EdgeInsets.only(top: 25.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: <Widget>[
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        const Text(
-                                          'Datos de mascota',
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        _status ? _getEditIcon() : Container(),
-                                      ],
-                                    )
-                                  ],
-                                )),
-                            SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            buildNameFormField(
-                              label: "Nombre de mascota",
-                              hint: "Ingrese un nombre",
-                              tipo: TextInputType.text,
-                            ),
-                            Padding(
+                    ),
+                    SizedBox(
+                        height: SizeConfig.getProportionateScreenHeight(25)),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
                               padding: const EdgeInsets.only(top: 25.0),
-                              child: FutureBuilder(
-                                  future: _initialSpecies,
-                                  builder: (_, dataSnapshot) {
-                                    if (dataSnapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const Center(
-                                        child: Text("Loading..."),
-                                      );
-                                    } else {
-                                      return Consumer<Species>(
-                                        builder: (ctx, listSpecies, _) =>
-                                            DropdownButtonFormField(
-                                          hint: _speciesId == null
-                                              ? Text('Elija una especie')
-                                              : null,
-                                          disabledHint: _pet.speciesId != null
-                                              ? Text(listSpecies.items
-                                                  .firstWhere((item) =>
-                                                      item.id == _pet.speciesId)
-                                                  .name)
-                                              : null,
-                                          items: listSpecies.items
-                                              .map((e) => DropdownMenuItem(
-                                                    value: e.id,
-                                                    child: Text(e.name),
-                                                  ))
-                                              .toList(),
-                                          onChanged: !_status
-                                              ? (v) => setState(() {
-                                                    if (_pet.speciesId != v) {
-                                                      _pet.breedId = null;
-                                                      _initialBreeds =
-                                                          providerBreeds
-                                                              .getBreeds(v);
-                                                    }
-                                                    _pet.speciesId = v;
-                                                  })
-                                              : null,
-                                          value: _pet.speciesId,
-                                          isExpanded: true,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      const Text(
+                                        'Datos de mascota',
+                                        style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      );
-                                    }
-                                  }),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25.0),
-                              child: FutureBuilder(
-                                future: _initialBreeds,
-                                builder: (_, dataSnapshot) {
-                                  if (dataSnapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                      child: Text("Loading..."),
-                                    );
-                                  } else {
-                                    if (dataSnapshot.error != null) {
-                                      return Center(
-                                        child: Text('Algo salio mal'),
-                                      );
-                                    } else {
-                                      return Consumer<Breeds>(
-                                        builder: (ctx, listBreeds, _) =>
-                                            DropdownButtonFormField(
-                                          hint: _pet.breedId == null
-                                              ? Text('Eliga una raza')
-                                              : null,
-                                          disabledHint: _pet.breedId != null
-                                              ? Text(listBreeds.items
-                                                  .firstWhere((item) =>
-                                                      item.id == _pet.breedId)
-                                                  .name)
-                                              : null,
-                                          items: listBreeds.items
-                                              .map((e) => DropdownMenuItem(
-                                                    value: e.id,
-                                                    child: Text(e.name),
-                                                  ))
-                                              .toList(),
-                                          onChanged: !_status
-                                              ? (v) => setState(() {
-                                                    _pet.breedId = v;
-                                                  })
-                                              : null,
-                                          value: _pet.breedId,
-                                          isExpanded: true,
-                                        ),
-                                      );
-                                    }
-                                  }
-                                },
-                              ),
-                            ),
-                            GestureDetector(
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 25.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: <Widget>[
-                                            const Text(
-                                              'Fecha de Nacimiento',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color:
-                                                    Constants.kSecondaryColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Text(
-                                          df.format(_birthDate),
-                                          style: TextStyle(
-                                            fontSize: 23,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(
-                                              Icons.calendar_today_outlined),
-                                          onPressed: () async {
-                                            await _selectDate(context);
-                                            setState(
-                                              () {
-                                                _pet.birthDate = _birthDate
-                                                    .toIso8601String();
-                                              },
-                                            );
-                                          },
-                                          iconSize: 40,
-                                          color: Constants.kPrimaryColor,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            const Text(
-                                              'Edad',
-                                              style: TextStyle(
-                                                fontSize: 23,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Text(
-                                              (calculateAge(_birthDate)
-                                                      .toString() +
-                                                  " Años"),
-                                              style: TextStyle(
-                                                fontSize: 23,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                _selectDate(context);
-                              },
-                            ),
-                            SizedBox(
-                              height:
-                                  SizeConfig.getProportionateScreenHeight(25),
-                            ),
-                            buildDropdown(['PEQUEÑO', 'MEDIANO', 'GRANDE']),
-                            SizedBox(
-                              height:
-                                  SizeConfig.getProportionateScreenHeight(25),
-                            ),
-                            buildPrimaryColorFormField(
-                              label: "Color primario",
-                              hint: "Ingrese un color",
-                              tipo: TextInputType.text,
-                            ),
-                            SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            buildSecondaryColorFormField(
-                              label: "Color secundario",
-                              hint: "Ingrese un color",
-                              tipo: TextInputType.text,
-                            ),
-                            SizedBox(
-                              height:
-                                  SizeConfig.getProportionateScreenHeight(25),
-                            ),
-                            buildDescriptionFormField(
-                              label: "Descripción",
-                              hint: "Ingrese una description",
-                              tipo: TextInputType.multiline,
-                            ),
-                            SizedBox(
-                              height:
-                                  SizeConfig.getProportionateScreenHeight(25),
-                            ),
-                            !_status
-                                ? Column(
-                                    children: [
-                                      DefaultButton(
-                                        text: "Guardar",
-                                        color: Constants.kPrimaryColor,
-                                        press: () async {
-                                          try {
-                                            if (_pet.birthDate == null) {
-                                              Dialogs.info(
-                                                context,
-                                                title: "ERROR",
-                                                content:
-                                                    "Debe seleccionar la fecha de nacimiento",
-                                              );
-                                              return;
-                                            }
-                                            newPet = PetItem(
-                                              id: _pet.id,
-                                              name: _pet.name,
-                                              speciesId: _pet.speciesId,
-                                              breedId: _pet.breedId,
-                                              birthDate: _pet.birthDate,
-                                              age: _age,
-                                              petSize: _pet.petSize,
-                                              primaryColor: _pet.primaryColor,
-                                              secondaryColor:
-                                                  _pet.secondaryColor,
-                                              description: _pet.description,
-                                              status: _petStatus,
-                                              picture: _pet.picture,
-                                              createdAt: _pet.createdAt,
-                                            );
-                                            Provider.of<Pets>(context,
-                                                    listen: false)
-                                                .petItem = newPet;
-                                            // Provider.of<Pets>(context, listen: false).savePet();
-                                            Navigator.pop(context);
-                                          } catch (e) {
-                                            Dialogs.info(
-                                              context,
-                                              title: 'ERROR',
-                                              content:
-                                                  e.response.data["message"],
-                                            );
-                                          }
-                                          setState(() {
-                                            _status = true;
-                                            FocusScope.of(context)
-                                                .requestFocus(FocusNode());
-                                          });
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
-                                        },
-                                      ),
-                                      SizedBox(
-                                        height: SizeConfig
-                                            .getProportionateScreenHeight(25),
-                                      ),
-                                      DefaultButton(
-                                        text: "Cancelar",
-                                        color: Colors.white,
-                                        press: () async {
-                                          setState(() {
-                                            _status = true;
-                                            FocusScope.of(context)
-                                                .requestFocus(FocusNode());
-                                          });
-                                        },
-                                      ),
-                                      SizedBox(
-                                        height: SizeConfig
-                                            .getProportionateScreenHeight(25),
                                       ),
                                     ],
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      _status ? _getEditIcon() : Container(),
+                                    ],
                                   )
-                                : Container(),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ));
+                                ],
+                              )),
+                          SizedBox(
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25)),
+                          buildNameFormField(
+                            label: "Nombre de mascota",
+                            hint: "Ingrese un nombre",
+                            tipo: TextInputType.text,
+                          ),
+                          FutureBuilder(
+                            future: _initialSpecies,
+                            builder: (_, dataSnapshot) {
+                              if (dataSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: Text("Loading..."),
+                                );
+                              } else {
+                                return Consumer<Species>(
+                                  builder: (ctx, listSpecies, _) {
+                                    final list =
+                                        listSpecies.toGenericFormItem();
+                                    return buildSingleSpecies(list);
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          FutureBuilder(
+                            future: _initialBreeds,
+                            builder: (_, dataSnapshot) {
+                              if (dataSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: Text("Loading..."),
+                                );
+                              } else {
+                                return Consumer<Breeds>(
+                                  builder: (ctx, listBreeds, _) {
+                                    final list = listBreeds.toGenericFormItem();
+                                    return buildSingleBreeds(list);
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                          GestureDetector(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 25.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          const Text(
+                                            'Fecha de Nacimiento',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Constants.kSecondaryColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Text(
+                                        df.format(_birthDate),
+                                        style: TextStyle(
+                                          fontSize: 23,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon:
+                                            Icon(Icons.calendar_today_outlined),
+                                        onPressed: () async {
+                                          await _selectDate(context);
+                                          setState(
+                                            () {
+                                              _pet.birthDate =
+                                                  _birthDate.toIso8601String();
+                                            },
+                                          );
+                                        },
+                                        iconSize: 40,
+                                        color: Constants.kPrimaryColor,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          const Text(
+                                            'Edad',
+                                            style: TextStyle(
+                                              fontSize: 23,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Text(
+                                            (calculateAge(_birthDate)
+                                                    .toString() +
+                                                " Años"),
+                                            style: TextStyle(
+                                              fontSize: 23,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              _selectDate(context);
+                            },
+                          ),
+                          SizedBox(
+                            height: SizeConfig.getProportionateScreenHeight(25),
+                          ),
+                          buildDropdown(['PEQUEÑO', 'MEDIANO', 'GRANDE']),
+                          SizedBox(
+                            height: SizeConfig.getProportionateScreenHeight(25),
+                          ),
+                          buildPrimaryColorFormField(
+                            label: "Color primario",
+                            hint: "Ingrese un color",
+                            tipo: TextInputType.text,
+                          ),
+                          SizedBox(
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25)),
+                          buildSecondaryColorFormField(
+                            label: "Color secundario",
+                            hint: "Ingrese un color",
+                            tipo: TextInputType.text,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.getProportionateScreenHeight(25),
+                          ),
+                          buildDescriptionFormField(
+                            label: "Descripción",
+                            hint: "Ingrese una description",
+                            tipo: TextInputType.multiline,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.getProportionateScreenHeight(25),
+                          ),
+                          !_status
+                              ? Column(
+                                  children: [
+                                    DefaultButton(
+                                      text: "Guardar",
+                                      color: Constants.kPrimaryColor,
+                                      press: () async {
+                                        try {
+                                          if (_pet.birthDate == null) {
+                                            Dialogs.info(
+                                              context,
+                                              title: "ERROR",
+                                              content:
+                                                  "Debe seleccionar la fecha de nacimiento",
+                                            );
+                                            return;
+                                          }
+                                          newPet = PetItem(
+                                            id: _pet.id,
+                                            name: _pet.name,
+                                            speciesId: _pet.speciesId,
+                                            breedId: _pet.breedId,
+                                            birthDate: _pet.birthDate,
+                                            age: _age,
+                                            petSize: _pet.petSize,
+                                            primaryColor: _pet.primaryColor,
+                                            secondaryColor: _pet.secondaryColor,
+                                            description: _pet.description,
+                                            status: _petStatus,
+                                            picture: _pet.picture,
+                                            createdAt: _pet.createdAt,
+                                          );
+                                          Provider.of<Pets>(context,
+                                                  listen: false)
+                                              .petItem = newPet;
+                                          Provider.of<Pets>(context,
+                                                  listen: false)
+                                              .savePet();
+                                          Navigator.pop(context);
+                                        } catch (e) {
+                                          Dialogs.info(
+                                            context,
+                                            title: 'ERROR',
+                                            content: e.response.data["message"],
+                                          );
+                                        }
+                                        setState(() {
+                                          _status = true;
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                        });
+                                        setState(() {
+                                          _isLoading = false;
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig
+                                          .getProportionateScreenHeight(25),
+                                    ),
+                                    DefaultButton(
+                                      text: "Cancelar",
+                                      color: Colors.white,
+                                      press: () async {
+                                        setState(
+                                          () {
+                                            _status = true;
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig
+                                          .getProportionateScreenHeight(25),
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget buildSingleSpecies(List<ListTileItem> species) {
+    final onTap = () async {
+      final item = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemSelectionScreen(
+            allItems: species,
+            subject: 'Especie',
+          ),
+        ),
+      ) as ListTileItem;
+
+      if (item == null) return;
+
+      setState(() {
+        this._speciesItem = SpeciesItem(id: item.id, name: item.value);
+        _pet.speciesId = item.id;
+        _initialBreeds = Provider.of<Breeds>(
+          context,
+          listen: false,
+        ).getBreeds(item.id);
+      });
+    };
+    if (_pet.speciesId != null) {
+      _speciesItem = Provider.of<Species>(
+        context,
+        listen: false,
+      ).getLocalSpeciesItemById(_pet.speciesId);
+    }
+
+    return buildPicker(
+      title: 'Selecciona una Especie',
+      child: _speciesItem == null
+          ? _status
+              ? buildListTile(title: 'Ninguna Especie')
+              : buildListTile(title: 'Ninguna Especie', onTap: onTap)
+          : _status
+              ? buildListTile(
+                  title: _speciesItem.name,
+                )
+              : buildListTile(
+                  title: _speciesItem.name,
+                  onTap: onTap,
+                ),
+    );
+  }
+
+  Widget buildSingleBreeds(List<ListTileItem> breeds) {
+    final onTap = () async {
+      final item = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemSelectionScreen(
+            allItems: breeds,
+            subject: 'Raza',
+          ),
+        ),
+      ) as ListTileItem;
+
+      if (item == null) return;
+
+      setState(() {
+        this._breedsItem = BreedsItem(id: item.id, name: item.value);
+        _pet.breedId = item.id;
+      });
+    };
+    if (_pet.breedId != null) {
+      _breedsItem = Provider.of<Breeds>(
+        context,
+        listen: false,
+      ).getLocalBreedsItemById(_pet.breedId);
+    }
+
+    return buildPicker(
+      title: 'Selecciona una Raza',
+      child: _breedsItem == null
+          ? _status
+              ? buildListTile(title: 'Ninguna Raza')
+              : buildListTile(title: 'Ninguna Raza', onTap: onTap)
+          : _status
+              ? buildListTile(
+                  title: _breedsItem.name,
+                )
+              : buildListTile(
+                  title: _breedsItem.name,
+                  onTap: onTap,
+                ),
+    );
+  }
+
+  Widget buildPicker({
+    @required String title,
+    @required Widget child,
+  }) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(margin: EdgeInsets.zero, child: child),
+        ],
+      );
+
+  Widget buildListTile({
+    @required String title,
+    VoidCallback onTap,
+    Widget leading,
+  }) {
+    return ListTile(
+      onTap: onTap,
+      leading: leading,
+      title: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: Colors.black, fontSize: 18),
+      ),
+      trailing: Icon(Icons.arrow_drop_down, color: Colors.black),
+    );
   }
 
   @override
