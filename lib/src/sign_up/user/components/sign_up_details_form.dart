@@ -256,13 +256,14 @@ class _BodyState extends State<Body> with ValidatorMixins {
           );
   }
 
-  Widget buildSingleCity(List<ListTileItem> species) {
+  Widget buildSingleCity(List<ListTileItem> cities) {
     final onTap = () async {
       final item = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ItemSelectionScreen(
-            allItems: species,
+            allItems: cities,
+            subject: 'Ciudad',
           ),
         ),
       ) as ListTileItem;
