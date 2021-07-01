@@ -66,9 +66,10 @@ class Species with ChangeNotifier {
     }
   }
 
-  List<ListTileItem> toGenericFormItem() {
+  List<ListTileItem> toGenericFormItem({List<SpeciesItem> selectedSpecies}) {
     List<ListTileItem> genericItems = [];
-    items.forEach((element) {
+    final list = selectedSpecies == null ? items : selectedSpecies;
+    list.forEach((element) {
       genericItems.add(ListTileItem(element.id, element.name));
     });
     return genericItems;
