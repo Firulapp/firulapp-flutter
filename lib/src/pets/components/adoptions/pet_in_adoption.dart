@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firulapp/components/default_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -94,6 +95,22 @@ class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
                           _status,
                         ),
                       ),
+                      DefaultButton(
+                          text: "Solicitar adopción",
+                          color: Constants.kPrimaryColor,
+                          press: () async {
+                            final response = await Dialogs.alert(
+                              context,
+                              "¿Desea solicitar adopcion de ${_pet.name}?",
+                              "",
+                              "Cancelar",
+                              "Aceptar",
+                            );
+                            if (response) {
+                              Provider.of<Pets>(context, listen: false)
+                                  .requestAdoption(_pet.id);
+                            }
+                          }),
                       SizedBox(
                           height: SizeConfig.getProportionateScreenHeight(25)),
                       Container(
