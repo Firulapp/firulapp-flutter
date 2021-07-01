@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firulapp/components/default_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +12,7 @@ import '../../components/dropdown/listtile_item.dart';
 import '../../provider/city.dart';
 import '../../components/dialogs.dart';
 import '../../constants/constants.dart';
+import '../../size_config.dart';
 import 'components/profile_photo.dart';
 import '../../provider/user.dart';
 
@@ -361,60 +363,42 @@ class ProfilePageState extends State<ProfilePage>
   Widget _getActionButtons() {
     return Padding(
       padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: Container(
-                  child: RaisedButton(
-                child: const Text("Guardar"),
-                textColor: Colors.white,
-                color: Colors.green,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  });
-                  try {
-                    Provider.of<User>(context, listen: false).saveUser();
-                  } catch (error) {
-                    Dialogs.info(
-                      context,
-                      title: "ERROR",
-                      content: error.response.data["message"],
-                    );
-                  }
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-              )),
-            ),
-            flex: 2,
+      child: Column(
+        children: [
+          DefaultButton(
+            text: "Guardar",
+            color: Constants.kPrimaryColor,
+            press: () async {
+              setState(() {
+                _status = true;
+                FocusScope.of(context).requestFocus(FocusNode());
+              });
+              try {
+                Provider.of<User>(context, listen: false).saveUser();
+              } catch (error) {
+                Dialogs.info(
+                  context,
+                  title: "ERROR",
+                  content: error.response.data["message"],
+                );
+              }
+            },
           ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Container(
-                child: RaisedButton(
-                  child: const Text("Cancelar"),
-                  textColor: Colors.white,
-                  color: Colors.red,
-                  onPressed: () {
-                    setState(() {
-                      _status = true;
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    });
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-            ),
-            flex: 2,
+          SizedBox(
+            height: SizeConfig.getProportionateScreenHeight(25),
+          ),
+          DefaultButton(
+            text: "Cancelar",
+            color: Colors.white,
+            press: () async {
+              setState(() {
+                _status = true;
+                FocusScope.of(context).requestFocus(FocusNode());
+              });
+            },
+          ),
+          SizedBox(
+            height: SizeConfig.getProportionateScreenHeight(25),
           ),
         ],
       ),
