@@ -202,24 +202,26 @@ class ProfilePageState extends State<ProfilePage>
                             ],
                           ),
                         ),
-                        FutureBuilder(
-                          future: _citiesFuture,
-                          builder: (_, dataSnapshot) {
-                            if (dataSnapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: Text("Loading..."),
-                              );
-                            } else {
-                              return Consumer<City>(
-                                builder: (ctx, listCities, _) {
-                                  final list = listCities.toGenericFormItem();
-                                  return buildSingleCity(
-                                      list, user.userData.city);
-                                },
-                              );
-                            }
-                          },
+                        Padding(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: FutureBuilder(
+                            future: _citiesFuture,
+                            builder: (_, dataSnapshot) {
+                              if (dataSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: Text("Loading..."),
+                                );
+                              } else {
+                                return Consumer<City>(
+                                  builder: (ctx, listCities, _) {
+                                    final list = listCities.toGenericFormItem();
+                                    return buildSingleCity(list);
+                                  },
+                                );
+                              }
+                            },
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
@@ -277,13 +279,20 @@ class ProfilePageState extends State<ProfilePage>
     super.dispose();
   }
 
-  Widget buildSingleCity(List<ListTileItem> species, int city) {
+  Widget buildSingleCity(List<ListTileItem> cities) {
+    final user = Provider.of<User>(context, listen: false);
+    if (_cityItem == null) {
+      _cityItem = Provider.of<City>(
+        context,
+        listen: false,
+      ).getLocalCityItemById(user.userData.city);
+    }
     final onTap = () async {
       final item = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ItemSelectionScreen(
-            allItems: species,
+            allItems: cities,
           ),
         ),
       ) as ListTileItem;
@@ -291,16 +300,10 @@ class ProfilePageState extends State<ProfilePage>
       if (item == null) return;
 
       setState(() {
+        user.userData.city = item.id;
         this._cityItem = CityItem(id: item.id, name: item.value);
-        city = item.id;
       });
     };
-    if (city != null) {
-      _cityItem = Provider.of<City>(
-        context,
-        listen: false,
-      ).getLocalCityItemById(city);
-    }
 
     return buildPicker(
       title: 'Selecciona una Ciudad',
