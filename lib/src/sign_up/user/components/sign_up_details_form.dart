@@ -131,6 +131,16 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 "Ingrese su apellido",
                 TextInputType.name,
               ),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
+              buildDropdown(
+                _user.getDocumentTypeOptions(),
+              ),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
+              buildDocumentFormField(
+                "Documento de identidad",
+                "Ingrese su documento",
+                TextInputType.number,
+              ),
               FutureBuilder(
                 future: _citiesFuture,
                 builder: (_, dataSnapshot) {
@@ -146,32 +156,6 @@ class _BodyState extends State<Body> with ValidatorMixins {
                       },
                     );
                   }
-                },
-              ),
-              buildDocumentFormField(
-                "Documento de identidad",
-                "Ingrese su documento",
-                TextInputType.number,
-              ),
-              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
-              FutureBuilder(
-                future: _citiesFuture,
-                builder: (_, dataSnapshot) {
-                  return Consumer<City>(
-                    builder: (ctx, cityData, child) => DropdownButtonFormField(
-                      items: cityData.cities
-                          .map(
-                            (city) => DropdownMenuItem(
-                              value: city.id,
-                              child: Text(city.name),
-                            ),
-                          )
-                          .toList(),
-                      value: _city,
-                      onChanged: (newValue) => _city = newValue,
-                      hint: const Text("Ciudad"),
-                    ),
-                  );
                 },
               ),
               SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
