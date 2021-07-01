@@ -94,7 +94,6 @@ class Reports with ChangeNotifier {
         );
       });
       notifyListeners();
-      print(response);
     } catch (error) {
       print(error);
       throw error;
@@ -151,7 +150,7 @@ class Reports with ChangeNotifier {
       secondaryStreet: json["secondaryStreet"],
       status: json["status"],
       reportType: json["reportType"],
-      userId: user.userData.id,
+      userId: json["userId"] == null ? user.userData.id : json["userId"],
       createdAt: json["createdAt"],
       createdBy: user.userData.id,
       modifiedAt: json["modifiedAt"],

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/dropdown/item_selection_screen.dart';
@@ -14,37 +13,20 @@ import '../../constants/constants.dart';
 import 'components/profile_photo.dart';
 import '../../provider/user.dart';
 
-class ProfilePage extends StatefulWidget {
-  static const routeName = "/profile-details";
+class ProfilePageOrganization extends StatefulWidget {
+  static const routeName = "/profile-details-organization";
   @override
   ProfilePageState createState() => ProfilePageState();
 }
 
-class ProfilePageState extends State<ProfilePage>
+class ProfilePageState extends State<ProfilePageOrganization>
     with SingleTickerProviderStateMixin {
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
   File _pickedImage;
   Future _citiesFuture;
-  String _birthDate;
-  final df = new DateFormat('dd-MM-yyyy');
-  DateTime _date = DateTime.now();
+  String temporal_description;
   CityItem _cityItem;
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime pickedDate = await showDatePicker(
-      context: context,
-      initialDate: _date,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    );
-    if (pickedDate != null && pickedDate != _date) {
-      setState(() {
-        _date = pickedDate;
-        _birthDate = _date.toIso8601String();
-      });
-    }
-  }
 
   Future _obtainCitiesFuture() {
     return Provider.of<City>(context, listen: false).fetchCities();
@@ -67,7 +49,7 @@ class ProfilePageState extends State<ProfilePage>
     final user = Provider.of<User>(context);
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Informacion Personal"),
+          title: const Text("Informacion Organizacion"),
         ),
         body: ListView(
           children: <Widget>[
@@ -97,7 +79,7 @@ class ProfilePageState extends State<ProfilePage>
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                     Text(
-                                      'Informacion Personal',
+                                      'Informacion',
                                       style: TextStyle(
                                         fontSize: 25,
                                         fontWeight: FontWeight.bold,
@@ -133,21 +115,6 @@ class ProfilePageState extends State<ProfilePage>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                              initialValue: user.userData.surname,
-                              decoration: InputDecoration(
-                                hintText: "Ingresa tu Apellido",
-                                labelText: 'Apellido',
-                                labelStyle: defaultTextStyle(),
-                              ),
-                              enabled: !_status,
-                              autofocus: !_status,
-                              onChanged: (newValue) =>
-                                  user.userData.surname = newValue),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: TextFormField(
                               initialValue: user.userData.mail,
                               decoration: InputDecoration(
                                 hintText: "Ingresa tu Correo",
@@ -173,34 +140,6 @@ class ProfilePageState extends State<ProfilePage>
                               autofocus: !_status,
                               onChanged: (newValue) =>
                                   user.userData.userName = newValue),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                DateFormat('dd-MM-yyyy').format(
-                                  DateTime.parse(user.userData.birthDate),
-                                ),
-                                style: TextStyle(
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.calendar_today_outlined),
-                                onPressed: () async {
-                                  await _selectDate(context);
-                                  setState(() {
-                                    user.userData.birthDate = _birthDate;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 25.0, right: 25.0),
@@ -237,7 +176,6 @@ class ProfilePageState extends State<ProfilePage>
                                 )
                                 .toList(),
                             value: user.userData.documentType,
-                            autofocus: !_status,
                             onChanged: !_status
                                 ? (newValue) =>
                                     user.userData.documentType = newValue
@@ -259,6 +197,22 @@ class ProfilePageState extends State<ProfilePage>
                             autofocus: !_status,
                             onChanged: (newValue) =>
                                 user.userData.document = newValue,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 25.0),
+                          child: TextFormField(
+                            initialValue: temporal_description,
+                            decoration: InputDecoration(
+                              hintText: "Ingresa su descripción",
+                              labelText: 'Descripción',
+                              labelStyle: defaultTextStyle(),
+                            ),
+                            enabled: !_status,
+                            autofocus: !_status,
+                            onChanged: (newValue) =>
+                                temporal_description = newValue,
                           ),
                         ),
                         !_status ? _getActionButtons() : Container(),

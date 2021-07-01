@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../components/dropdown/listtile_item.dart';
 import '../constants/endpoints.dart';
 
 class CityItem {
@@ -38,5 +39,20 @@ class City with ChangeNotifier {
       print(error);
       throw error;
     }
+  }
+
+  CityItem getLocalCityItemById(int id) {
+    return cities.firstWhere(
+      (breed) => breed.id == id,
+      orElse: () => null,
+    );
+  }
+
+  List<ListTileItem> toGenericFormItem() {
+    List<ListTileItem> genericItems = [];
+    cities.forEach((element) {
+      genericItems.add(ListTileItem(element.id, element.name));
+    });
+    return genericItems;
   }
 }

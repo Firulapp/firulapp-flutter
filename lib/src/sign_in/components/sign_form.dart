@@ -75,11 +75,17 @@ class _SingFromState extends State<SingFrom>
           email: _email,
           password: _password,
         );
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          HomeScreen.routeName,
-          (_) => false,
+        await Provider.of<Session>(context, listen: false).logOut();
+        await Provider.of<Session>(context, listen: false).login(
+          email: _email,
+          password: _password,
         );
+        final session = Provider.of<Session>(context, listen: false);
+        await session.getSession();
+        if (session.isAuth) {
+          await Provider.of<User>(context, listen: false).getUser();
+          Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        }
       } catch (error) {
         String message;
         if (error.message != null) {
@@ -96,6 +102,9 @@ class _SingFromState extends State<SingFrom>
           title: 'ERROR',
           content: message,
         );
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
     setState(() {

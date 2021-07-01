@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../provider/city.dart';
-import '../../home/home.dart';
-import '../../../provider/session.dart';
-import '../../../provider/user.dart';
-import '../../../components/dialogs.dart';
-import '../../../components/default_button.dart';
-import '../../../components/input_text.dart';
-import '../../mixins/validator_mixins.dart';
-import '../../../size_config.dart';
-import '../../../constants/constants.dart';
+import '../../../../components/dropdown/item_selection_screen.dart';
+import '../../../../components/dropdown/listtile_item.dart';
+import '../../../../provider/city.dart';
+import '../../../sign_in/sign_in_screen.dart';
+import '../../../../provider/session.dart';
+import '../../../../provider/user.dart';
+import '../../../../components/dialogs.dart';
+import '../../../../components/default_button.dart';
+import '../../../../components/input_text.dart';
+import '../../../mixins/validator_mixins.dart';
+import '../../../../size_config.dart';
+import '../../../../constants/constants.dart';
 
 class SignUpDetailsForm extends StatelessWidget {
   static const routeName = "/sign_up/step2";
@@ -75,6 +77,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
   final df = new DateFormat('dd-MM-yyyy');
   DateTime currentDate = DateTime.now();
   Future _citiesFuture;
+  CityItem _cityItem;
 
   Future _obtainCitiesFuture() {
     return Provider.of<City>(context, listen: false).fetchCities();
@@ -132,58 +135,70 @@ class _BodyState extends State<Body> with ValidatorMixins {
               buildDropdown(
                 _user.getDocumentTypeOptions(),
               ),
-              SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               buildDocumentFormField(
                 "Documento de identidad",
                 "Ingrese su documento",
                 TextInputType.number,
               ),
-              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               FutureBuilder(
                 future: _citiesFuture,
                 builder: (_, dataSnapshot) {
-                  return Consumer<City>(
-                    builder: (ctx, cityData, child) => DropdownButtonFormField(
-                      items: cityData.cities
-                          .map(
-                            (city) => DropdownMenuItem(
-                              value: city.id,
-                              child: Text(city.name),
-                            ),
-                          )
-                          .toList(),
-                      value: _city,
-                      onChanged: (newValue) => _city = newValue,
-                      hint: const Text("Ciudad"),
-                    ),
-                  );
+                  if (dataSnapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Text("Loading..."),
+                    );
+                  } else {
+                    return Consumer<City>(
+                      builder: (ctx, listCities, _) {
+                        final list = listCities.toGenericFormItem();
+                        return buildSingleCity(list);
+                      },
+                    );
+                  }
                 },
               ),
-              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.calendar_today_outlined),
-                    onPressed: () => _selectDate(context),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        df.format(currentDate),
-                        style: TextStyle(
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold,
-                        ),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
+              GestureDetector(
+                child: Column(
+                  children: [
+                    const Text(
+                      'Fecha de Nacimiento',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Constants.kSecondaryColor,
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.calendar_today_outlined),
+                          onPressed: () => _selectDate(context),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              df.format(currentDate),
+                              style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                onTap: () => _selectDate(context),
               ),
-              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
+              SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
               DefaultButton(
                 text: "Registrar",
                 color: Constants.kPrimaryColor,
@@ -191,6 +206,14 @@ class _BodyState extends State<Body> with ValidatorMixins {
                   setState(() {
                     _isLoading = true;
                   });
+                  if (_birthDate == null) {
+                    Dialogs.info(
+                      context,
+                      title: "ERROR",
+                      content: "Debe seleccionar la fecha de nacimiento",
+                    );
+                    return;
+                  }
                   final isOK = _formKey.currentState.validate();
                   if (isOK) {
                     try {
@@ -210,12 +233,13 @@ class _BodyState extends State<Body> with ValidatorMixins {
                           surname: _surname,
                           notifications: true,
                           profilePicture: null,
+                          userType: 'APP',
                         ),
                       );
                       await Provider.of<Session>(context, listen: false)
                           .register(userData: _user.userData);
                       Navigator.pushNamedAndRemoveUntil(
-                          context, HomeScreen.routeName, (_) => false);
+                          context, SignInScreen.routeName, (_) => false);
                     } catch (error) {
                       Dialogs.info(
                         context,
@@ -231,6 +255,81 @@ class _BodyState extends State<Body> with ValidatorMixins {
               ),
             ]),
           );
+  }
+
+  Widget buildSingleCity(List<ListTileItem> cities) {
+    final onTap = () async {
+      final item = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemSelectionScreen(
+            allItems: cities,
+            subject: 'Ciudad',
+          ),
+        ),
+      ) as ListTileItem;
+
+      if (item == null) return;
+
+      setState(() {
+        this._cityItem = CityItem(id: item.id, name: item.value);
+        _city = item.id;
+      });
+    };
+    if (_city != null) {
+      _cityItem = Provider.of<City>(
+        context,
+        listen: false,
+      ).getLocalCityItemById(_city);
+    }
+
+    return buildPicker(
+      title: 'Selecciona una Ciudad',
+      child: _cityItem == null
+          ? buildListTile(title: 'Ninguna Ciudad', onTap: onTap)
+          : buildListTile(
+              title: _cityItem.name,
+              onTap: onTap,
+            ),
+    );
+  }
+
+  Widget buildPicker({
+    @required String title,
+    @required Widget child,
+  }) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(margin: EdgeInsets.zero, child: child),
+        ],
+      );
+
+  Widget buildListTile({
+    @required String title,
+    VoidCallback onTap,
+    Widget leading,
+  }) {
+    return ListTile(
+      onTap: onTap,
+      leading: leading,
+      title: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: Colors.black, fontSize: 18),
+      ),
+      trailing: Icon(Icons.arrow_drop_down, color: Colors.black),
+    );
   }
 
   Widget buildUsernameFormField(String label, String hint, TextInputType tipo) {

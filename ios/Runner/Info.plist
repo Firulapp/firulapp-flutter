@@ -19,11 +19,15 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Para actualizar foto de usuario o mascota necesitamos acceder a la cámara</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Necesitamos utilizar su ubicación para el reporte de mascotas</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Necesitamos utilizar su ubicación para el reporte de mascotas</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Para actualizar foto de usuario o mascota necesitamos acceder a la fotografia</string>
 	<key>UILaunchStoryboardName</key>
@@ -45,13 +49,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Para actualizar foto de usuario o mascota necesitamos acceder a la fotografia</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Para actualizar foto de usuario o mascota necesitamos acceder a la cámara</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Necesitamos utilizar su ubicación para el reporte de mascotas</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Necesitamos utilizar su ubicación para el reporte de mascotas</string>
 </dict>
 </plist>
