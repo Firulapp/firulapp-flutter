@@ -1,3 +1,6 @@
+import 'package:firulapp/provider/species.dart';
+import 'package:flutter/foundation.dart';
+
 class PetServiceItem {
   String id;
   int userId;
@@ -22,6 +25,27 @@ class PetServiceItem {
     this.status,
     this.price,
   });
+}
+
+class PetService with ChangeNotifier {
+  List<PetServiceItem> _items;
+  List<int> _speciesIds;
+
+  List<int> get speciesIds {
+    return [..._speciesIds];
+  }
+
+  List<PetServiceItem> get items {
+    return [..._items];
+  }
+
+  void updateSpeciesFilter(List<SpeciesItem> species) {
+    _speciesIds = [];
+    species.forEach((element) {
+      _speciesIds.add(element.id);
+    });
+    notifyListeners();
+  }
 }
 
 class CategoryItem {
