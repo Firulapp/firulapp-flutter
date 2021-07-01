@@ -295,6 +295,7 @@ class ProfilePageState extends State<ProfilePage>
         MaterialPageRoute(
           builder: (context) => ItemSelectionScreen(
             allItems: cities,
+            subject: 'Ciudad',
           ),
         ),
       ) as ListTileItem;

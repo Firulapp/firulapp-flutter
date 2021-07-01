@@ -26,12 +26,15 @@ class ItemSelectionScreen extends StatefulWidget {
 
 class _ItemSelectionScreenState extends State<ItemSelectionScreen> {
   String _text = '';
-  List<ListTileItem> selectedItems;
+  List<ListTileItem> selectedItems = [];
 
   @override
   void initState() {
     super.initState();
-    selectedItems = widget.items;
+    selectedItems = [];
+    widget.items.forEach((element) {
+      selectedItems.add(element);
+    });
   }
 
   bool containsSearchText(ListTileItem item) {
@@ -43,8 +46,17 @@ class _ItemSelectionScreenState extends State<ItemSelectionScreen> {
   }
 
   List<ListTileItem> getPrioritizedItems(List<ListTileItem> items) {
-    final notSelectedCountries = List.of(items)
-      ..removeWhere((item) => selectedItems.contains(item));
+    var notSelectedCountries = [];
+    if (selectedItems.isNotEmpty) {
+      notSelectedCountries = List.of(items)
+        ..removeWhere((item) {
+          return selectedItems.every((element) {
+            return element.id == item.id;
+          });
+        });
+    } else {
+      notSelectedCountries = List.of(items);
+    }
 
     return [
       ...List.of(selectedItems)..sort(Utils.ascendingSort),
