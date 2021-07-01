@@ -10,7 +10,9 @@ import 'package:firulapp/constants/constants.dart';
 import 'package:firulapp/provider/user.dart';
 import 'package:firulapp/src/mixins/validator_mixins.dart';
 import 'package:provider/provider.dart';
-import 'package:firulapp/provider/city.dart';
+import '../../../../components/dropdown/item_selection_screen.dart';
+import '../../../../components/dropdown/listtile_item.dart';
+import '../../../../provider/city.dart';
 import '../../../../size_config.dart';
 
 class OrganizationSignUpForm extends StatefulWidget {
@@ -53,6 +55,7 @@ class _BodyState extends State<Body> with ValidatorMixins {
   String _document;
   String _type;
   int _city;
+  CityItem _cityItem;
 
   Future _citiesFuture;
 
@@ -112,25 +115,21 @@ class _BodyState extends State<Body> with ValidatorMixins {
                 "Ingrese su RUC",
                 TextInputType.number,
               ),
-              SizedBox(height: SizeConfig.getProportionateScreenHeight(25)),
               FutureBuilder(
                 future: _citiesFuture,
                 builder: (_, dataSnapshot) {
-                  return Consumer<City>(
-                    builder: (ctx, cityData, child) => DropdownButtonFormField(
-                      items: cityData.cities
-                          .map(
-                            (city) => DropdownMenuItem(
-                              value: city.id,
-                              child: Text(city.name),
-                            ),
-                          )
-                          .toList(),
-                      value: _city,
-                      onChanged: (newValue) => _city = newValue,
-                      hint: const Text("Ciudad"),
-                    ),
-                  );
+                  if (dataSnapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Text("Loading..."),
+                    );
+                  } else {
+                    return Consumer<City>(
+                      builder: (ctx, listCities, _) {
+                        final list = listCities.toGenericFormItem();
+                        return buildSingleCity(list);
+                      },
+                    );
+                  }
                 },
               ),
               SizedBox(height: SizeConfig.getProportionateScreenHeight(15)),
@@ -212,6 +211,81 @@ class _BodyState extends State<Body> with ValidatorMixins {
               ),
             ]),
           );
+  }
+
+  Widget buildSingleCity(List<ListTileItem> cities) {
+    final onTap = () async {
+      final item = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemSelectionScreen(
+            allItems: cities,
+            subject: 'Ciudad',
+          ),
+        ),
+      ) as ListTileItem;
+
+      if (item == null) return;
+
+      setState(() {
+        this._cityItem = CityItem(id: item.id, name: item.value);
+        _city = item.id;
+      });
+    };
+    if (_city != null) {
+      _cityItem = Provider.of<City>(
+        context,
+        listen: false,
+      ).getLocalCityItemById(_city);
+    }
+
+    return buildPicker(
+      title: 'Selecciona una Ciudad',
+      child: _cityItem == null
+          ? buildListTile(title: 'Ninguna Ciudad', onTap: onTap)
+          : buildListTile(
+              title: _cityItem.name,
+              onTap: onTap,
+            ),
+    );
+  }
+
+  Widget buildPicker({
+    @required String title,
+    @required Widget child,
+  }) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 5,
+            ),
+          ),
+          SizedBox(height: SizeConfig().hp(2)),
+          Card(
+            margin: EdgeInsets.zero,
+            child: child,
+          ),
+        ],
+      );
+
+  Widget buildListTile({
+    @required String title,
+    VoidCallback onTap,
+    Widget leading,
+  }) {
+    return ListTile(
+      onTap: onTap,
+      leading: leading,
+      title: Text(
+        title,
+        maxLines: 1,
+      ),
+      trailing: Icon(Icons.arrow_drop_down, color: Colors.black),
+    );
   }
 
   Widget buildConformPassFormField() {

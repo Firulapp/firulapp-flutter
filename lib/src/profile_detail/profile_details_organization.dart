@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/dropdown/item_selection_screen.dart';
+import '../../components/dropdown/listtile_item.dart';
 import '../../provider/city.dart';
 import '../../components/dialogs.dart';
 import '../../constants/constants.dart';
@@ -24,6 +26,7 @@ class ProfilePageState extends State<ProfilePageOrganization>
   File _pickedImage;
   Future _citiesFuture;
   String temporal_description;
+  CityItem _cityItem;
 
   Future _obtainCitiesFuture() {
     return Provider.of<City>(context, listen: false).fetchCities();
@@ -139,30 +142,23 @@ class ProfilePageState extends State<ProfilePageOrganization>
                                   user.userData.userName = newValue),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
-                              left: 25.0, right: 25.0, top: 25.0),
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
                           child: FutureBuilder(
                             future: _citiesFuture,
                             builder: (_, dataSnapshot) {
-                              return Consumer<City>(
-                                builder: (ctx, cityData, child) =>
-                                    DropdownButtonFormField(
-                                  items: cityData.cities
-                                      .map(
-                                        (city) => DropdownMenuItem(
-                                          value: city.id,
-                                          child: Text(city.name),
-                                        ),
-                                      )
-                                      .toList(),
-                                  value: user.userData.city,
-                                  onChanged: !_status
-                                      ? (newValue) =>
-                                          user.userData.city = newValue
-                                      : null,
-                                  hint: const Text("Ciudad"),
-                                ),
-                              );
+                              if (dataSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: Text("Loading..."),
+                                );
+                              } else {
+                                return Consumer<City>(
+                                  builder: (ctx, listCities, _) {
+                                    final list = listCities.toGenericFormItem();
+                                    return buildSingleCity(list);
+                                  },
+                                );
+                              }
                             },
                           ),
                         ),
@@ -235,6 +231,81 @@ class ProfilePageState extends State<ProfilePageOrganization>
     // Clean up the controller when the Widget is disposed
     myFocusNode.dispose();
     super.dispose();
+  }
+
+  Widget buildSingleCity(List<ListTileItem> cities) {
+    final user = Provider.of<User>(context, listen: false);
+    if (_cityItem == null) {
+      _cityItem = Provider.of<City>(
+        context,
+        listen: false,
+      ).getLocalCityItemById(user.userData.city);
+    }
+    final onTap = () async {
+      final item = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemSelectionScreen(
+            allItems: cities,
+          ),
+        ),
+      ) as ListTileItem;
+
+      if (item == null) return;
+
+      setState(() {
+        user.userData.city = item.id;
+        this._cityItem = CityItem(id: item.id, name: item.value);
+      });
+    };
+
+    return buildPicker(
+      title: 'Selecciona una Ciudad',
+      child: _cityItem == null
+          ? buildListTile(title: 'Ninguna Ciudad', onTap: onTap)
+          : buildListTile(
+              title: _cityItem.name,
+              onTap: onTap,
+            ),
+    );
+  }
+
+  Widget buildPicker({
+    @required String title,
+    @required Widget child,
+  }) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(margin: EdgeInsets.zero, child: child),
+        ],
+      );
+
+  Widget buildListTile({
+    @required String title,
+    VoidCallback onTap,
+    Widget leading,
+  }) {
+    return ListTile(
+      onTap: onTap,
+      leading: leading,
+      title: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: Colors.black, fontSize: 18),
+      ),
+      trailing: Icon(Icons.arrow_drop_down, color: Colors.black),
+    );
   }
 
   TextStyle defaultTextStyle() {
