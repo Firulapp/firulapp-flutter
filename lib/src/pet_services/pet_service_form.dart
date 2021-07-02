@@ -54,7 +54,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Formulario Consulta Médica"),
+        title: const Text("Formulario Servicio"),
       ),
       body: _isLoading
           ? Center(
@@ -156,6 +156,8 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                   try {
                                     setState(() {
                                       _isLoading = true;
+                                      _petService.address = "";
+                                      _petService.email = user.mail;
                                     });
                                     await Provider.of<PetService>(
                                       context,
@@ -293,7 +295,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     });
     return DropdownButtonFormField(
       items: _typeOptions,
-      onChanged: (newValue) => _petService.category = newValue,
+      onChanged: (newValue) => _petService.category = int.parse(newValue),
       hint: const Text("Tipo de servicio"),
     );
   }
