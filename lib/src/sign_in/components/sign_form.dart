@@ -77,11 +77,6 @@ class _SingFromState extends State<SingFrom>
           email: _email,
           password: _password,
         );
-        await Provider.of<Session>(context, listen: false).logOut();
-        await Provider.of<Session>(context, listen: false).login(
-          email: _email,
-          password: _password,
-        );
         final session = Provider.of<Session>(context, listen: false);
         await session.getSession();
         if (session.isAuth) {
