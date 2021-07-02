@@ -40,7 +40,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context, listen: true).userData;
+    final user = Provider.of<User>(context).userData;
     var _name = user == null ? "" : user.name;
     var _surname = user == null ? "" : user.surname;
     var _mail = user == null ? "" : user.mail;

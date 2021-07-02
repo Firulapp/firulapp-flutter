@@ -1,5 +1,3 @@
-import 'package:firulapp/provider/activity.dart';
-import 'package:firulapp/provider/pet_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +14,8 @@ import './provider/species.dart';
 import './provider/medical_record.dart';
 import './provider/vaccination_record.dart';
 import './provider/reports.dart';
+import './provider/activity.dart';
+import './provider/pet_service.dart';
 
 void main() => runApp(MyApp());
 
@@ -51,6 +51,19 @@ class MyApp extends StatelessWidget {
               UserSession(),
             ),
             PetItem(),
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, PetService>(
+          update: (context, user, petService) => PetService(
+            user,
+            petService == null ? {} : petService.items,
+          ),
+          create: (ctx) => PetService(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
           ),
         ),
         ChangeNotifierProxyProvider<User, MedicalRecord>(
@@ -111,19 +124,6 @@ class MyApp extends StatelessWidget {
             report == null ? {} : report.items,
           ),
           create: (ctx) => Reports(
-            User(
-              UserData(),
-              UserSession(),
-            ),
-            [],
-          ),
-        ),
-        ChangeNotifierProxyProvider<User, PetService>(
-          update: (context, user, petService) => PetService(
-            user,
-            petService == null ? {} : petService.items,
-          ),
-          create: (ctx) => PetService(
             User(
               UserData(),
               UserSession(),

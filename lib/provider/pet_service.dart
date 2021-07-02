@@ -67,10 +67,10 @@ class PetService with ChangeNotifier {
     }
   }
 
-  Future<void> save(PetServiceItem petService) async {
+  Future<void> save(PetServiceItem petService, int speciesId) async {
     try {
       final response = await _dio.post(
-        Endpoints.saveMedicalRecord,
+        Endpoints.service,
         data: {
           "serviceDto": {
             "id": petService.id,
@@ -86,7 +86,7 @@ class PetService with ChangeNotifier {
             "modifiedAt": petService.createdAt,
             "modifiedBy": user.userData.id,
           },
-          "species": _speciesIds
+          "species": List.of(_speciesIds),
         },
       );
       final petServiceResponse = response.data["dto"];

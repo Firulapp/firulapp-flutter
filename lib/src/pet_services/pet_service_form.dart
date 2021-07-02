@@ -168,13 +168,16 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                     setState(() {
                                       _isLoading = true;
                                       _petService.email = user.userData.mail;
+                                      _petService.createdBy = user.userData.id;
+                                      _petService.userId = user.userData.id;
                                     });
                                     await Provider.of<PetService>(
                                       context,
                                       listen: false,
-                                    ).save(_petService);
+                                    ).save(_petService, _speciesId);
                                     Navigator.pop(context);
                                   } catch (error) {
+                                    print(error);
                                     Dialogs.info(
                                       context,
                                       title: 'ERROR',

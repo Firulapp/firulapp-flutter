@@ -148,7 +148,8 @@ class User with ChangeNotifier {
         mail: userResponse["email"],
         enabled: userResponse["enabled"],
       );
-      addUser(userData);
+      _userData = userData;
+      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -177,7 +178,8 @@ class User with ChangeNotifier {
           "enabled": true
         },
       );
-      addUser(userData);
+      _userData = userData;
+      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -206,7 +208,8 @@ class User with ChangeNotifier {
           "enabled": true
         },
       );
-      addUser(userData);
+      _userData = userData;
+      notifyListeners();
     } catch (error) {
       throw error;
     }
