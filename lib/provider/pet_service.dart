@@ -1,17 +1,23 @@
+import 'package:dio/dio.dart';
+import 'package:firulapp/constants/endpoints.dart';
 import 'package:firulapp/provider/species.dart';
+import 'package:firulapp/provider/user.dart';
 import 'package:flutter/foundation.dart';
 
 class PetServiceItem {
   String id;
   int userId;
-  String category;
+  int category;
   String title;
   String address;
   bool status;
   String description;
-  String contact;
   String email;
   double price;
+  String createdAt;
+  int createdBy;
+  String modifiedAt;
+  int modifiedBy;
 
   PetServiceItem({
     this.id,
@@ -20,16 +26,23 @@ class PetServiceItem {
     this.title,
     this.address,
     this.description,
-    this.contact,
     this.email,
     this.status,
     this.price,
+    this.createdAt,
+    this.createdBy,
+    this.modifiedAt,
+    this.modifiedBy,
   });
 }
 
 class PetService with ChangeNotifier {
+  final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
   List<PetServiceItem> _items;
   List<int> _speciesIds;
+  final User user;
+
+  PetService(this.user, _items);
 
   List<int> get speciesIds {
     return [..._speciesIds];
@@ -39,12 +52,45 @@ class PetService with ChangeNotifier {
     return [..._items];
   }
 
+  Future<void> fetchServices() async {
+    try {
+      _items = [];
+      final response = await this._dio.get('${Endpoints.service}');
+      final services = response.data["list"];
+      services.forEach((service) {
+        _items.add(
+          mapJsonToEntity(service),
+        );
+      });
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   void updateSpeciesFilter(List<SpeciesItem> species) {
     _speciesIds = [];
     species.forEach((element) {
       _speciesIds.add(element.id);
     });
     notifyListeners();
+  }
+
+  PetServiceItem mapJsonToEntity(dynamic json) {
+    return PetServiceItem(
+      id: json["id"],
+      userId: json["userId"],
+      address: json["address"],
+      category: json["serviceTypeId"],
+      title: json["title"],
+      description: json["description"],
+      price: json["price"],
+      email: json["email"],
+      createdAt: json["createdAt"],
+      createdBy: user.userData.id,
+      modifiedAt: json["modifiedAt"],
+      modifiedBy: user.userData.id,
+    );
   }
 }
 
