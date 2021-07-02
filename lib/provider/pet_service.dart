@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:firulapp/constants/endpoints.dart';
-import 'package:firulapp/provider/species.dart';
 import 'package:firulapp/provider/user.dart';
 import 'package:flutter/foundation.dart';
 
@@ -80,6 +79,8 @@ class PetService with ChangeNotifier {
             "title": petService.title,
             "description": petService.description,
             "price": petService.price,
+            "address": petService.address,
+            "mailContact": user.userData.mail,
             "createdAt": petService.createdAt,
             "createdBy": user.userData.id,
             "modifiedAt": petService.createdAt,
@@ -125,6 +126,8 @@ class PetService with ChangeNotifier {
       modifiedBy: user.userData.id,
     );
   }
+
+  PetServiceItem getLocalPetServiceById(String serviceId) {}
 }
 
 class CategoryItem {

@@ -23,7 +23,6 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
   bool _isLoading = false;
   Future _initialSpecies;
   int _speciesId;
-  int _category;
 
   Future<void> _getListSpecies() async {
     try {
@@ -47,9 +46,12 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
   Widget build(BuildContext context) {
     final serviceId = ModalRoute.of(context).settings.arguments as String;
     if (serviceId != null) {
-      //TODO: fethcServicio para editar
+      _petService = Provider.of<PetService>(
+        context,
+        listen: false,
+      ).getLocalPetServiceById(serviceId);
     }
-    final user = Provider.of<User>(context, listen: true).userData;
+    final user = Provider.of<User>(context, listen: true);
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
@@ -141,8 +143,17 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                               height:
                                   SizeConfig.getProportionateScreenHeight(25),
                             ),
-                            buildContactFormField(
-                                "Contacto", TextInputType.name, user.mail),
+                            buildAddressFormField(
+                              "Dirección",
+                              "Ingrese la dirección donde ofrece el servicio",
+                              TextInputType.number,
+                            ),
+                            SizedBox(
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
+                            buildContactFormField("Contacto",
+                                TextInputType.name, user.userData.mail),
                             SizedBox(
                               height:
                                   SizeConfig.getProportionateScreenHeight(25),
@@ -156,8 +167,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                   try {
                                     setState(() {
                                       _isLoading = true;
-                                      _petService.address = "";
-                                      _petService.email = user.mail;
+                                      _petService.email = user.userData.mail;
                                     });
                                     await Provider.of<PetService>(
                                       context,
@@ -246,6 +256,17 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
       validator: validateTextNotNull,
       value: mail,
       enabled: false,
+    );
+  }
+
+  Widget buildAddressFormField(String label, String hint, TextInputType tipo) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      validator: validateTextNotNull,
+      value: _petService.address,
+      onChanged: (newValue) => _petService.address = newValue,
     );
   }
 
