@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:firulapp/components/default_button.dart';
 import 'package:firulapp/components/dialogs.dart';
+import 'package:firulapp/components/dropdown/item_selection_screen.dart';
+import 'package:firulapp/components/dropdown/listtile_item.dart';
 import 'package:firulapp/components/input_text.dart';
 import 'package:firulapp/constants/constants.dart';
 import 'package:firulapp/provider/breeds.dart';
@@ -30,7 +32,8 @@ class _FoundPetFormStep1State extends State<FoundPetFormStep1>
   Future _initialSpecies;
   Future _initialBreeds;
   PetItem _pet = new PetItem();
-  int _speciesId;
+  SpeciesItem _speciesItem;
+  BreedsItem _breedsItem;
 
   Future<void> _getListSpecies() async {
     try {
@@ -101,42 +104,13 @@ class _FoundPetFormStep1State extends State<FoundPetFormStep1>
                               );
                             } else {
                               return Consumer<Species>(
-                                builder: (ctx, listSpecies, _) =>
-                                    DropdownButtonFormField(
-                                  hint: _speciesId == null
-                                      ? Text('Elija una especie')
-                                      : null,
-                                  disabledHint: _pet.speciesId != null
-                                      ? Text(listSpecies.items
-                                          .firstWhere((item) =>
-                                              item.id == _pet.speciesId)
-                                          .name)
-                                      : null,
-                                  items: listSpecies.items
-                                      .map((e) => DropdownMenuItem(
-                                            value: e.id,
-                                            child: Text(e.name),
-                                          ))
-                                      .toList(),
-                                  onChanged: (v) => setState(
-                                    () {
-                                      if (_pet.speciesId != v) {
-                                        _pet.breedId = null;
-                                        _initialBreeds =
-                                            providerBreeds.getBreeds(v);
-                                      }
-                                      _pet.speciesId = v;
-                                    },
-                                  ),
-                                  value: _pet.speciesId,
-                                  isExpanded: true,
-                                ),
+                                builder: (ctx, listSpecies, _) {
+                                  final list = listSpecies.toGenericFormItem();
+                                  return buildSingleSpecies(list);
+                                },
                               );
                             }
                           },
-                        ),
-                        SizedBox(
-                          height: SizeConfig.getProportionateScreenHeight(25),
                         ),
                         FutureBuilder(
                           future: _initialBreeds,
@@ -147,39 +121,12 @@ class _FoundPetFormStep1State extends State<FoundPetFormStep1>
                                 child: Text("Loading..."),
                               );
                             } else {
-                              if (dataSnapshot.error != null) {
-                                return Center(
-                                  child: Text('Algo salio mal'),
-                                );
-                              } else {
-                                return Consumer<Breeds>(
-                                  builder: (ctx, listBreeds, _) =>
-                                      DropdownButtonFormField(
-                                    hint: _pet.breedId == null
-                                        ? Text('Eliga una raza')
-                                        : null,
-                                    disabledHint: _pet.breedId != null
-                                        ? Text(listBreeds.items
-                                            .firstWhere((item) =>
-                                                item.id == _pet.breedId)
-                                            .name)
-                                        : null,
-                                    items: listBreeds.items
-                                        .map((e) => DropdownMenuItem(
-                                              value: e.id,
-                                              child: Text(e.name),
-                                            ))
-                                        .toList(),
-                                    onChanged: (v) => setState(
-                                      () {
-                                        _pet.breedId = v;
-                                      },
-                                    ),
-                                    value: _pet.breedId,
-                                    isExpanded: true,
-                                  ),
-                                );
-                              }
+                              return Consumer<Breeds>(
+                                builder: (ctx, listBreeds, _) {
+                                  final list = listBreeds.toGenericFormItem();
+                                  return buildSingleBreeds(list);
+                                },
+                              );
                             }
                           },
                         ),
@@ -229,6 +176,122 @@ class _FoundPetFormStep1State extends State<FoundPetFormStep1>
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildSingleSpecies(List<ListTileItem> species) {
+    final onTap = () async {
+      final item = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemSelectionScreen(
+            allItems: species,
+            subject: 'Especie',
+          ),
+        ),
+      ) as ListTileItem;
+
+      if (item == null) return;
+
+      setState(() {
+        this._speciesItem = SpeciesItem(id: item.id, name: item.value);
+        _pet.speciesId = item.id;
+        _initialBreeds = Provider.of<Breeds>(
+          context,
+          listen: false,
+        ).getBreeds(item.id);
+      });
+    };
+    if (_pet.speciesId != null) {
+      _speciesItem = Provider.of<Species>(
+        context,
+        listen: false,
+      ).getLocalSpeciesItemById(_pet.speciesId);
+    }
+
+    return buildPicker(
+      title: 'Selecciona una Especie',
+      child: _speciesItem == null
+          ? buildListTile(title: 'Ninguna Especie', onTap: onTap)
+          : buildListTile(
+              title: _speciesItem.name,
+              onTap: onTap,
+            ),
+    );
+  }
+
+  Widget buildSingleBreeds(List<ListTileItem> breeds) {
+    final onTap = () async {
+      final item = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemSelectionScreen(
+            allItems: breeds,
+            subject: 'Raza',
+          ),
+        ),
+      ) as ListTileItem;
+
+      if (item == null) return;
+
+      setState(() {
+        this._breedsItem = BreedsItem(id: item.id, name: item.value);
+        _pet.breedId = item.id;
+      });
+    };
+    if (_pet.breedId != null) {
+      _breedsItem = Provider.of<Breeds>(
+        context,
+        listen: false,
+      ).getLocalBreedsItemById(_pet.breedId);
+    }
+
+    return buildPicker(
+      title: 'Selecciona una Raza',
+      child: _breedsItem == null
+          ? buildListTile(title: 'Ninguna Raza', onTap: onTap)
+          : buildListTile(
+              title: _breedsItem.name,
+              onTap: onTap,
+            ),
+    );
+  }
+
+  Widget buildPicker({
+    @required String title,
+    @required Widget child,
+  }) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(margin: EdgeInsets.zero, child: child),
+        ],
+      );
+
+  Widget buildListTile({
+    @required String title,
+    VoidCallback onTap,
+    Widget leading,
+  }) {
+    return ListTile(
+      onTap: onTap,
+      leading: leading,
+      title: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: Colors.black, fontSize: 18),
+      ),
+      trailing: Icon(Icons.arrow_drop_down, color: Colors.black),
     );
   }
 

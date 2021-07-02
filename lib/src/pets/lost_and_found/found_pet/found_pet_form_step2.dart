@@ -1,9 +1,12 @@
 import 'package:firulapp/components/default_button.dart';
 import 'package:firulapp/components/dialogs.dart';
+import 'package:firulapp/components/dropdown/item_selection_screen.dart';
+import 'package:firulapp/components/dropdown/listtile_item.dart';
 import 'package:firulapp/components/input_text.dart';
 import 'package:firulapp/constants/constants.dart';
 import 'package:firulapp/provider/city.dart';
 import 'package:firulapp/provider/reports.dart';
+import 'package:firulapp/provider/user.dart';
 import 'package:firulapp/src/mixins/validator_mixins.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +27,7 @@ class _FoundPetFormStep2State extends State<FoundPetFormStep2>
   Future _citiesFuture;
   int _city;
   bool _isLoading = false;
+  CityItem _cityItem;
 
   @override
   void initState() {
@@ -87,26 +91,27 @@ class _FoundPetFormStep2State extends State<FoundPetFormStep2>
                               height:
                                   SizeConfig.getProportionateScreenHeight(25),
                             ),
-                            FutureBuilder(
-                              future: _citiesFuture,
-                              builder: (_, dataSnapshot) {
-                                return Consumer<City>(
-                                  builder: (ctx, cityData, child) =>
-                                      DropdownButtonFormField(
-                                    items: cityData.cities
-                                        .map(
-                                          (city) => DropdownMenuItem(
-                                            value: city.id,
-                                            child: Text(city.name),
-                                          ),
-                                        )
-                                        .toList(),
-                                    value: _city,
-                                    onChanged: (newValue) => _city = newValue,
-                                    hint: const Text("Ciudad"),
-                                  ),
-                                );
-                              },
+                            Padding(
+                              padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                              child: FutureBuilder(
+                                future: _citiesFuture,
+                                builder: (_, dataSnapshot) {
+                                  if (dataSnapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: Text("Loading..."),
+                                    );
+                                  } else {
+                                    return Consumer<City>(
+                                      builder: (ctx, listCities, _) {
+                                        final list =
+                                            listCities.toGenericFormItem();
+                                        return buildSingleCity(list);
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
                             ),
                             SizedBox(
                               height:
@@ -157,6 +162,74 @@ class _FoundPetFormStep2State extends State<FoundPetFormStep2>
                 ),
               ],
             ),
+    );
+  }
+
+  Widget buildSingleCity(List<ListTileItem> cities) {
+    final onTap = () async {
+      final item = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemSelectionScreen(
+            allItems: cities,
+            subject: 'Ciudad',
+          ),
+        ),
+      ) as ListTileItem;
+
+      if (item == null) return;
+
+      setState(() {
+        this._cityItem = CityItem(id: item.id, name: item.value);
+      });
+    };
+
+    return buildPicker(
+      title: 'Selecciona una Ciudad',
+      child: _cityItem == null
+          ? buildListTile(title: 'Ninguna Ciudad', onTap: onTap)
+          : buildListTile(
+              title: _cityItem.name,
+              onTap: onTap,
+            ),
+    );
+  }
+
+  Widget buildPicker({
+    @required String title,
+    @required Widget child,
+  }) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(margin: EdgeInsets.zero, child: child),
+        ],
+      );
+
+  Widget buildListTile({
+    @required String title,
+    VoidCallback onTap,
+    Widget leading,
+  }) {
+    return ListTile(
+      onTap: onTap,
+      leading: leading,
+      title: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: Colors.black, fontSize: 18),
+      ),
+      trailing: Icon(Icons.arrow_drop_down, color: Colors.black),
     );
   }
 

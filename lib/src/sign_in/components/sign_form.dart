@@ -45,7 +45,9 @@ class _SingFromState extends State<SingFrom>
       }
     } catch (error) {
       String message;
-      if (error.error.osError.message != null) {
+      if (error.runtimeType.toString() == "FlutterError") {
+        message = "Ocurrio un error inesperado";
+      } else if (error.error.osError.message != null) {
         message = error.error.osError.message;
       } else if (error.response.data["status"] == 401) {
         message = "Servidor no disponible, vuelva a intentar";

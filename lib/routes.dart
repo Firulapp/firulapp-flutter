@@ -29,6 +29,7 @@ import './src/pets/components/adoptions/pet_in_adoption.dart';
 import './src/pet_services/pet_service_form.dart';
 import './src/pets/components/adoptions/pet_for_adoption.dart';
 import './src/sign_up/organization/organization_sign_up_screen.dart';
+import './src/profile_detail/profile_details_organization.dart';
 
 class Routes {
   static final Map<String, WidgetBuilder> routes = {
@@ -62,5 +63,6 @@ class Routes {
     PetInAdoption.routeName: (context) => PetInAdoption(),
     PetServiceForm.routeName: (context) => PetServiceForm(),
     OrganizationSignUpScreen.routeName: (context) => OrganizationSignUpScreen(),
+    ProfilePageOrganization.routeName: (context) => ProfilePageOrganization()
   };
 }

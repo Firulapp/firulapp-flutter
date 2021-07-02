@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firulapp/components/default_button.dart';
+import 'package:firulapp/components/dropdown/item_selection_screen.dart';
+import 'package:firulapp/components/dropdown/listtile_item.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +35,8 @@ class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
   var _isLoading = true;
 
   // valores dinamicos del formulario, se utilizaran para enviar el objeto al back
-  int _speciesId;
+  SpeciesItem _speciesItem;
+  BreedsItem _breedsItem;
   DateTime _birthDate = DateTime.now();
   int _age;
   String _petStatus = PetStatus.ADOPTADA.value;
@@ -94,6 +98,22 @@ class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
                           _status,
                         ),
                       ),
+                      DefaultButton(
+                          text: "Solicitar adopción",
+                          color: Constants.kPrimaryColor,
+                          press: () async {
+                            final response = await Dialogs.alert(
+                              context,
+                              "¿Desea solicitar adopcion de ${_pet.name}?",
+                              "",
+                              "Cancelar",
+                              "Aceptar",
+                            );
+                            if (response) {
+                              Provider.of<Pets>(context, listen: false)
+                                  .requestAdoption(_pet.id);
+                            }
+                          }),
                       SizedBox(
                           height: SizeConfig.getProportionateScreenHeight(25)),
                       Container(
@@ -132,100 +152,43 @@ class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
                               hint: "Ingrese un nombre",
                               tipo: TextInputType.text,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25.0),
-                              child: FutureBuilder(
-                                  future: _initialSpecies,
-                                  builder: (_, dataSnapshot) {
-                                    if (dataSnapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const Center(
-                                        child: Text("Loading..."),
-                                      );
-                                    } else {
-                                      return Consumer<Species>(
-                                        builder: (ctx, listSpecies, _) =>
-                                            DropdownButtonFormField(
-                                          hint: _speciesId == null
-                                              ? Text('Elija una especie')
-                                              : null,
-                                          disabledHint: _pet.speciesId != null
-                                              ? Text(listSpecies.items
-                                                  .firstWhere((item) =>
-                                                      item.id == _pet.speciesId)
-                                                  .name)
-                                              : null,
-                                          items: listSpecies.items
-                                              .map((e) => DropdownMenuItem(
-                                                    value: e.id,
-                                                    child: Text(e.name),
-                                                  ))
-                                              .toList(),
-                                          onChanged: !_status
-                                              ? (v) => setState(() {
-                                                    if (_pet.speciesId != v) {
-                                                      _pet.breedId = null;
-                                                      _initialBreeds =
-                                                          providerBreeds
-                                                              .getBreeds(v);
-                                                    }
-                                                    _pet.speciesId = v;
-                                                  })
-                                              : null,
-                                          value: _pet.speciesId,
-                                          isExpanded: true,
-                                        ),
-                                      );
-                                    }
-                                  }),
+                            FutureBuilder(
+                              future: _initialSpecies,
+                              builder: (_, dataSnapshot) {
+                                if (dataSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                    child: Text("Loading..."),
+                                  );
+                                } else {
+                                  return Consumer<Species>(
+                                    builder: (ctx, listSpecies, _) {
+                                      final list =
+                                          listSpecies.toGenericFormItem();
+                                      return buildSingleSpecies(list);
+                                    },
+                                  );
+                                }
+                              },
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25.0),
-                              child: FutureBuilder(
-                                future: _initialBreeds,
-                                builder: (_, dataSnapshot) {
-                                  if (dataSnapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                      child: Text("Loading..."),
-                                    );
-                                  } else {
-                                    if (dataSnapshot.error != null) {
-                                      return Center(
-                                        child: Text('Algo salio mal'),
-                                      );
-                                    } else {
-                                      return Consumer<Breeds>(
-                                        builder: (ctx, listBreeds, _) =>
-                                            DropdownButtonFormField(
-                                          hint: _pet.breedId == null
-                                              ? Text('Eliga una raza')
-                                              : null,
-                                          disabledHint: _pet.breedId != null
-                                              ? Text(listBreeds.items
-                                                  .firstWhere((item) =>
-                                                      item.id == _pet.breedId)
-                                                  .name)
-                                              : null,
-                                          items: listBreeds.items
-                                              .map((e) => DropdownMenuItem(
-                                                    value: e.id,
-                                                    child: Text(e.name),
-                                                  ))
-                                              .toList(),
-                                          onChanged: !_status
-                                              ? (v) => setState(() {
-                                                    _pet.breedId = v;
-                                                  })
-                                              : null,
-                                          value: _pet.breedId,
-                                          isExpanded: true,
-                                        ),
-                                      );
-                                    }
-                                  }
-                                },
-                              ),
+                            FutureBuilder(
+                              future: _initialBreeds,
+                              builder: (_, dataSnapshot) {
+                                if (dataSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                    child: Text("Loading..."),
+                                  );
+                                } else {
+                                  return Consumer<Breeds>(
+                                    builder: (ctx, listBreeds, _) {
+                                      final list =
+                                          listBreeds.toGenericFormItem();
+                                      return buildSingleBreeds(list);
+                                    },
+                                  );
+                                }
+                              },
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 25.0),
@@ -346,6 +309,134 @@ class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
     super.dispose();
   }
 
+  Widget buildSingleSpecies(List<ListTileItem> species) {
+    final onTap = () async {
+      final item = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemSelectionScreen(
+            allItems: species,
+            subject: 'Especie',
+          ),
+        ),
+      ) as ListTileItem;
+
+      if (item == null) return;
+
+      setState(() {
+        this._speciesItem = SpeciesItem(id: item.id, name: item.value);
+        _pet.speciesId = item.id;
+        _initialBreeds = Provider.of<Breeds>(
+          context,
+          listen: false,
+        ).getBreeds(item.id);
+      });
+    };
+    if (_pet.speciesId != null) {
+      _speciesItem = Provider.of<Species>(
+        context,
+        listen: false,
+      ).getLocalSpeciesItemById(_pet.speciesId);
+    }
+
+    return buildPicker(
+      title: 'Selecciona una Especie',
+      child: _speciesItem == null
+          ? _status
+              ? buildListTile(title: 'Ninguna Especie')
+              : buildListTile(title: 'Ninguna Especie', onTap: onTap)
+          : _status
+              ? buildListTile(
+                  title: _speciesItem.name,
+                )
+              : buildListTile(
+                  title: _speciesItem.name,
+                  onTap: onTap,
+                ),
+    );
+  }
+
+  Widget buildSingleBreeds(List<ListTileItem> breeds) {
+    final onTap = () async {
+      final item = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ItemSelectionScreen(
+            allItems: breeds,
+            subject: 'Raza',
+          ),
+        ),
+      ) as ListTileItem;
+
+      if (item == null) return;
+
+      setState(() {
+        this._breedsItem = BreedsItem(id: item.id, name: item.value);
+        _pet.breedId = item.id;
+      });
+    };
+    if (_pet.breedId != null) {
+      _breedsItem = Provider.of<Breeds>(
+        context,
+        listen: false,
+      ).getLocalBreedsItemById(_pet.breedId);
+    }
+
+    return buildPicker(
+      title: 'Selecciona una Raza',
+      child: _breedsItem == null
+          ? _status
+              ? buildListTile(title: 'Ninguna Raza')
+              : buildListTile(title: 'Ninguna Raza', onTap: onTap)
+          : _status
+              ? buildListTile(
+                  title: _breedsItem.name,
+                )
+              : buildListTile(
+                  title: _breedsItem.name,
+                  onTap: onTap,
+                ),
+    );
+  }
+
+  Widget buildPicker({
+    @required String title,
+    @required Widget child,
+  }) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(margin: EdgeInsets.zero, child: child),
+        ],
+      );
+
+  Widget buildListTile({
+    @required String title,
+    VoidCallback onTap,
+    Widget leading,
+  }) {
+    return ListTile(
+      onTap: onTap,
+      leading: leading,
+      title: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: Colors.black, fontSize: 18),
+      ),
+      trailing: Icon(Icons.arrow_drop_down, color: Colors.black),
+    );
+  }
+
   void _selectImage(File pickedImage) {
     _pet.picture = base64Encode(pickedImage.readAsBytesSync());
   }
@@ -425,25 +516,6 @@ class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _getEditIcon() {
-    return GestureDetector(
-      child: CircleAvatar(
-        backgroundColor: Constants.kPrimaryColor,
-        radius: 20.0,
-        child: Icon(
-          Icons.edit,
-          color: Colors.white,
-          size: 16.0,
-        ),
-      ),
-      onTap: () {
-        setState(() {
-          _status = false;
-        });
-      },
     );
   }
 

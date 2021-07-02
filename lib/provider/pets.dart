@@ -298,6 +298,18 @@ class Pets with ChangeNotifier {
       throw e;
     }
   }
+
+  Future<void> requestAdoption(int petId) async {
+    print(userData.userData.id);
+    print(petId);
+    try {
+      await this
+          ._dio
+          .post('${Endpoints.pet}/$petId/adopt/${userData.userData.id}');
+    } catch (e) {
+      throw e;
+    }
+  }
 }
 
 extension PetsExtension on PetStatus {
