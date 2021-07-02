@@ -1,3 +1,4 @@
+import 'package:firulapp/components/dropdown/listtile_item.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
@@ -36,6 +37,13 @@ class Species with ChangeNotifier {
     return _items.where((e) => e.status).toList();
   }
 
+  SpeciesItem getLocalSpeciesItemById(int id) {
+    return enableSpecie.firstWhere(
+      (spe) => spe.id == id,
+      orElse: () => null,
+    );
+  }
+
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
 
   Future<void> getSpecies() async {
@@ -56,5 +64,14 @@ class Species with ChangeNotifier {
     } catch (e) {
       throw e;
     }
+  }
+
+  List<ListTileItem> toGenericFormItem({List<SpeciesItem> selectedSpecies}) {
+    List<ListTileItem> genericItems = [];
+    final list = selectedSpecies == null ? items : selectedSpecies;
+    list.forEach((element) {
+      genericItems.add(ListTileItem(element.id, element.name));
+    });
+    return genericItems;
   }
 }

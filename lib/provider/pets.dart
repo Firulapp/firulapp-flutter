@@ -77,6 +77,7 @@ class Pets with ChangeNotifier {
   List<PetItem> _items = [];
   List<PetItem> _petsByStatus = [];
   List<PetItem> _foundPets = [];
+  List<PetItem> _lostPets = [];
   List<PetItem> _allPets = []; //usado para filtrar mascotas
 
   Pets(this.userData, petItem);
@@ -105,8 +106,16 @@ class Pets with ChangeNotifier {
     return _items.firstWhere((pet) => pet.id == id);
   }
 
+  PetItem getLocalPetInAdoptionById(int id) {
+    return _petsByStatus.firstWhere((pet) => pet.id == id);
+  }
+
   PetItem getLocalFoundPetById(int id) {
     return _foundPets.firstWhere((pet) => pet.id == id);
+  }
+
+  PetItem getLocalLostPetById(int id) {
+    return _lostPets.firstWhere((pet) => pet.id == id);
   }
 
   get petItem => _petItem;
@@ -213,6 +222,35 @@ class Pets with ChangeNotifier {
     }
   }
 
+  Future fetchLostPetList() async {
+    try {
+      final response = await this._dio.get('${Endpoints.petByStatus}/PERDIDA');
+      final List<PetItem> loadedPets = [];
+      response.data['list'].forEach((pet) {
+        loadedPets.add(PetItem.fromJson(pet));
+      });
+      _lostPets = loadedPets;
+      notifyListeners();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future fetchFoundPetList() async {
+    try {
+      final response =
+          await this._dio.get('${Endpoints.petByStatus}/ENCONTRADA');
+      final List<PetItem> loadedPets = [];
+      response.data['list'].forEach((pet) {
+        loadedPets.add(PetItem.fromJson(pet));
+      });
+      _foundPets = loadedPets;
+      notifyListeners();
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future deletePet(PetItem pet) async {
     try {
       await this._dio.delete(
@@ -247,17 +285,6 @@ class Pets with ChangeNotifier {
     }
   }
 
-  Future fetchFoundPetList() async {
-    _foundPets = [];
-    await fetchPetList();
-    _allPets.forEach((pet) {
-      if (pet.status == "ENCONTRADA") {
-        _foundPets.add(pet);
-      }
-    });
-    notifyListeners();
-  }
-
   Future<void> tranferPet(String userName, int petId) async {
     try {
       final response = await this
@@ -267,6 +294,18 @@ class Pets with ChangeNotifier {
         items = [];
         fetchPetList();
       }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> requestAdoption(int petId) async {
+    print(userData.userData.id);
+    print(petId);
+    try {
+      await this
+          ._dio
+          .post('${Endpoints.pet}/$petId/adopt/${userData.userData.id}');
     } catch (e) {
       throw e;
     }

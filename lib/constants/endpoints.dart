@@ -4,6 +4,9 @@ class Endpoints {
   static final param = '/param';
   static final login = '$user/login';
   static final signUp = '$user/register';
+  static final organization = '/organization';
+  static final organizationSingUp = '$signUp$organization/request';
+  static final organizationUpdate = '/organization/update';
   static final logout = '$user/logout';
   static final species = '$param/species';
   static final breeds = '$param/breed/species';
@@ -31,4 +34,5 @@ class Endpoints {
   static final reportFoundPet = '$pet/report/pet/found';
   static final closeReport = '$pet/report/close';
   static final transferPet = '$pet/transfer/';
+  static final service = '/service';
 }
