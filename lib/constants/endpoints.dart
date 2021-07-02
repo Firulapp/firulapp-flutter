@@ -35,6 +35,5 @@ class Endpoints {
   static final closeReport = '$pet/report/close';
   static final transferPet = '$pet/transfer/';
   static final service = '/service';
-  static final service = '/service';
   static final saveService = '$service';
 }

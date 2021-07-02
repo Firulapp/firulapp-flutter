@@ -1,4 +1,5 @@
 import 'package:firulapp/provider/activity.dart';
+import 'package:firulapp/provider/pet_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -110,6 +111,19 @@ class MyApp extends StatelessWidget {
             report == null ? {} : report.items,
           ),
           create: (ctx) => Reports(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, PetService>(
+          update: (context, user, petService) => PetService(
+            user,
+            petService == null ? {} : petService.items,
+          ),
+          create: (ctx) => PetService(
             User(
               UserData(),
               UserSession(),
