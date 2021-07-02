@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../size_config.dart';
 import './components/category_item.dart' as widget;
-import '../../provider/pet_service.dart';
+import '../../provider/service_type.dart';
 import './pet_service_form.dart';
 import 'components/filter_selector.dart';
 
