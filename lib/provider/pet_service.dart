@@ -68,13 +68,46 @@ class PetService with ChangeNotifier {
     }
   }
 
-  void updateSpeciesFilter(List<SpeciesItem> species) {
+  Future<void> savePetService(PetServiceItem petService) async {
+    try {
+      final response = await _dio.post(
+        Endpoints.saveMedicalRecord,
+        data: {
+          "serviceDto": {
+            "id": petService.id,
+            "userId": user.userData.id,
+            "serviceTypeId": petService.category,
+            "title": petService.title,
+            "description": petService.description,
+            "price": petService.price,
+            "createdAt": petService.createdAt,
+            "createdBy": user.userData.id,
+            "modifiedAt": petService.createdAt,
+            "modifiedBy": user.userData.id,
+          },
+          "species": _speciesIds
+        },
+      );
+      final petServiceResponse = response.data["dto"];
+      if (_items.contains(petService)) {
+        _items[_items.indexWhere((element) => element.id == petService.id)] =
+            mapJsonToEntity(petServiceResponse);
+      } else {
+        _items.add(mapJsonToEntity(petServiceResponse));
+      }
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+/*  void updateSpeciesFilter(List<SpeciesItem> species) {
     _speciesIds = [];
     species.forEach((element) {
       _speciesIds.add(element.id);
     });
     notifyListeners();
-  }
+  }*/
 
   PetServiceItem mapJsonToEntity(dynamic json) {
     return PetServiceItem(
