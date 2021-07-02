@@ -68,7 +68,7 @@ class PetService with ChangeNotifier {
     }
   }
 
-  Future<void> savePetService(PetServiceItem petService) async {
+  Future<void> save(PetServiceItem petService) async {
     try {
       final response = await _dio.post(
         Endpoints.saveMedicalRecord,

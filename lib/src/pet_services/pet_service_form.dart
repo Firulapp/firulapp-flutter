@@ -22,8 +22,8 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
   PetServiceItem _petService = new PetServiceItem();
   bool _isLoading = false;
   Future _initialSpecies;
-  String _category;
   int _speciesId;
+  int _category;
 
   Future<void> _getListSpecies() async {
     try {
@@ -157,7 +157,10 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                     setState(() {
                                       _isLoading = true;
                                     });
-                                    //TODO: Guardar servicio
+                                    await Provider.of<PetService>(
+                                      context,
+                                      listen: false,
+                                    ).save(_petService);
                                     Navigator.pop(context);
                                   } catch (error) {
                                     Dialogs.info(
@@ -220,7 +223,8 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                 : SizedBox(
                                     height:
                                         SizeConfig.getProportionateScreenHeight(
-                                            25),
+                                      25,
+                                    ),
                                   ),
                           ],
                         ),
@@ -289,7 +293,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     });
     return DropdownButtonFormField(
       items: _typeOptions,
-      onChanged: (newValue) => _category = newValue,
+      onChanged: (newValue) => _petService.category = newValue,
       hint: const Text("Tipo de servicio"),
     );
   }
