@@ -1,9 +1,11 @@
-import 'package:firulapp/components/dialogs.dart';
-import 'package:firulapp/components/dropdown/item_selection_screen.dart';
-import 'package:firulapp/components/dropdown/listtile_item.dart';
-import 'package:firulapp/provider/species.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../components/dialogs.dart';
+import '../../../components/dropdown/item_selection_screen.dart';
+import '../../../components/dropdown/listtile_item.dart';
+import '../../../provider/pet_service.dart';
+import '../../../provider/species.dart';
 
 class FilterSelector extends StatefulWidget {
   @override
@@ -58,6 +60,7 @@ class _FilterSelectorState extends State<FilterSelector> {
 
   Widget buildSpecies(List<ListTileItem> allSpecies) {
     final onTap = () async {
+      final providerServices = Provider.of<PetService>(context, listen: false);
       final item = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -72,6 +75,7 @@ class _FilterSelectorState extends State<FilterSelector> {
 
       setState(() {
         this._speciesItem = SpeciesItem(id: item.id, name: item.value);
+        providerServices.setSpeciesId(item.id);
       });
     };
 

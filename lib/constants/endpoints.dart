@@ -36,6 +36,6 @@ class Endpoints {
   static final transferPet = '$pet/transfer/';
   static final service = '/service';
   static final saveService = '$service/save';
-  static final fetchServiceByType = '$service/type';
+  static final fetchServiceByTypeAndSpecies = '$service/filter';
   static final fetchServiceByUser = '$service/user';
 }

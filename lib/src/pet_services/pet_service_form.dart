@@ -318,7 +318,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     });
     return DropdownButtonFormField(
       items: _typeOptions,
-      onChanged: (newValue) => _petService.category = int.parse(newValue),
+      onChanged: (newValue) => _petService.category = newValue,
       hint: const Text("Tipo de servicio"),
     );
   }
