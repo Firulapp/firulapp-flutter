@@ -45,7 +45,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
 
   @override
   Widget build(BuildContext context) {
-    final serviceId = ModalRoute.of(context).settings.arguments as String;
+    final serviceId = ModalRoute.of(context).settings.arguments as int;
     if (serviceId != null) {
       _petService = Provider.of<PetService>(
         context,

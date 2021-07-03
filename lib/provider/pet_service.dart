@@ -5,12 +5,11 @@ import '../constants/endpoints.dart';
 import './user.dart';
 
 class PetServiceItem {
-  String id;
+  int id;
   int userId;
   int category;
   String title;
   String address;
-  bool status;
   String description;
   String email;
   double price;
@@ -27,7 +26,6 @@ class PetServiceItem {
     this.address,
     this.description,
     this.email,
-    this.status,
     this.price,
     this.createdAt,
     this.createdBy,
@@ -70,8 +68,9 @@ class PetService with ChangeNotifier {
       _items = [];
       final response =
           await this._dio.get('${Endpoints.fetchServiceByType}/$_serviceType');
-      final services = response.data["list"];
-      services.forEach((service) {
+      final servicesResponse = response.data["list"];
+      servicesResponse.forEach((element) {
+        var service = element["serviceDto"];
         _items.add(
           mapJsonToEntity(service),
         );
@@ -101,9 +100,7 @@ class PetService with ChangeNotifier {
             "modifiedAt": petService.createdAt,
             "modifiedBy": user.userData.id,
           },
-          //TODO: Cambiar valor al confirmar que conecta con el back
           "species": [speciesId],
-          // "species": List.of(_speciesIds),
         },
       );
       final petServiceResponse = response.data["dto"];
@@ -131,11 +128,11 @@ class PetService with ChangeNotifier {
     return PetServiceItem(
       id: json["id"],
       userId: json["userId"],
-      address: json["address"],
       category: json["serviceTypeId"],
+      price: json["price"],
+      address: json["address"],
       title: json["title"],
       description: json["description"],
-      price: json["price"],
       email: json["email"],
       createdAt: json["createdAt"],
       createdBy: user.userData.id,
@@ -144,7 +141,7 @@ class PetService with ChangeNotifier {
     );
   }
 
-  PetServiceItem getLocalPetServiceById(String serviceId) {
+  PetServiceItem getLocalPetServiceById(int serviceId) {
     return _items.firstWhere((serv) => serv.id == serviceId);
   }
 }

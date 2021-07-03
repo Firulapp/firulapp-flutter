@@ -6,11 +6,33 @@ import 'package:provider/provider.dart';
 
 import '../../size_config.dart';
 
-class SelectedCategoryScreen extends StatelessWidget {
+class SelectedCategoryScreen extends StatefulWidget {
   static const routeName = "/selected-category";
 
   @override
+  _SelectedCategoryScreenState createState() => _SelectedCategoryScreenState();
+}
+
+class _SelectedCategoryScreenState extends State<SelectedCategoryScreen> {
+  Future _servicesFuture;
+  bool fetchServicesFlag = true;
+
+  Future _obtainServicesFuture() {
+    return Provider.of<PetService>(context).fetchServicesByType();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (fetchServicesFlag) {
+      _servicesFuture = _obtainServicesFuture();
+      fetchServicesFlag = false;
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final SizeConfig sizeConfig = SizeConfig();
     final serviceTypeId = ModalRoute.of(context).settings.arguments as int;
     final serviceType = ServiceType.DUMMY_CATEGORIES
         .firstWhere((element) => element.id == serviceTypeId);
@@ -18,91 +40,62 @@ class SelectedCategoryScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(serviceType.title),
       ),
-      body: Body(serviceType),
-    );
-  }
-}
-
-class Body extends StatefulWidget {
-  final ServiceType _serviceType;
-  Body(this._serviceType);
-
-  @override
-  _BodyState createState() => _BodyState();
-}
-
-class _BodyState extends State<Body> {
-  Future _servicesFuture;
-
-  Future _obtainServicesFuture() {
-    return Provider.of<PetService>(context).fetchServicesByType();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _servicesFuture = _obtainServicesFuture();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final serviceProvider = Provider.of<PetService>(context);
-    final SizeConfig sizeConfig = SizeConfig();
-    return FutureBuilder(
-      future: _servicesFuture,
-      builder: (_, dataSnapshot) {
-        if (dataSnapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else {
-          if (dataSnapshot.error != null) {
-            return Center(
-              child: Text('Algo salio mal'),
-            );
+      body: FutureBuilder(
+        future: _servicesFuture,
+        builder: (_, dataSnapshot) {
+          if (dataSnapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
           } else {
-            return Consumer<PetService>(builder: (ctx, services, child) {
-              if (services.itemCount != 0) {
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    return _availableService(
-                      services.items[index],
-                    );
-                  },
-                  itemCount: services.itemCount,
-                );
-              } else {
-                return Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 150.0,
-                        height: 150.0,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                              "assets/images/empty.png",
+            if (dataSnapshot.error != null) {
+              return Center(
+                child: Text('Algo salio mal'),
+              );
+            } else {
+              return Consumer<PetService>(builder: (ctx, services, child) {
+                if (services.itemCount != 0) {
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      return _availableService(
+                        services.items[index],
+                      );
+                    },
+                    itemCount: services.itemCount,
+                  );
+                } else {
+                  return Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 150.0,
+                          height: 150.0,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(
+                                "assets/images/empty.png",
+                              ),
+                              fit: BoxFit.fill,
+                              alignment: Alignment.center,
                             ),
-                            fit: BoxFit.cover,
-                            alignment: Alignment.center,
                           ),
                         ),
-                      ),
-                      Text(
-                        'Sin Servicios Disponibles :(',
-                        style: TextStyle(
-                          fontSize: sizeConfig.hp(4),
-                          color: Constants.kPrimaryColor,
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }
-            });
+                        Text(
+                          'Sin Servicios Disponibles',
+                          style: TextStyle(
+                            fontSize: sizeConfig.hp(4),
+                            color: Constants.kPrimaryColor,
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }
+              });
+            }
           }
-        }
-      },
+        },
+      ),
     );
   }
 
@@ -118,9 +111,13 @@ class _BodyState extends State<Body> {
         child: Center(
           child: ListTile(
               title: Text(
-                "ASS",
+                item.title,
               ),
-              subtitle: Text("Baño para gatos"),
+              subtitle: Text(
+                item.description,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
               onTap: () {
                 print("ds");
               },
