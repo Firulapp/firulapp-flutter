@@ -79,7 +79,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             buildCategoryDropdown(
-                              CategoryItem.DUMMY_CATEGORIES,
+                              ServiceType.DUMMY_CATEGORIES,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 25.0),
@@ -168,9 +168,6 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                   try {
                                     setState(() {
                                       _isLoading = true;
-                                      _petService.email = user.userData.mail;
-                                      _petService.createdBy = user.userData.id;
-                                      _petService.userId = user.userData.id;
                                     });
                                     await Provider.of<PetService>(
                                       context,
@@ -269,7 +266,6 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
       label: label,
       hintText: hint,
       keyboardType: tipo,
-      validator: validateTextNotNull,
       value: _petService.address,
       onChanged: (newValue) => _petService.address = newValue,
     );
@@ -292,6 +288,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
       label: label,
       hintText: hint,
       keyboardType: tipo,
+      validator: validateTextNotNull,
       maxLines: 10,
       value: _petService.description,
       onChanged: (newValue) => _petService.description = newValue,
@@ -309,7 +306,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     );
   }
 
-  DropdownButtonFormField buildCategoryDropdown(List<CategoryItem> categories) {
+  DropdownButtonFormField buildCategoryDropdown(List<ServiceType> categories) {
     List<DropdownMenuItem> _typeOptions = [];
     categories.forEach((category) {
       _typeOptions.add(

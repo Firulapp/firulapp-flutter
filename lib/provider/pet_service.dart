@@ -38,9 +38,10 @@ class PetServiceItem {
 
 class PetService with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
-  List<PetServiceItem> _items;
+  List<PetServiceItem> _items = [];
   List<int> _speciesIds;
   final User user;
+  int _serviceType;
 
   PetService(this.user, _items);
 
@@ -48,14 +49,27 @@ class PetService with ChangeNotifier {
     return [..._speciesIds];
   }
 
+  int get serviceType {
+    return _serviceType;
+  }
+
   List<PetServiceItem> get items {
     return [..._items];
   }
 
-  Future<void> fetchServices() async {
+  int get itemCount {
+    return _items.length;
+  }
+
+  void setServiceType(int serviceType) {
+    _serviceType = serviceType;
+  }
+
+  Future<void> fetchServicesByType() async {
     try {
       _items = [];
-      final response = await this._dio.get('${Endpoints.service}');
+      final response =
+          await this._dio.get('${Endpoints.fetchServiceByType}/$_serviceType');
       final services = response.data["list"];
       services.forEach((service) {
         _items.add(
@@ -71,7 +85,7 @@ class PetService with ChangeNotifier {
   Future<void> save(PetServiceItem petService, int speciesId) async {
     try {
       final response = await _dio.post(
-        Endpoints.service,
+        Endpoints.saveService,
         data: {
           "serviceDto": {
             "id": petService.id,
@@ -88,7 +102,7 @@ class PetService with ChangeNotifier {
             "modifiedBy": user.userData.id,
           },
           //TODO: Cambiar valor al confirmar que conecta con el back
-          "species": null,
+          "species": [speciesId],
           // "species": List.of(_speciesIds),
         },
       );
