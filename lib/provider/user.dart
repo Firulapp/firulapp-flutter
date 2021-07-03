@@ -87,6 +87,7 @@ class OrganizationData {
 
 class User with ChangeNotifier {
   UserData _userData;
+  UserData otherUserInfo;
   OrganizationData _organizationData;
   final UserSession session;
 
@@ -149,6 +150,33 @@ class User with ChangeNotifier {
         enabled: userResponse["enabled"],
       );
       _userData = userData;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> getOtherUserInfo(int userId) async {
+    try {
+      final response = await this._dio.get('${Endpoints.user}/$userId');
+      final userResponse = response.data["dto"];
+      var userData = UserData(
+        id: userResponse["id"],
+        userId: userResponse["userId"],
+        name: userResponse["name"],
+        surname: userResponse["surname"],
+        city: userResponse["city"],
+        document: userResponse["document"],
+        documentType: userResponse["documentType"],
+        profilePicture: userResponse["profilePicture"],
+        userType: userResponse["userType"],
+        birthDate: userResponse["birthDate"],
+        notifications: userResponse["notifications"],
+        userName: userResponse["username"],
+        mail: userResponse["email"],
+        enabled: userResponse["enabled"],
+      );
+      otherUserInfo = userData;
       notifyListeners();
     } catch (error) {
       throw error;

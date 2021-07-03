@@ -1,16 +1,16 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:firulapp/components/dialogs.dart';
-import 'package:firulapp/provider/species.dart';
-import 'package:firulapp/provider/user.dart';
-import 'package:firulapp/components/input_text.dart';
-import '../../provider/pet_service.dart';
-import '../../provider/service_type.dart';
-import 'package:firulapp/src/mixins/validator_mixins.dart';
-import '../../components/default_button.dart';
-import '../../size_config.dart';
-import '../../constants/constants.dart';
+import '../../../components/dialogs.dart';
+import '../../../provider/species.dart';
+import '../../../provider/user.dart';
+import '../../../components/input_text.dart';
+import '../../../provider/pet_service.dart';
+import '../../../provider/service_type.dart';
+import '../../mixins/validator_mixins.dart';
+import '../../../components/default_button.dart';
+import '../../../size_config.dart';
+import '../../../constants/constants.dart';
 
 class PetServiceForm extends StatefulWidget {
   static const routeName = "/pet-service-form";
@@ -50,7 +50,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
       _petService = Provider.of<PetService>(
         context,
         listen: false,
-      ).getLocalPetServiceById(serviceId);
+      ).getLocalOwnServiceById(serviceId);
     }
     final user = Provider.of<User>(context, listen: true);
     SizeConfig().init(context);
@@ -106,7 +106,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                               .toList(),
                                           onChanged: (newValue) =>
                                               _speciesId = newValue,
-                                          value: _speciesId,
+                                          value: _petService.speciesId,
                                           isExpanded: true,
                                         ),
                                       );
@@ -176,12 +176,11 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                     Navigator.pop(context);
                                   } catch (error) {
                                     print(error);
-                                    //  TODO: Descomentar al confirmar que conecta con el back
-                                    // Dialogs.info(
-                                    //   context,
-                                    //   title: 'ERROR',
-                                    //   content: error.response.data["message"],
-                                    // );
+                                    Dialogs.info(
+                                      context,
+                                      title: 'ERROR',
+                                      content: error.response.data["message"],
+                                    );
                                   }
                                   setState(() {
                                     _isLoading = false;
@@ -189,7 +188,8 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                 }
                               },
                             ),
-                            false //TODO: ver si el servicio tiene un id
+                            _petService.id !=
+                                    null //TODO: ver si el servicio tiene un id
                                 ? Column(
                                     children: [
                                       SizedBox(
@@ -203,7 +203,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                           final response = await Dialogs.alert(
                                             context,
                                             "¿Estás seguro que desea eliminar?",
-                                            "Se borrará el registro de la consulta médica",
+                                            "Se borrará el registro del servicio",
                                             "Cancelar",
                                             "Aceptar",
                                           );
@@ -221,11 +221,11 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                                     .response.data["message"],
                                               );
                                             }
-                                            setState(() {
-                                              _isLoading = false;
-                                            });
                                             Navigator.pop(context);
                                           }
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
                                         },
                                       ),
                                       SizedBox(
@@ -318,6 +318,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     });
     return DropdownButtonFormField(
       items: _typeOptions,
+      value: _petService.category,
       onChanged: (newValue) => _petService.category = newValue,
       hint: const Text("Tipo de servicio"),
     );

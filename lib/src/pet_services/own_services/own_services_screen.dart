@@ -1,10 +1,11 @@
-import 'package:firulapp/constants/constants.dart';
-import 'package:firulapp/provider/pet_service.dart';
-import 'package:firulapp/provider/service_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../size_config.dart';
+import '../../../constants/constants.dart';
+import '../../../provider/pet_service.dart';
+import '../../../provider/service_type.dart';
+import './pet_service_form.dart';
 
 class OwnServicesScreen extends StatefulWidget {
   static const routeName = "/own-services";
@@ -119,7 +120,8 @@ class _OwnServicesScreenState extends State<OwnServicesScreen> {
                 overflow: TextOverflow.ellipsis,
               ),
               onTap: () {
-                print("ds");
+                Navigator.of(context)
+                    .pushNamed(PetServiceForm.routeName, arguments: item.id);
               },
               trailing: Icon(Icons.arrow_forward_ios)),
         ),

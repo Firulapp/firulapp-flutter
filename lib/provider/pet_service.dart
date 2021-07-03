@@ -8,6 +8,7 @@ class PetServiceItem {
   int id;
   int userId;
   int category;
+  int speciesId;
   String title;
   String address;
   String description;
@@ -77,6 +78,14 @@ class PetService with ChangeNotifier {
     _serviceType = serviceType;
   }
 
+  PetServiceItem getLocalOwnServiceById(int serviceId) {
+    return ownItems.firstWhere((serv) => serv.id == serviceId);
+  }
+
+  PetServiceItem getLocalServiceById(int serviceId) {
+    return items.firstWhere((serv) => serv.id == serviceId);
+  }
+
   Future<void> fetchServicesByType() async {
     try {
       _items = [];
@@ -91,9 +100,9 @@ class PetService with ChangeNotifier {
       servicesResponse.forEach((element) {
         var service = element["serviceDto"];
         if (service["userId"] != user.userData.id) {
-          _items.add(
-            mapJsonToEntity(service),
-          );
+          final petServiceItem = mapJsonToEntity(service);
+          petServiceItem.speciesId = element["species"][0];
+          _items.add(petServiceItem);
         }
       });
       notifyListeners();
@@ -111,9 +120,9 @@ class PetService with ChangeNotifier {
       final servicesResponse = response.data["list"];
       servicesResponse.forEach((element) {
         var service = element["serviceDto"];
-        _ownItems.add(
-          mapJsonToEntity(service),
-        );
+        final petServiceItem = mapJsonToEntity(service);
+        petServiceItem.speciesId = element["species"][0];
+        _ownItems.add(petServiceItem);
       });
       notifyListeners();
     } catch (error) {
@@ -156,14 +165,6 @@ class PetService with ChangeNotifier {
     }
   }
 
-/*  void updateSpeciesFilter(List<SpeciesItem> species) {
-    _speciesIds = [];
-    species.forEach((element) {
-      _speciesIds.add(element.id);
-    });
-    notifyListeners();
-  }*/
-
   PetServiceItem mapJsonToEntity(dynamic json) {
     return PetServiceItem(
       id: json["id"],
@@ -173,15 +174,11 @@ class PetService with ChangeNotifier {
       address: json["address"],
       title: json["title"],
       description: json["description"],
-      email: json["email"],
+      email: json["mailContact"],
       createdAt: json["createdAt"],
       createdBy: user.userData.id,
       modifiedAt: json["modifiedAt"],
       modifiedBy: user.userData.id,
     );
-  }
-
-  PetServiceItem getLocalPetServiceById(int serviceId) {
-    return _items.firstWhere((serv) => serv.id == serviceId);
   }
 }

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../size_config.dart';
 import './components/category_item.dart' as widget;
 import '../../provider/service_type.dart';
-import './pet_service_form.dart';
-import 'components/filter_selector.dart';
+import './own_services/pet_service_form.dart';
+import './components/filter_selector.dart';
 
 class ServiceCategoriesScreen extends StatelessWidget {
   static const routeName = "/services-screen1";
