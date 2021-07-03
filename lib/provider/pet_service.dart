@@ -37,6 +37,7 @@ class PetServiceItem {
 class PetService with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
   List<PetServiceItem> _items = [];
+  List<PetServiceItem> _ownItems = [];
   List<int> _speciesIds;
   final User user;
   int _serviceType;
@@ -59,6 +60,14 @@ class PetService with ChangeNotifier {
     return _items.length;
   }
 
+  List<PetServiceItem> get ownItems {
+    return [..._ownItems];
+  }
+
+  int get ownItemCount {
+    return _ownItems.length;
+  }
+
   void setServiceType(int serviceType) {
     _serviceType = serviceType;
   }
@@ -71,7 +80,28 @@ class PetService with ChangeNotifier {
       final servicesResponse = response.data["list"];
       servicesResponse.forEach((element) {
         var service = element["serviceDto"];
-        _items.add(
+        if (service["userId"] != user.userData.id) {
+          _items.add(
+            mapJsonToEntity(service),
+          );
+        }
+      });
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> fetchServicesByUser() async {
+    try {
+      _ownItems = [];
+      final response = await this
+          ._dio
+          .get('${Endpoints.fetchServiceByUser}/${user.userData.id}');
+      final servicesResponse = response.data["list"];
+      servicesResponse.forEach((element) {
+        var service = element["serviceDto"];
+        _ownItems.add(
           mapJsonToEntity(service),
         );
       });

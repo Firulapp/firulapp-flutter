@@ -1,11 +1,12 @@
-import 'package:firulapp/constants/constants.dart';
-import 'package:firulapp/provider/pet_service.dart';
-import 'package:firulapp/src/pet_services/selected_category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../size_config.dart';
+import '../own_services/own_services_screen.dart';
+import '../selected_category_screen.dart';
+import '../../../constants/constants.dart';
+import '../../../provider/pet_service.dart';
 
 class CategoryItem extends StatelessWidget {
   final int id;
@@ -25,8 +26,13 @@ class CategoryItem extends StatelessWidget {
               context,
               listen: false,
             ).setServiceType(id);
-            Navigator.of(context)
-                .pushNamed(SelectedCategoryScreen.routeName, arguments: id);
+            if (id != 0) {
+              Navigator.of(context)
+                  .pushNamed(SelectedCategoryScreen.routeName, arguments: id);
+            } else {
+              Navigator.of(context)
+                  .pushNamed(OwnServicesScreen.routeName, arguments: id);
+            }
           },
           fillColor:
               id != 0 ? Constants.kPrimaryLightColor : Constants.kPrimaryColor,

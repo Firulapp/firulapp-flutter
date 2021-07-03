@@ -37,4 +37,5 @@ class Endpoints {
   static final service = '/service';
   static final saveService = '$service/save';
   static final fetchServiceByType = '$service/type';
+  static final fetchServiceByUser = '$service/user';
 }
