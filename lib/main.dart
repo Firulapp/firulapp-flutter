@@ -53,19 +53,6 @@ class MyApp extends StatelessWidget {
             PetItem(),
           ),
         ),
-        ChangeNotifierProxyProvider<User, PetService>(
-          update: (context, user, petService) => PetService(
-            user,
-            petService == null ? {} : petService.items,
-          ),
-          create: (ctx) => PetService(
-            User(
-              UserData(),
-              UserSession(),
-            ),
-            [],
-          ),
-        ),
         ChangeNotifierProxyProvider<User, MedicalRecord>(
           update: (context, user, med) => MedicalRecord(
             user,
@@ -124,6 +111,19 @@ class MyApp extends StatelessWidget {
             report == null ? {} : report.items,
           ),
           create: (ctx) => Reports(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, PetService>(
+          update: (context, user, petService) => PetService(
+            user,
+            petService == null ? {} : petService.user,
+          ),
+          create: (ctx) => PetService(
             User(
               UserData(),
               UserSession(),

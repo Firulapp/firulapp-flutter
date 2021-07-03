@@ -87,7 +87,9 @@ class PetService with ChangeNotifier {
             "modifiedAt": petService.createdAt,
             "modifiedBy": user.userData.id,
           },
-          "species": List.of(_speciesIds),
+          //TODO: Cambiar valor al confirmar que conecta con el back
+          "species": null,
+          // "species": List.of(_speciesIds),
         },
       );
       final petServiceResponse = response.data["dto"];

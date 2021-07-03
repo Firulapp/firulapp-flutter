@@ -179,11 +179,12 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                     Navigator.pop(context);
                                   } catch (error) {
                                     print(error);
-                                    Dialogs.info(
-                                      context,
-                                      title: 'ERROR',
-                                      content: error.response.data["message"],
-                                    );
+                                    //  TODO: Descomentar al confirmar que conecta con el back
+                                    // Dialogs.info(
+                                    //   context,
+                                    //   title: 'ERROR',
+                                    //   content: error.response.data["message"],
+                                    // );
                                   }
                                   setState(() {
                                     _isLoading = false;
