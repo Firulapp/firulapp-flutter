@@ -10,6 +10,7 @@ import '../mixins/validator_mixins.dart';
 import '../../components/default_button.dart';
 import '../../size_config.dart';
 import '../../constants/constants.dart';
+import './book_appointment.dart';
 
 class ServiceScreen extends StatefulWidget {
   static const routeName = "/selected-service";
@@ -117,7 +118,9 @@ class _ServiceScreenState extends State<ServiceScreen> with ValidatorMixins {
                                 setState(() {
                                   _isLoading = true;
                                 });
-                                print("reserva");
+                                Navigator.pushNamed(
+                                    context, BookAppointment.routeName,
+                                    arguments: _petService.id);
                               } catch (error) {
                                 print(error);
                                 Dialogs.info(
