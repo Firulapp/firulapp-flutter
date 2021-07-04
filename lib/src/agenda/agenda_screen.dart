@@ -7,13 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/material.dart';
 
-import '../vaccionation_records/vaccination_records_form_screen.dart';
+import '../pets/vaccionation_records/vaccination_records_form_screen.dart';
 import '../../constants/constants.dart';
 import './components/event_item.dart';
-import '../medical_records/medical_record_form_screen.dart';
-import './activity_form_screen.dart';
+import '../pets/medical_records/medical_record_form_screen.dart';
+import '../pets/activity/activity_form_screen.dart';
 import 'components/agenda_event_item.dart';
-import 'components/pet_option.dart';
+import '../pets/utils/pet_option.dart';
 import 'package:firulapp/components/dtos/event_item.dart' as eventDTO;
 
 class AgendaScreen extends StatefulWidget {
@@ -116,7 +116,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                       await Provider.of<VaccinationRecord>(context,
                               listen: false)
                           .fetchVaccinationRecords();
-                      Navigator.of(context).pushNamed(
+                      await Navigator.of(context).pushNamed(
                         NewVaccinationRecordScreen.routeName,
                         arguments: eventDTO.EventItem(
                           eventId: _selectedEvents[index]
@@ -131,7 +131,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                       ).setPetItem(pet);
                       await Provider.of<Activity>(context, listen: false)
                           .fetchActivities();
-                      Navigator.of(context).pushNamed(
+                      await Navigator.of(context).pushNamed(
                         ActivityFormScreen.routeName,
                         arguments: eventDTO.EventItem(
                           eventId: _selectedEvents[index]["activityId"],
@@ -145,7 +145,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                       ).setPetItem(pet);
                       await Provider.of<MedicalRecord>(context, listen: false)
                           .fetchMedicalRecords();
-                      Navigator.of(context).pushNamed(
+                      await Navigator.of(context).pushNamed(
                         NewMedicalRecordScreen.routeName,
                         arguments: eventDTO.EventItem(
                           eventId: _selectedEvents[index]["petMedicalRecordId"],

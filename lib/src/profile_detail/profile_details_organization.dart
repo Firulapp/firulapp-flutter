@@ -25,7 +25,7 @@ class ProfilePageState extends State<ProfilePageOrganization>
   final FocusNode myFocusNode = FocusNode();
   File _pickedImage;
   Future _citiesFuture;
-  String temporal_description;
+  String temporalDescription;
   CityItem _cityItem;
 
   Future _obtainCitiesFuture() {
@@ -203,7 +203,7 @@ class ProfilePageState extends State<ProfilePageOrganization>
                           padding: EdgeInsets.only(
                               left: 25.0, right: 25.0, top: 25.0),
                           child: TextFormField(
-                            initialValue: temporal_description,
+                            initialValue: temporalDescription,
                             decoration: InputDecoration(
                               hintText: "Ingresa su descripción",
                               labelText: 'Descripción',
@@ -212,7 +212,7 @@ class ProfilePageState extends State<ProfilePageOrganization>
                             enabled: !_status,
                             autofocus: !_status,
                             onChanged: (newValue) =>
-                                temporal_description = newValue,
+                                temporalDescription = newValue,
                           ),
                         ),
                         !_status ? _getActionButtons() : Container(),

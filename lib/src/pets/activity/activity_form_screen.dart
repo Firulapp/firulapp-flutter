@@ -1,68 +1,94 @@
-import 'package:firulapp/components/dtos/event_item.dart';
-import 'package:firulapp/constants/constants.dart';
-import 'package:firulapp/provider/agenda.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/default_button.dart';
-import '../../components/input_text.dart';
-import '../../provider/medical_record.dart';
-import '../../components/dialogs.dart';
-import '../mixins/validator_mixins.dart';
-import '../../size_config.dart';
+import '../../../components/dtos/event_item.dart';
+import '../../../constants/constants.dart';
+import '../../../provider/agenda.dart';
+import '../../mixins/validator_mixins.dart';
+import '../../../provider/activity.dart';
+import '../../../components/default_button.dart';
+import '../../../components/input_text.dart';
+import '../../../components/dialogs.dart';
+import '../../../size_config.dart';
 
-class NewMedicalRecordScreen extends StatefulWidget {
-  static const routeName = "/new_medical_records";
+class ActivityFormScreen extends StatefulWidget {
+  static const routeName = "/activity_form";
+
   @override
-  _NewMedicalRecordScreenState createState() => _NewMedicalRecordScreenState();
+  _ActivityFormScreenState createState() => _ActivityFormScreenState();
 }
 
-class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
+class _ActivityFormScreenState extends State<ActivityFormScreen>
     with ValidatorMixins {
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
-  MedicalRecordItem _medicalRecord = new MedicalRecordItem();
-  DateTime _medicalRecordDate;
+  ActivityItem _activity = new ActivityItem();
+  DateTime _activityDate;
+  TimeOfDay _activityTime = TimeOfDay.now();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
       context: context,
-      initialDate: _medicalRecordDate,
+      initialDate: _activityDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2030),
     );
-    if (pickedDate != null && pickedDate != _medicalRecordDate) {
+    final TimeOfDay _selectedTime24Hour = await showTimePicker(
+      context: context,
+      initialTime: _activityTime,
+    );
+    if (pickedDate != null && pickedDate != _activityDate) {
       setState(() {
-        _medicalRecordDate = pickedDate;
-        _medicalRecord.consultedAt = _medicalRecordDate.toIso8601String();
+        _activityDate = pickedDate;
+        _activity.activityDate = _activityDate.toIso8601String();
+      });
+    }
+    if (_selectedTime24Hour != null && _activityTime != _selectedTime24Hour) {
+      setState(() {
+        _activityTime = _selectedTime24Hour;
+        _activity.activityTime =
+            "${_activityTime.hour}:${_activityTime.minute}";
       });
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context).settings.arguments as EventItem;
-    _medicalRecordDate = event.date;
+    _activityDate = event.date;
     if (event.eventId != null) {
-      _medicalRecord = Provider.of<MedicalRecord>(
+      _activity = Provider.of<Activity>(
         context,
         listen: false,
-      ).getLocalMedicalRecordById(event.eventId);
-      if (_medicalRecord != null) {
-        _medicalRecordDate = DateTime.parse(_medicalRecord.consultedAt);
+      ).getLocalActivityById(event.eventId);
+      if (_activity == null) {
+        _activity = new ActivityItem();
+      }
+      _activityDate = DateTime.parse(_activity.activityDate);
+      if (_activity.activityTime.length <= 5) {
+        var time = _activity.activityTime.split(":");
+        _activityTime = TimeOfDay(
+          hour: int.parse(time.first),
+          minute: int.parse(time.last),
+        );
       } else {
-        _medicalRecord = new MedicalRecordItem();
+        _activityTime = TimeOfDay(
+          hour: DateTime.parse(_activity.activityTime).hour,
+          minute: DateTime.parse(_activity.activityTime).minute,
+        );
       }
     } else {
-      _medicalRecord.consultedAt = _medicalRecordDate.toIso8601String();
+      _activity.activityDate = _activityDate.toIso8601String();
+      _activity.activityTime = "${_activityTime.hour}:${_activityTime.minute}";
     }
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Formulario Consulta Médica"),
+        title: const Text("Agregar Actividad"),
       ),
       body: _isLoading
           ? Center(
@@ -83,11 +109,17 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            Text(
+                              "",
+                              style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             Row(
                               children: [
                                 Text(
-                                  DateFormat('dd-MM-yyyy')
-                                      .format(_medicalRecordDate),
+                                  "${DateFormat('dd-MM-yyyy').format(_activityDate)} ${_activityTime.hour}:${_activityTime.minute}",
                                   style: TextStyle(
                                     fontSize: 23,
                                     fontWeight: FontWeight.bold,
@@ -103,69 +135,31 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                               height:
                                   SizeConfig.getProportionateScreenHeight(25),
                             ),
-                            buildVeterinaryFormField(
-                              "Veterinaria",
-                              "Ingrese el nombre de la veterinaria",
+                            buildTitleFormField(
+                              "Título de la actividad",
+                              "Ingrese el título de la actividad",
                               TextInputType.name,
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            buildDiagnosticFormField(
-                              "Diagnóstico",
-                              "Ingrese el diagnóstico de la mascota",
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
+                            buildDetailFormField(
+                              "Detalle de la actividad",
+                              "Ingrese el detalle de la actividad",
                               TextInputType.multiline,
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            buildTreatmentFormField(
-                              "Tratamiento",
-                              "Ingrese el tratamiento a seguir",
-                              TextInputType.multiline,
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
                             ),
-                            SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            buildObservationsFormField(
-                              "Observaciones",
-                              "Ingrese observaciones sobre el diagnostico",
-                              TextInputType.multiline,
-                            ),
-                            SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            Row(
-                              children: [
-                                Container(
-                                  width: SizeConfig.getProportionateScreenWidth(
-                                      150),
-                                  child: buildWeightFormField(
-                                    "Peso",
-                                    TextInputType.number,
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Container(
-                                  width: SizeConfig.getProportionateScreenWidth(
-                                      150),
-                                  child: buildHeightFormField(
-                                    "Altura",
-                                    TextInputType.number,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
                             Row(
                               children: [
                                 CupertinoSwitch(
-                                  value: _medicalRecord.treatmentReminder,
+                                  value: _activity.reminder,
                                   onChanged: (value) {
                                     setState(() {
-                                      _medicalRecord.treatmentReminder = value;
+                                      _activity.reminder = value;
                                     });
                                   },
                                 ),
@@ -176,8 +170,9 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                               ],
                             ),
                             SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
                             DefaultButton(
                               text: "Guardar",
                               color: Constants.kPrimaryColor,
@@ -188,10 +183,10 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                     setState(() {
                                       _isLoading = true;
                                     });
-                                    await Provider.of<MedicalRecord>(
+                                    await Provider.of<Activity>(
                                       context,
                                       listen: false,
-                                    ).saveMedicalRecord(_medicalRecord);
+                                    ).saveActivity(_activity);
                                     await Provider.of<Agenda>(context,
                                             listen: false)
                                         .fetchEvents();
@@ -213,9 +208,9 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 ? Column(
                                     children: [
                                       SizedBox(
-                                          height: SizeConfig
-                                              .getProportionateScreenHeight(
-                                                  25)),
+                                        height: SizeConfig
+                                            .getProportionateScreenHeight(25),
+                                      ),
                                       DefaultButton(
                                         text: "Borrar",
                                         color: Colors.white,
@@ -223,22 +218,23 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                           final response = await Dialogs.alert(
                                             context,
                                             "¿Estás seguro que desea eliminar?",
-                                            "Se borrará el registro de la consulta médica",
+                                            "Se borrará el registro de esta actividad",
                                             "Cancelar",
                                             "Aceptar",
                                           );
-                                          setState(() {
-                                            _isLoading = true;
-                                          });
                                           if (response) {
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
                                             try {
-                                              await Provider.of<MedicalRecord>(
+                                              await Provider.of<Activity>(
                                                 context,
                                                 listen: false,
-                                              ).delete(_medicalRecord);
+                                              ).delete(_activity);
                                               await Provider.of<Agenda>(context,
                                                       listen: false)
                                                   .fetchEvents();
+                                              Navigator.pop(context);
                                             } catch (error) {
                                               Dialogs.info(
                                                 context,
@@ -247,11 +243,10 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                                     .response.data["message"],
                                               );
                                             }
-                                            setState(() {
-                                              _isLoading = false;
-                                            });
-                                            Navigator.pop(context);
                                           }
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
                                         },
                                       ),
                                       SizedBox(
@@ -276,77 +271,26 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
     );
   }
 
-  Widget buildVeterinaryFormField(
-      String label, String hint, TextInputType tipo) {
+  Widget buildTitleFormField(String label, String hint, TextInputType tipo) {
     return InputText(
       label: label,
       hintText: hint,
       keyboardType: tipo,
       validator: validateTextNotNull,
-      value: _medicalRecord.veterinary,
-      onChanged: (newValue) => _medicalRecord.veterinary = newValue,
+      value: _activity.activityTitle,
+      onChanged: (newValue) => _activity.activityTitle = newValue,
     );
   }
 
-  Widget buildDiagnosticFormField(
-      String label, String hint, TextInputType tipo) {
+  Widget buildDetailFormField(String label, String hint, TextInputType tipo) {
     return InputText(
       label: label,
       hintText: hint,
       keyboardType: tipo,
+      validator: validateTextNotNull,
+      value: _activity.detail,
       maxLines: 10,
-      validator: validateTextNotNull,
-      value: _medicalRecord.diagnostic,
-      onChanged: (newValue) => _medicalRecord.diagnostic = newValue,
-    );
-  }
-
-  Widget buildTreatmentFormField(
-      String label, String hint, TextInputType tipo) {
-    return InputText(
-      label: label,
-      hintText: hint,
-      keyboardType: tipo,
-      maxLines: 10,
-      validator: validateTextNotNull,
-      value: _medicalRecord.treatment,
-      onChanged: (newValue) => _medicalRecord.treatment = newValue,
-    );
-  }
-
-  Widget buildObservationsFormField(
-      String label, String hint, TextInputType tipo) {
-    return InputText(
-      label: label,
-      hintText: hint,
-      keyboardType: tipo,
-      maxLines: 10,
-      value: _medicalRecord.observations,
-      onChanged: (newValue) => _medicalRecord.observations = newValue,
-    );
-  }
-
-  Widget buildWeightFormField(String label, TextInputType tipo) {
-    return InputText(
-      label: label,
-      keyboardType: tipo,
-      validator: validateTextNotNull,
-      value: _medicalRecord.petWeight == null
-          ? ''
-          : _medicalRecord.petWeight.toString(),
-      onChanged: (newValue) => _medicalRecord.petWeight = int.parse(newValue),
-    );
-  }
-
-  Widget buildHeightFormField(String label, TextInputType tipo) {
-    return InputText(
-      label: label,
-      keyboardType: tipo,
-      validator: validateTextNotNull,
-      value: _medicalRecord.petHeight == null
-          ? ''
-          : _medicalRecord.petHeight.toString(),
-      onChanged: (newValue) => _medicalRecord.petHeight = int.parse(newValue),
+      onChanged: (newValue) => _activity.detail = newValue,
     );
   }
 }

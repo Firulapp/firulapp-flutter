@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import './provider/activity.dart';
 import './provider/agenda.dart';
 import './provider/breeds.dart';
 import './provider/pets.dart';
