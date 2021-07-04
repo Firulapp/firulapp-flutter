@@ -145,6 +145,12 @@ class _BookAppointmentState extends State<BookAppointment>
                                     await Provider.of<Agenda>(context,
                                             listen: false)
                                         .fetchEvents();
+                                    await Dialogs.info(
+                                      context,
+                                      title: "Turno reservado",
+                                      content:
+                                          "Comuníquese con el oferente para definir el horario",
+                                    );
                                     Navigator.pop(context);
                                   } catch (error) {
                                     Dialogs.info(
