@@ -14,7 +14,7 @@ import './src/agenda/agenda_screen.dart';
 import './src/pets/medical_records/medical_record_form_screen.dart';
 import './src/pets/vaccionation_records/vaccination_records_form_screen.dart';
 import './src/pets/vaccionation_records/vaccination_records_screen.dart';
-import './src/agenda/activity_form_screen.dart';
+import 'src/pets/activity/activity_form_screen.dart';
 import './src/pets/lost_and_found/lost_and_found_map.dart';
 import './src/pets/lost_and_found/found_pet/found_pet_form_step1.dart';
 import './src/pets/lost_and_found/found_pet/found_pet_form_step2.dart';

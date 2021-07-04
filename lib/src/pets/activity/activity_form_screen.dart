@@ -1,17 +1,17 @@
-import 'package:firulapp/components/dtos/event_item.dart';
-import 'package:firulapp/constants/constants.dart';
-import 'package:firulapp/provider/agenda.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../mixins/validator_mixins.dart';
-import '../../provider/activity.dart';
-import '../../components/default_button.dart';
-import '../../components/input_text.dart';
-import '../../components/dialogs.dart';
-import '../../size_config.dart';
+import '../../../components/dtos/event_item.dart';
+import '../../../constants/constants.dart';
+import '../../../provider/agenda.dart';
+import '../../mixins/validator_mixins.dart';
+import '../../../provider/activity.dart';
+import '../../../components/default_button.dart';
+import '../../../components/input_text.dart';
+import '../../../components/dialogs.dart';
+import '../../../size_config.dart';
 
 class ActivityFormScreen extends StatefulWidget {
   static const routeName = "/activity_form";
@@ -64,6 +64,9 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
         context,
         listen: false,
       ).getLocalActivityById(event.eventId);
+      if (_activity == null) {
+        _activity = new ActivityItem();
+      }
       _activityDate = DateTime.parse(_activity.activityDate);
       if (_activity.activityTime.length <= 5) {
         var time = _activity.activityTime.split(":");

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:path_provider/path_provider.dart' as syspaths;
-
-import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
+
+import '../../../provider/pets.dart';
 
 class PetOption extends StatefulWidget {
   final PetItem petItem;
