@@ -194,8 +194,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                 }
                               },
                             ),
-                            _petService.id !=
-                                    null //TODO: ver si el servicio tiene un id
+                            _petService.id != null
                                 ? Column(
                                     children: [
                                       SizedBox(

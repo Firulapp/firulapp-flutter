@@ -10,21 +10,25 @@ import 'package:flutter/material.dart';
 class AgendaItem {
   final int id;
   final int userId;
+  final int clientId;
   final int petId;
   final int activityId;
   final int petMedicalRecordId;
   final int petVaccinationRecordId;
+  final int serviceId;
   final String details;
   final String activityDate;
   final String activityTime;
-
+  //TODO: atributo status para cambiar el color del widget appointment
   AgendaItem({
     this.id,
     this.userId,
+    this.clientId,
     this.petId,
     this.activityId,
     this.petMedicalRecordId,
     this.petVaccinationRecordId,
+    this.serviceId,
     this.details,
     this.activityDate,
     this.activityTime,
@@ -52,6 +56,7 @@ class Agenda with ChangeNotifier {
   */
   Future<void> fetchEvents() async {
     List<dynamic> agendaItems = [];
+    _items = {};
     try {
       final response =
           await this._dio.get('${Endpoints.userAgenda}/${user.session.userId}');
