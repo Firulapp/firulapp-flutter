@@ -7,7 +7,6 @@ import 'package:firulapp/constants/constants.dart';
 import 'package:firulapp/provider/city.dart';
 import 'package:firulapp/provider/pets.dart';
 import 'package:firulapp/provider/reports.dart';
-import 'package:firulapp/provider/user.dart';
 import 'package:firulapp/src/mixins/validator_mixins.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

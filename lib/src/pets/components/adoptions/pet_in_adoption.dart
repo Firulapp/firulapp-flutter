@@ -79,7 +79,6 @@ class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
 
   @override
   Widget build(BuildContext context) {
-    final providerBreeds = Provider.of<Breeds>(context, listen: false);
     return new Scaffold(
         appBar: AppBar(
           title: Text("Mascota En Adopción"),

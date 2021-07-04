@@ -76,8 +76,8 @@ class _LostAndFoundMapState extends State<LostAndFoundMap> {
       ),
     );
 
-    var bounds = await _controller
-        .getVisibleRegion(); //TODO usar los bounds para obtener los markers
+    //var bounds = await _controller
+    //.getVisibleRegion(); //TODO usar los bounds para obtener los markers
     await Provider.of<Reports>(context, listen: false).fetchReports(
       latitudeMax: 250.0,
       latitudeMin: -250.0,
