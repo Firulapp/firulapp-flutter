@@ -1,12 +1,12 @@
-import 'package:firulapp/components/dtos/event_item.dart';
-import 'package:firulapp/src/vaccionation_records/vaccination_records_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/pets.dart';
-import '../../constants/constants.dart';
-import '../../provider/vaccination_record.dart' as vaxProvider;
-import '../../size_config.dart';
+import '../../../components/dtos/event_item.dart';
+import './vaccination_records_form_screen.dart';
+import '../../../provider/pets.dart';
+import '../../../constants/constants.dart';
+import '../../../provider/vaccination_record.dart' as vaxProvider;
+import '../../../size_config.dart';
 import './components/vaccination_record_item.dart';
 
 class VaccinationRecordsScreen extends StatefulWidget {

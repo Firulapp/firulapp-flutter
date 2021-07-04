@@ -1,68 +1,73 @@
-import 'package:firulapp/components/dtos/event_item.dart';
-import 'package:firulapp/constants/constants.dart';
-import 'package:firulapp/provider/agenda.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/default_button.dart';
-import '../../components/input_text.dart';
-import '../../provider/medical_record.dart';
-import '../../components/dialogs.dart';
-import '../mixins/validator_mixins.dart';
-import '../../size_config.dart';
+import '../../../components/dtos/event_item.dart';
+import '../../../provider/agenda.dart';
+import '../../../constants/constants.dart';
+import '../../../components/default_button.dart';
+import '../../../components/input_text.dart';
+import '../../../provider/vaccination_record.dart';
+import '../../../components/dialogs.dart';
+import '../../mixins/validator_mixins.dart';
+import '../../../size_config.dart';
 
-class NewMedicalRecordScreen extends StatefulWidget {
-  static const routeName = "/new_medical_records";
+class NewVaccinationRecordScreen extends StatefulWidget {
+  static const routeName = "/new_vaccination_records";
   @override
-  _NewMedicalRecordScreenState createState() => _NewMedicalRecordScreenState();
+  _NewVaccinationRecordScreenState createState() =>
+      _NewVaccinationRecordScreenState();
 }
 
-class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
+class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
     with ValidatorMixins {
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
-  MedicalRecordItem _medicalRecord = new MedicalRecordItem();
-  DateTime _medicalRecordDate;
+  VaccinationRecordItem _vaccinationRecord = new VaccinationRecordItem();
+  DateTime _vaccinationRecordDate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
       context: context,
-      initialDate: _medicalRecordDate,
+      initialDate: _vaccinationRecordDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2030),
     );
-    if (pickedDate != null && pickedDate != _medicalRecordDate) {
+    if (pickedDate != null && pickedDate != _vaccinationRecordDate) {
       setState(() {
-        _medicalRecordDate = pickedDate;
-        _medicalRecord.consultedAt = _medicalRecordDate.toIso8601String();
+        _vaccinationRecordDate = pickedDate;
+        _vaccinationRecord.vaccinationDate =
+            _vaccinationRecordDate.toIso8601String();
       });
     }
   }
 
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context).settings.arguments as EventItem;
-    _medicalRecordDate = event.date;
+    _vaccinationRecordDate = event.date;
     if (event.eventId != null) {
-      _medicalRecord = Provider.of<MedicalRecord>(
+      _vaccinationRecord = Provider.of<VaccinationRecord>(
         context,
         listen: false,
-      ).getLocalMedicalRecordById(event.eventId);
-      if (_medicalRecord != null) {
-        _medicalRecordDate = DateTime.parse(_medicalRecord.consultedAt);
+      ).getLocalVaccinationRecordById(event.eventId);
+
+      if (_vaccinationRecord != null) {
+        _vaccinationRecordDate =
+            DateTime.parse(_vaccinationRecord.vaccinationDate);
       } else {
-        _medicalRecord = new MedicalRecordItem();
+        _vaccinationRecord = new VaccinationRecordItem();
       }
     } else {
-      _medicalRecord.consultedAt = _medicalRecordDate.toIso8601String();
+      _vaccinationRecord.vaccinationDate =
+          _vaccinationRecordDate.toIso8601String();
     }
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Formulario Consulta Médica"),
+        title: const Text("Formulario Vacunación"),
       ),
       body: _isLoading
           ? Center(
@@ -83,11 +88,18 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            Text(
+                              "",
+                              style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             Row(
                               children: [
                                 Text(
                                   DateFormat('dd-MM-yyyy')
-                                      .format(_medicalRecordDate),
+                                      .format(_vaccinationRecordDate),
                                   style: TextStyle(
                                     fontSize: 23,
                                     fontWeight: FontWeight.bold,
@@ -100,29 +112,20 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                               ],
                             ),
                             SizedBox(
-                              height:
-                                  SizeConfig.getProportionateScreenHeight(25),
-                            ),
-                            buildVeterinaryFormField(
-                              "Veterinaria",
-                              "Ingrese el nombre de la veterinaria",
+                                height: SizeConfig.getProportionateScreenHeight(
+                                    25)),
+                            buildNameFormField(
+                              "Nombre de la Vacuna",
+                              "Ingrese el nombre de la vacuna",
                               TextInputType.name,
                             ),
                             SizedBox(
                                 height: SizeConfig.getProportionateScreenHeight(
                                     25)),
-                            buildDiagnosticFormField(
-                              "Diagnóstico",
-                              "Ingrese el diagnóstico de la mascota",
-                              TextInputType.multiline,
-                            ),
-                            SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            buildTreatmentFormField(
-                              "Tratamiento",
-                              "Ingrese el tratamiento a seguir",
-                              TextInputType.multiline,
+                            buildVeterinaryFormField(
+                              "Veterinaria",
+                              "Ingrese el nombre de la veterinaria",
+                              TextInputType.name,
                             ),
                             SizedBox(
                                 height: SizeConfig.getProportionateScreenHeight(
@@ -137,35 +140,11 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                     25)),
                             Row(
                               children: [
-                                Container(
-                                  width: SizeConfig.getProportionateScreenWidth(
-                                      150),
-                                  child: buildWeightFormField(
-                                    "Peso",
-                                    TextInputType.number,
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Container(
-                                  width: SizeConfig.getProportionateScreenWidth(
-                                      150),
-                                  child: buildHeightFormField(
-                                    "Altura",
-                                    TextInputType.number,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                                height: SizeConfig.getProportionateScreenHeight(
-                                    25)),
-                            Row(
-                              children: [
                                 CupertinoSwitch(
-                                  value: _medicalRecord.treatmentReminder,
+                                  value: _vaccinationRecord.reminders,
                                   onChanged: (value) {
                                     setState(() {
-                                      _medicalRecord.treatmentReminder = value;
+                                      _vaccinationRecord.reminders = value;
                                     });
                                   },
                                 ),
@@ -188,10 +167,10 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                     setState(() {
                                       _isLoading = true;
                                     });
-                                    await Provider.of<MedicalRecord>(
+                                    await Provider.of<VaccinationRecord>(
                                       context,
                                       listen: false,
-                                    ).saveMedicalRecord(_medicalRecord);
+                                    ).save(_vaccinationRecord);
                                     await Provider.of<Agenda>(context,
                                             listen: false)
                                         .fetchEvents();
@@ -213,9 +192,9 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                 ? Column(
                                     children: [
                                       SizedBox(
-                                          height: SizeConfig
-                                              .getProportionateScreenHeight(
-                                                  25)),
+                                        height: SizeConfig
+                                            .getProportionateScreenHeight(25),
+                                      ),
                                       DefaultButton(
                                         text: "Borrar",
                                         color: Colors.white,
@@ -223,7 +202,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                           final response = await Dialogs.alert(
                                             context,
                                             "¿Estás seguro que desea eliminar?",
-                                            "Se borrará el registro de la consulta médica",
+                                            "Se borrará el registro de esta vacuna",
                                             "Cancelar",
                                             "Aceptar",
                                           );
@@ -232,10 +211,11 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                           });
                                           if (response) {
                                             try {
-                                              await Provider.of<MedicalRecord>(
+                                              await Provider.of<
+                                                  VaccinationRecord>(
                                                 context,
                                                 listen: false,
-                                              ).delete(_medicalRecord);
+                                              ).delete(_vaccinationRecord);
                                               await Provider.of<Agenda>(context,
                                                       listen: false)
                                                   .fetchEvents();
@@ -247,11 +227,11 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                                     .response.data["message"],
                                               );
                                             }
-                                            setState(() {
-                                              _isLoading = false;
-                                            });
                                             Navigator.pop(context);
                                           }
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
                                         },
                                       ),
                                       SizedBox(
@@ -276,6 +256,17 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
     );
   }
 
+  Widget buildNameFormField(String label, String hint, TextInputType tipo) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      validator: validateTextNotNull,
+      value: _vaccinationRecord.vaccine,
+      onChanged: (newValue) => _vaccinationRecord.vaccine = newValue,
+    );
+  }
+
   Widget buildVeterinaryFormField(
       String label, String hint, TextInputType tipo) {
     return InputText(
@@ -283,34 +274,8 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
       hintText: hint,
       keyboardType: tipo,
       validator: validateTextNotNull,
-      value: _medicalRecord.veterinary,
-      onChanged: (newValue) => _medicalRecord.veterinary = newValue,
-    );
-  }
-
-  Widget buildDiagnosticFormField(
-      String label, String hint, TextInputType tipo) {
-    return InputText(
-      label: label,
-      hintText: hint,
-      keyboardType: tipo,
-      maxLines: 10,
-      validator: validateTextNotNull,
-      value: _medicalRecord.diagnostic,
-      onChanged: (newValue) => _medicalRecord.diagnostic = newValue,
-    );
-  }
-
-  Widget buildTreatmentFormField(
-      String label, String hint, TextInputType tipo) {
-    return InputText(
-      label: label,
-      hintText: hint,
-      keyboardType: tipo,
-      maxLines: 10,
-      validator: validateTextNotNull,
-      value: _medicalRecord.treatment,
-      onChanged: (newValue) => _medicalRecord.treatment = newValue,
+      value: _vaccinationRecord.veterinary,
+      onChanged: (newValue) => _vaccinationRecord.veterinary = newValue,
     );
   }
 
@@ -321,32 +286,8 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
       hintText: hint,
       keyboardType: tipo,
       maxLines: 10,
-      value: _medicalRecord.observations,
-      onChanged: (newValue) => _medicalRecord.observations = newValue,
-    );
-  }
-
-  Widget buildWeightFormField(String label, TextInputType tipo) {
-    return InputText(
-      label: label,
-      keyboardType: tipo,
-      validator: validateTextNotNull,
-      value: _medicalRecord.petWeight == null
-          ? ''
-          : _medicalRecord.petWeight.toString(),
-      onChanged: (newValue) => _medicalRecord.petWeight = int.parse(newValue),
-    );
-  }
-
-  Widget buildHeightFormField(String label, TextInputType tipo) {
-    return InputText(
-      label: label,
-      keyboardType: tipo,
-      validator: validateTextNotNull,
-      value: _medicalRecord.petHeight == null
-          ? ''
-          : _medicalRecord.petHeight.toString(),
-      onChanged: (newValue) => _medicalRecord.petHeight = int.parse(newValue),
+      value: _vaccinationRecord.observation,
+      onChanged: (newValue) => _vaccinationRecord.observation = newValue,
     );
   }
 }

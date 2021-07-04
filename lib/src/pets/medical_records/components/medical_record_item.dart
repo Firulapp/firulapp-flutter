@@ -1,7 +1,7 @@
-import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:flutter/material.dart';
 
-import '../../../provider/medical_record.dart' as medProvider;
+import '../../../../components/dtos/event_item.dart';
+import '../../../../provider/medical_record.dart' as medProvider;
 import '../medical_record_form_screen.dart';
 
 class MedicalRecordItem extends StatelessWidget {

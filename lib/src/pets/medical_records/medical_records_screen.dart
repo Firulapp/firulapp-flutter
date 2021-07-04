@@ -1,13 +1,13 @@
-import 'package:firulapp/components/dtos/event_item.dart';
-import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants/constants.dart';
-import '../../provider/medical_record.dart' as medProvider;
-import '../../size_config.dart';
+import '../../../components/dtos/event_item.dart';
+import '../../../provider/pets.dart';
+import '../../../constants/constants.dart';
+import '../../../provider/medical_record.dart' as medProvider;
+import '../../../size_config.dart';
 import './components/medical_record_item.dart';
-import 'medical_record_form_screen.dart';
+import './medical_record_form_screen.dart';
 
 class MedicalRecordsScreen extends StatefulWidget {
   static const routeName = "/medical_records";
