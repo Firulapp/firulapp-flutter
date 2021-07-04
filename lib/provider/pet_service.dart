@@ -79,7 +79,10 @@ class PetService with ChangeNotifier {
   }
 
   PetServiceItem getLocalOwnServiceById(int serviceId) {
-    return ownItems.firstWhere((serv) => serv.id == serviceId);
+    return ownItems.firstWhere(
+      (serv) => serv.id == serviceId,
+      orElse: () => null,
+    );
   }
 
   PetServiceItem getLocalServiceById(int serviceId) {
@@ -159,6 +162,18 @@ class PetService with ChangeNotifier {
       } else {
         _items.add(mapJsonToEntity(petServiceResponse));
       }
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> delete(PetServiceItem petService) async {
+    try {
+      await _dio.delete("${Endpoints.service}/${petService.id}");
+      _ownItems.remove(
+        petService,
+      );
       notifyListeners();
     } catch (error) {
       throw error;

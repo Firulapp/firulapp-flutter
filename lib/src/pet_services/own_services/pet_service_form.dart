@@ -11,6 +11,7 @@ import '../../mixins/validator_mixins.dart';
 import '../../../components/default_button.dart';
 import '../../../size_config.dart';
 import '../../../constants/constants.dart';
+import '../../../provider/agenda.dart';
 
 class PetServiceForm extends StatefulWidget {
   static const routeName = "/pet-service-form";
@@ -51,6 +52,9 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
         context,
         listen: false,
       ).getLocalOwnServiceById(serviceId);
+      if (_petService == null) {
+        _petService = new PetServiceItem();
+      }
     }
     final user = Provider.of<User>(context, listen: true);
     SizeConfig().init(context);
@@ -106,7 +110,9 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                               .toList(),
                                           onChanged: (newValue) =>
                                               _speciesId = newValue,
-                                          value: _petService.speciesId,
+                                          value: _petService.speciesId == null
+                                              ? null
+                                              : _petService.speciesId,
                                           isExpanded: true,
                                         ),
                                       );
@@ -212,7 +218,13 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                           });
                                           if (response) {
                                             try {
-                                              //TODO: Borrar servicio
+                                              await Provider.of<PetService>(
+                                                context,
+                                                listen: false,
+                                              ).delete(_petService);
+                                              await Provider.of<Agenda>(context,
+                                                      listen: false)
+                                                  .fetchEvents();
                                             } catch (error) {
                                               Dialogs.info(
                                                 context,
@@ -318,7 +330,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     });
     return DropdownButtonFormField(
       items: _typeOptions,
-      value: _petService.category,
+      value: _petService.category == null ? null : _petService.category,
       onChanged: (newValue) => _petService.category = newValue,
       hint: const Text("Tipo de servicio"),
     );
