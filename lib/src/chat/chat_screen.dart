@@ -7,24 +7,30 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (ctx, index) => Container(
-          padding: EdgeInsets.all(8),
-          child: Text('Chat funciona'),
-        ),
+      body: StreamBuilder(
+        stream: Firestore.instance
+            .collection('chat/Th6J80GzZ3iu4kKU4oLj/messages/')
+            .snapshots(),
+        builder: (ctx, streamSnapshots) {
+          if (streamSnapshots.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          final documents = streamSnapshots.data.documents;
+          return ListView.builder(
+            itemCount: documents.length,
+            itemBuilder: (ctx, index) => Container(
+              padding: EdgeInsets.all(8),
+              child: Text(documents[index]['text']),
+            ),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           Firestore.instance
-              .collection('chat/Th6J80GzZ3iu4kKU4oLj/messages/')
-              .snapshots()
-              .listen(
-            (data) {
-              print(data.documents[0]['text']);
-            },
-          );
+              .collection('chat/Th6J80GzZ3iu4kKU4oLj/messages')
+              .add({'text': 'Esto se agrego desde la app'});
         },
       ),
     );
