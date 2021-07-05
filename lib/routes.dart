@@ -1,3 +1,4 @@
+import 'package:firulapp/src/chat/chat_screen.dart';
 import 'package:flutter/widgets.dart';
 
 import './src/sign_in/sign_in_screen.dart';
@@ -63,6 +64,7 @@ class Routes {
     PetInAdoption.routeName: (context) => PetInAdoption(),
     PetServiceForm.routeName: (context) => PetServiceForm(),
     OrganizationSignUpScreen.routeName: (context) => OrganizationSignUpScreen(),
-    ProfilePageOrganization.routeName: (context) => ProfilePageOrganization()
+    ProfilePageOrganization.routeName: (context) => ProfilePageOrganization(),
+    ChatScreen.routeName: (context) => ChatScreen()
   };
 }
