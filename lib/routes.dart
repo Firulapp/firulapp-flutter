@@ -1,3 +1,4 @@
+import 'package:firulapp/src/chat/auth_screen.dart';
 import 'package:firulapp/src/chat/chat_screen.dart';
 import 'package:flutter/widgets.dart';
 
@@ -65,6 +66,7 @@ class Routes {
     PetServiceForm.routeName: (context) => PetServiceForm(),
     OrganizationSignUpScreen.routeName: (context) => OrganizationSignUpScreen(),
     ProfilePageOrganization.routeName: (context) => ProfilePageOrganization(),
-    ChatScreen.routeName: (context) => ChatScreen()
+    ChatScreen.routeName: (context) => ChatScreen(),
+    AuthScreen.routeName: (context) => AuthScreen()
   };
 }
