@@ -153,7 +153,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                             buildAddressFormField(
                               "Dirección",
                               "Ingrese la dirección donde ofrece el servicio",
-                              TextInputType.number,
+                              TextInputType.name,
                             ),
                             SizedBox(
                               height:

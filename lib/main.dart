@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/appointment.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -129,6 +130,19 @@ class MyApp extends StatelessWidget {
               UserSession(),
             ),
             [],
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, Appointment>(
+          update: (context, user, app) => Appointment(
+            user,
+            app == null ? {} : app.user,
+          ),
+          create: (ctx) => Appointment(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            AppointmentItem(),
           ),
         ),
         ChangeNotifierProvider(

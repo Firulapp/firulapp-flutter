@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 * funciona con tipo de dato 'dynamic', se deja para futuro fix
 */
 class AgendaItem {
-  final int id;
   final int userId;
   final int clientId;
   final int petId;
@@ -16,12 +15,12 @@ class AgendaItem {
   final int petMedicalRecordId;
   final int petVaccinationRecordId;
   final int serviceId;
+  final int appointmentId;
   final String details;
   final String activityDate;
   final String activityTime;
   //TODO: atributo status para cambiar el color del widget appointment
   AgendaItem({
-    this.id,
     this.userId,
     this.clientId,
     this.petId,
@@ -29,6 +28,7 @@ class AgendaItem {
     this.petMedicalRecordId,
     this.petVaccinationRecordId,
     this.serviceId,
+    this.appointmentId,
     this.details,
     this.activityDate,
     this.activityTime,
