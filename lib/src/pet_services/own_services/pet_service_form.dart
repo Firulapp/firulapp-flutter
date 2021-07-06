@@ -169,6 +169,14 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                               text: "Guardar",
                               color: Constants.kPrimaryColor,
                               press: () async {
+                                if (_speciesId == null) {
+                                  Dialogs.info(
+                                    context,
+                                    title: "ERROR",
+                                    content: "Debe seleccionar una especie",
+                                  );
+                                  return;
+                                }
                                 final isOK = _formKey.currentState.validate();
                                 if (isOK) {
                                   try {

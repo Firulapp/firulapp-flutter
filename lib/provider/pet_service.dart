@@ -102,11 +102,9 @@ class PetService with ChangeNotifier {
       final servicesResponse = response.data["list"];
       servicesResponse.forEach((element) {
         var service = element["serviceDto"];
-        if (service["userId"] != user.userData.id) {
-          final petServiceItem = mapJsonToEntity(service);
-          petServiceItem.speciesId = element["species"][0];
-          _items.add(petServiceItem);
-        }
+        final petServiceItem = mapJsonToEntity(service);
+        petServiceItem.speciesId = element["species"][0];
+        _items.add(petServiceItem);
       });
       notifyListeners();
     } catch (error) {

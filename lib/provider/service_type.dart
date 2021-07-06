@@ -18,18 +18,18 @@ class ServiceType {
     ),
     ServiceType(
       id: 3,
-      title: 'Tienda',
-      icon: 'assets/icons/pet-shop.svg',
-    ),
-    ServiceType(
-      id: 4,
       title: 'Entrenamiento',
       icon: 'assets/icons/dog-train.svg',
     ),
     ServiceType(
-      id: 5,
+      id: 4,
       title: 'Veterinaria',
       icon: 'assets/icons/vet.svg',
+    ),
+    ServiceType(
+      id: 5,
+      title: 'Otros',
+      icon: 'assets/icons/pet-shop.svg',
     ),
     ServiceType(
       id: 0,
