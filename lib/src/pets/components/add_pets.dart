@@ -39,7 +39,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   BreedsItem _breedsItem;
   DateTime _birthDate = DateTime.now();
   int _age;
-  String _petStatus = PetStatus.ADOPTADA.value;
+  String _petStatus = PetStatus.NORMAL.value;
 
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
@@ -68,6 +68,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
       _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
       _birthDate = DateTime.parse(_pet.birthDate);
       _initialBreeds = providerBreeds.getBreeds(_pet.speciesId);
+      _petStatus = _pet.status;
       isInit = false;
     }
     _isLoading = false;

@@ -68,35 +68,39 @@ class SelectedPetScreen extends StatelessWidget {
               );
             },
           ),
-          ProfileMenu(
-            text: "Poner en Adopción",
-            icon: "assets/icons/casa-de-mascotas.svg",
-            press: () {
-              Navigator.of(context).pushNamed(
-                PetForAdoption.routeName,
-                arguments: pet.id,
-              );
-            },
-          ),
-          ProfileMenu(
-            text: "Quitar de Adopción",
-            icon: "assets/icons/Error.svg",
-            press: () async {
-              final response = await Dialogs.alert(
-                context,
-                "¿Estás seguro que desea quitar de adopción a ${pet.name}?",
-                "",
-                "Cancelar",
-                "Aceptar",
-              );
-              if (response) {
-                pet.status = "NORMAL";
-                pet.description = commentary;
-                Provider.of<Pets>(context, listen: false).petItem = pet;
-                Provider.of<Pets>(context, listen: false).savePet();
-              }
-            },
-          ),
+          pet.status == "NORMAL"
+              ? ProfileMenu(
+                  text: "Poner en Adopción",
+                  icon: "assets/icons/casa-de-mascotas.svg",
+                  press: () {
+                    Navigator.of(context).pushNamed(
+                      PetForAdoption.routeName,
+                      arguments: pet.id,
+                    );
+                  },
+                )
+              : Container(),
+          pet.status == "ADOPTAR"
+              ? ProfileMenu(
+                  text: "Quitar de Adopción",
+                  icon: "assets/icons/Error.svg",
+                  press: () async {
+                    final response = await Dialogs.alert(
+                      context,
+                      "¿Estás seguro que desea quitar de adopción a ${pet.name}?",
+                      "",
+                      "Cancelar",
+                      "Aceptar",
+                    );
+                    if (response) {
+                      pet.status = "NORMAL";
+                      pet.description = commentary;
+                      Provider.of<Pets>(context, listen: false).petItem = pet;
+                      Provider.of<Pets>(context, listen: false).savePet();
+                    }
+                  },
+                )
+              : Container(),
           ProfileMenu(
             text: "Tranferir mascota",
             icon: "assets/icons/certification.svg",
