@@ -19,6 +19,7 @@ import './components/agenda_event_item.dart';
 import './components/appointment_agenda_item.dart';
 import '../pets/utils/pet_option.dart';
 import '../../components/dtos/event_item.dart' as eventDTO;
+import '../chat/chat_screen.dart';
 
 class AgendaScreen extends StatefulWidget {
   static const routeName = "/agenda";
@@ -380,7 +381,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
                     color: Constants.kPrimaryColor,
                   ),
                   onTap: (petSelected) {
-                    //TODO: Navigator al chat privado
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, ChatScreen.routeName);
                   },
                 ),
               ],
