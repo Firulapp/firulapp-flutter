@@ -127,8 +127,13 @@ class _SingFormState extends State<SingForm>
       setState(() {
         _isLoading = false;
       });
-    } catch (err) {
-      print(err);
+    } catch (error) {
+      String message = error.toString();
+      Dialogs.info(
+        context,
+        title: 'ERROR',
+        content: message,
+      );
       setState(() {
         _isLoading = false;
       });
