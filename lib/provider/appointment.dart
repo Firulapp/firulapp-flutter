@@ -4,16 +4,16 @@ import 'package:firulapp/provider/user.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentItem {
-  final int id;
-  final int serviceId;
-  final int userId;
-  final int petId;
-  final String appointmentDate;
-  final String status;
-  final String createdAt;
-  final int createdBy;
-  final String modifiedAt;
-  final int modifiedBy;
+  int id;
+  int serviceId;
+  int userId;
+  int petId;
+  String appointmentDate;
+  String status;
+  String createdAt;
+  int createdBy;
+  String modifiedAt;
+  int modifiedBy;
 
   AppointmentItem({
     this.id,
@@ -21,7 +21,7 @@ class AppointmentItem {
     this.userId,
     this.petId,
     this.appointmentDate,
-    this.status,
+    this.status = "PENDIENTE",
     this.createdAt,
     this.createdBy,
     this.modifiedAt,
@@ -36,6 +36,10 @@ class Appointment with ChangeNotifier {
 
   AppointmentItem get item {
     return _item;
+  }
+
+  void setAppointmentItem(AppointmentItem item) {
+    _item = item;
   }
 
   Appointment(this.user, _items);
@@ -53,7 +57,7 @@ class Appointment with ChangeNotifier {
     }
   }
 
-  Future<void> saveAppointment(int serviceId, int petId) async {
+  Future<void> saveAppointment() async {
     try {
       final response = await this._dio.post('${Endpoints.appointment}', data: {
         "id": item.id,

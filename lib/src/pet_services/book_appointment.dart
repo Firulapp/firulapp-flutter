@@ -1,3 +1,4 @@
+import 'package:firulapp/provider/appointment.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +12,6 @@ import '../../provider/agenda.dart';
 import '../../provider/pets.dart';
 
 class BookAppointment extends StatefulWidget {
-  final String serviceId;
-  BookAppointment({this.serviceId});
   static const routeName = "/book-appointment";
   @override
   _BookAppointmentState createState() => _BookAppointmentState();
@@ -25,7 +24,7 @@ class _BookAppointmentState extends State<BookAppointment>
   final _formKey = GlobalKey<FormState>();
   final df = new DateFormat('dd-MM-yyyy');
   DateTime _appointmentDate = new DateTime.now();
-  int _petId;
+  AppointmentItem _appointment = AppointmentItem();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
@@ -37,7 +36,6 @@ class _BookAppointmentState extends State<BookAppointment>
     if (pickedDate != null && pickedDate != _appointmentDate) {
       setState(() {
         _appointmentDate = pickedDate;
-        //_medicalRecord.consultedAt = _appointmentDate.toIso8601String();
       });
     }
   }
@@ -50,6 +48,7 @@ class _BookAppointmentState extends State<BookAppointment>
 
   @override
   Widget build(BuildContext context) {
+    final serviceId = ModalRoute.of(context).settings.arguments as int;
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
@@ -116,8 +115,9 @@ class _BookAppointmentState extends State<BookAppointment>
                                           ),
                                         )
                                         .toList(),
-                                    value: _petId,
-                                    onChanged: (newValue) => _petId = newValue,
+                                    value: _appointment.petId,
+                                    onChanged: (newValue) =>
+                                        _appointment.petId = newValue,
                                     hint: const Text("Mascota"),
                                   ),
                                 );
@@ -136,12 +136,18 @@ class _BookAppointmentState extends State<BookAppointment>
                                   try {
                                     setState(() {
                                       _isLoading = true;
+                                      _appointment.serviceId = serviceId;
+                                      _appointment.appointmentDate =
+                                          _appointmentDate.toIso8601String();
                                     });
-                                    /*await Provider.of<Activity>(
+                                    Provider.of<Appointment>(
                                       context,
                                       listen: false,
-                                    ).saveActivity(_activity);*/
-                                    print(widget.serviceId);
+                                    ).setAppointmentItem(_appointment);
+                                    await Provider.of<Appointment>(
+                                      context,
+                                      listen: false,
+                                    ).saveAppointment();
                                     await Provider.of<Agenda>(context,
                                             listen: false)
                                         .fetchEvents();
