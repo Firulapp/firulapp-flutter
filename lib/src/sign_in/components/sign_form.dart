@@ -141,7 +141,7 @@ class _SingFormState extends State<SingForm>
   _submit() async {
     setState(() {
       _isLoading = true;
-      _isLogin = false;
+      _isLogin = true;
     });
     final isOK = _formKey.currentState.validate();
     FocusScope.of(context).unfocus(); // Cierra el teclado al ejecutar el check

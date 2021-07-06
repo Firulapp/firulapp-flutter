@@ -86,6 +86,18 @@ class _HomeDrawerState extends State<HomeDrawer> {
             height: 2.0,
           ),
           ListTile(
+            leading: Icon(Icons.chat),
+            title: Text('Chat'),
+            onTap: () {
+              // This line code will close drawer programatically....
+              Navigator.pop(context);
+              Navigator.pushNamed(context, ChatScreen.routeName);
+            },
+          ),
+          Divider(
+            height: 2.0,
+          ),
+          ListTile(
               leading: Icon(Icons.exit_to_app),
               title: const Text('Cerrar Sesion'),
               onTap: () async {
@@ -105,15 +117,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
               }),
           Divider(
             height: 2.0,
-          ),
-          ListTile(
-            leading: Icon(Icons.chat),
-            title: Text('Chat'),
-            onTap: () {
-              // This line code will close drawer programatically....
-              Navigator.pop(context);
-              Navigator.pushNamed(context, ChatScreen.routeName);
-            },
           ),
         ],
       ),
