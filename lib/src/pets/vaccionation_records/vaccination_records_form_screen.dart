@@ -27,6 +27,7 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
   final df = new DateFormat('dd-MM-yyyy');
   VaccinationRecordItem _vaccinationRecord = new VaccinationRecordItem();
   DateTime _vaccinationRecordDate;
+  var isInit = true;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
@@ -46,22 +47,25 @@ class _NewVaccinationRecordScreenState extends State<NewVaccinationRecordScreen>
 
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context).settings.arguments as EventItem;
-    _vaccinationRecordDate = event.date;
-    if (event.eventId != null) {
-      _vaccinationRecord = Provider.of<VaccinationRecord>(
-        context,
-        listen: false,
-      ).getLocalVaccinationRecordById(event.eventId);
+    if (isInit) {
+      _vaccinationRecordDate = event.date;
+      isInit = false;
+      if (event.eventId != null) {
+        _vaccinationRecord = Provider.of<VaccinationRecord>(
+          context,
+          listen: false,
+        ).getLocalVaccinationRecordById(event.eventId);
 
-      if (_vaccinationRecord != null) {
-        _vaccinationRecordDate =
-            DateTime.parse(_vaccinationRecord.vaccinationDate);
+        if (_vaccinationRecord != null) {
+          _vaccinationRecordDate =
+              DateTime.parse(_vaccinationRecord.vaccinationDate);
+        } else {
+          _vaccinationRecord = new VaccinationRecordItem();
+        }
       } else {
-        _vaccinationRecord = new VaccinationRecordItem();
+        _vaccinationRecord.vaccinationDate =
+            _vaccinationRecordDate.toIso8601String();
       }
-    } else {
-      _vaccinationRecord.vaccinationDate =
-          _vaccinationRecordDate.toIso8601String();
     }
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();

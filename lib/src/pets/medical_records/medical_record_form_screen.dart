@@ -26,6 +26,7 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
   final df = new DateFormat('dd-MM-yyyy');
   MedicalRecordItem _medicalRecord = new MedicalRecordItem();
   DateTime _medicalRecordDate;
+  bool isInit = true;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
@@ -37,27 +38,30 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
     if (pickedDate != null && pickedDate != _medicalRecordDate) {
       setState(() {
         _medicalRecordDate = pickedDate;
-        _medicalRecord.consultedAt = _medicalRecordDate.toIso8601String();
       });
     }
   }
 
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context).settings.arguments as EventItem;
-    _medicalRecordDate = event.date;
-    if (event.eventId != null) {
-      _medicalRecord = Provider.of<MedicalRecord>(
-        context,
-        listen: false,
-      ).getLocalMedicalRecordById(event.eventId);
-      if (_medicalRecord != null) {
-        _medicalRecordDate = DateTime.parse(_medicalRecord.consultedAt);
+    if (isInit) {
+      _medicalRecordDate = event.date;
+      isInit = false;
+      if (event.eventId != null) {
+        _medicalRecord = Provider.of<MedicalRecord>(
+          context,
+          listen: false,
+        ).getLocalMedicalRecordById(event.eventId);
+        if (_medicalRecord != null) {
+          _medicalRecordDate = DateTime.parse(_medicalRecord.consultedAt);
+        } else {
+          _medicalRecord = new MedicalRecordItem();
+        }
       } else {
-        _medicalRecord = new MedicalRecordItem();
+        _medicalRecord.consultedAt = _medicalRecordDate.toIso8601String();
       }
-    } else {
-      _medicalRecord.consultedAt = _medicalRecordDate.toIso8601String();
     }
+
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
@@ -187,6 +191,8 @@ class _NewMedicalRecordScreenState extends State<NewMedicalRecordScreen>
                                   try {
                                     setState(() {
                                       _isLoading = true;
+                                      _medicalRecord.consultedAt =
+                                          _medicalRecordDate.toIso8601String();
                                     });
                                     await Provider.of<MedicalRecord>(
                                       context,

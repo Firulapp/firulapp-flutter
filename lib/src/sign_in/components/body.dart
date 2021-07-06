@@ -39,6 +39,7 @@ class Body extends StatelessWidget {
                 SingForm(),
                 SizedBox(height: sizeConfig.wp(4)),
                 NoAccountText(),
+                SizedBox(height: sizeConfig.wp(2)),
               ],
             ),
           ),

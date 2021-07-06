@@ -1,20 +1,23 @@
-import 'package:firulapp/provider/activity.dart';
-import 'package:firulapp/provider/agenda.dart';
-import 'package:firulapp/provider/medical_record.dart';
-import 'package:firulapp/provider/pets.dart';
-import 'package:firulapp/provider/vaccination_record.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../provider/activity.dart';
+import '../../provider/user.dart';
+import '../../provider/agenda.dart';
+import '../../provider/medical_record.dart';
+import '../../provider/pets.dart';
+import '../../provider/vaccination_record.dart';
 import '../pets/vaccionation_records/vaccination_records_form_screen.dart';
 import '../../constants/constants.dart';
 import './components/event_item.dart';
 import '../pets/medical_records/medical_record_form_screen.dart';
 import '../pets/activity/activity_form_screen.dart';
-import 'components/agenda_event_item.dart';
+import './components/agenda_event_item.dart';
+import './components/appointment_agenda_item.dart';
 import '../pets/utils/pet_option.dart';
-import 'package:firulapp/components/dtos/event_item.dart' as eventDTO;
+import '../../components/dtos/event_item.dart' as eventDTO;
 
 class AgendaScreen extends StatefulWidget {
   static const routeName = "/agenda";
@@ -104,57 +107,77 @@ class _AgendaScreenState extends State<AgendaScreen> {
           Flexible(
             child: ListView.builder(
               itemBuilder: (context, index) {
-                return AgendaEventItem(
-                  event: _selectedEvents[index],
-                  onTap: (pet) async {
-                    if (_selectedEvents[index]["petVaccinationRecordId"] !=
-                        null) {
-                      Provider.of<VaccinationRecord>(
-                        context,
-                        listen: false,
-                      ).setPetItem(pet);
-                      await Provider.of<VaccinationRecord>(context,
-                              listen: false)
-                          .fetchVaccinationRecords();
-                      await Navigator.of(context).pushNamed(
-                        NewVaccinationRecordScreen.routeName,
-                        arguments: eventDTO.EventItem(
-                          eventId: _selectedEvents[index]
-                              ["petVaccinationRecordId"],
-                          date: DateTime.now(),
-                        ),
-                      );
-                    } else if (_selectedEvents[index]["activityId"] != null) {
-                      Provider.of<Activity>(
-                        context,
-                        listen: false,
-                      ).setPetItem(pet);
-                      await Provider.of<Activity>(context, listen: false)
-                          .fetchActivities();
-                      await Navigator.of(context).pushNamed(
-                        ActivityFormScreen.routeName,
-                        arguments: eventDTO.EventItem(
-                          eventId: _selectedEvents[index]["activityId"],
-                          date: DateTime.now(),
-                        ),
-                      );
-                    } else {
-                      Provider.of<MedicalRecord>(
-                        context,
-                        listen: false,
-                      ).setPetItem(pet);
-                      await Provider.of<MedicalRecord>(context, listen: false)
-                          .fetchMedicalRecords();
-                      await Navigator.of(context).pushNamed(
-                        NewMedicalRecordScreen.routeName,
-                        arguments: eventDTO.EventItem(
-                          eventId: _selectedEvents[index]["petMedicalRecordId"],
-                          date: DateTime.now(),
-                        ),
-                      );
-                    }
-                  },
-                );
+                if (_selectedEvents[index]["serviceId"] != null) {
+                  return AppointmentAgendaItem(
+                      event: _selectedEvents[index],
+                      onTap: (pet) async {
+                        await Provider.of<User>(context, listen: false)
+                            .getOtherUserInfo(
+                                _selectedEvents[index]["clientId"]);
+                        final client = Provider.of<User>(context, listen: false)
+                            .otherUserInfo;
+                        await _showAppointmentDialog(
+                          client,
+                          _selectedEvents[index]["serviceId"],
+                          pet,
+                          _selectedEvents[index]["activityDate"],
+                        );
+                      });
+                } else {
+                  return AgendaEventItem(
+                    event: _selectedEvents[index],
+                    onTap: (pet) async {
+                      if (_selectedEvents[index]["petVaccinationRecordId"] !=
+                          null) {
+                        Provider.of<VaccinationRecord>(
+                          context,
+                          listen: false,
+                        ).setPetItem(pet);
+                        await Provider.of<VaccinationRecord>(context,
+                                listen: false)
+                            .fetchVaccinationRecords();
+                        await Navigator.of(context).pushNamed(
+                          NewVaccinationRecordScreen.routeName,
+                          arguments: eventDTO.EventItem(
+                            eventId: _selectedEvents[index]
+                                ["petVaccinationRecordId"],
+                            date: DateTime.now(),
+                          ),
+                        );
+                      } else if (_selectedEvents[index]["activityId"] != null) {
+                        Provider.of<Activity>(
+                          context,
+                          listen: false,
+                        ).setPetItem(pet);
+                        await Provider.of<Activity>(context, listen: false)
+                            .fetchActivities();
+                        await Navigator.of(context).pushNamed(
+                          ActivityFormScreen.routeName,
+                          arguments: eventDTO.EventItem(
+                            eventId: _selectedEvents[index]["activityId"],
+                            date: DateTime.now(),
+                          ),
+                        );
+                      } else if (_selectedEvents[index]["petMedicalRecordId"] !=
+                          null) {
+                        Provider.of<MedicalRecord>(
+                          context,
+                          listen: false,
+                        ).setPetItem(pet);
+                        await Provider.of<MedicalRecord>(context, listen: false)
+                            .fetchMedicalRecords();
+                        await Navigator.of(context).pushNamed(
+                          NewMedicalRecordScreen.routeName,
+                          arguments: eventDTO.EventItem(
+                            eventId: _selectedEvents[index]
+                                ["petMedicalRecordId"],
+                            date: DateTime.now(),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                }
               },
               itemCount: _selectedEvents.length,
             ),
@@ -185,7 +208,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
               children: [
                 EventItem(
                   title: "Consulta Médica",
-                  icon: "assets/icons/medical-check.svg",
+                  icon: SvgPicture.asset(
+                    "assets/icons/medical-check.svg",
+                    color: Constants.kPrimaryColor,
+                    width: 60,
+                    fit: BoxFit.cover,
+                  ),
                   pet: petSelected,
                   onTap: (petSelected) {
                     Provider.of<MedicalRecord>(
@@ -206,7 +234,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 ),
                 EventItem(
                   title: "Vacuna",
-                  icon: "assets/icons/syringe.svg",
+                  icon: SvgPicture.asset(
+                    "assets/icons/syringe.svg",
+                    color: Constants.kPrimaryColor,
+                    width: 60,
+                    fit: BoxFit.cover,
+                  ),
                   pet: petSelected,
                   onTap: (pet) {
                     Provider.of<VaccinationRecord>(
@@ -227,7 +260,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 ),
                 EventItem(
                   title: "Actividad",
-                  icon: "assets/icons/play-with-pet.svg",
+                  icon: SvgPicture.asset(
+                    "assets/icons/play-with-pet.svg",
+                    color: Constants.kPrimaryColor,
+                    width: 60,
+                    fit: BoxFit.cover,
+                  ),
                   pet: petSelected,
                   onTap: (pet) {
                     Provider.of<Activity>(
@@ -287,6 +325,50 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 ),
               );
             },
+          ),
+        ),
+      ),
+    );
+  }
+
+  _showAppointmentDialog(
+    UserData client,
+    int serviceId,
+    PetItem pet,
+    String activityDate,
+  ) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: Colors.black,
+          ),
+        ),
+        title: const Text(
+          "¿Qué desea hacer?",
+          textAlign: TextAlign.center,
+        ),
+        content: Container(
+          height: 200,
+          child: SingleChildScrollView(
+            child: Column(children: [
+              EventItem(
+                title: "Cancelar Turno",
+                icon: Icon(Icons.cancel_outlined),
+                onTap: (petSelected) {
+                  //TODO: Cancelar Turno
+                },
+              ),
+              EventItem(
+                title: "Comunicarse con el Cliente",
+                icon: Icon(Icons.chat_outlined),
+                onTap: (petSelected) {
+                  //TODO: mailto:
+                },
+              ),
+            ]),
           ),
         ),
       ),

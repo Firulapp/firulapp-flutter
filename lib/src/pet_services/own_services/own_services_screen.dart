@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../size_config.dart';
-import '../../constants/constants.dart';
-import '../../provider/pet_service.dart';
-import '../../provider/service_type.dart';
-import './service_screen.dart';
+import '../../../size_config.dart';
+import '../../../constants/constants.dart';
+import '../../../provider/pet_service.dart';
+import '../../../provider/service_type.dart';
+import './pet_service_form.dart';
 
-class SelectedCategoryScreen extends StatefulWidget {
-  static const routeName = "/selected-category";
+class OwnServicesScreen extends StatefulWidget {
+  static const routeName = "/own-services";
 
   @override
-  _SelectedCategoryScreenState createState() => _SelectedCategoryScreenState();
+  _OwnServicesScreenState createState() => _OwnServicesScreenState();
 }
 
-class _SelectedCategoryScreenState extends State<SelectedCategoryScreen> {
+class _OwnServicesScreenState extends State<OwnServicesScreen> {
   Future _servicesFuture;
   bool fetchServicesFlag = true;
 
   Future _obtainServicesFuture() {
-    return Provider.of<PetService>(context).fetchServicesByType();
+    return Provider.of<PetService>(context).fetchServicesByUser();
   }
 
   @override
@@ -53,14 +53,14 @@ class _SelectedCategoryScreenState extends State<SelectedCategoryScreen> {
               );
             } else {
               return Consumer<PetService>(builder: (ctx, services, child) {
-                if (services.itemCount != 0) {
+                if (services.ownItemCount != 0) {
                   return ListView.builder(
                     itemBuilder: (context, index) {
                       return _availableService(
-                        services.items[index],
+                        services.ownItems[index],
                       );
                     },
-                    itemCount: services.itemCount,
+                    itemCount: services.ownItemCount,
                   );
                 } else {
                   return Center(
@@ -121,7 +121,7 @@ class _SelectedCategoryScreenState extends State<SelectedCategoryScreen> {
               ),
               onTap: () {
                 Navigator.of(context)
-                    .pushNamed(ServiceScreen.routeName, arguments: item.id);
+                    .pushNamed(PetServiceForm.routeName, arguments: item.id);
               },
               trailing: Icon(Icons.arrow_forward_ios)),
         ),

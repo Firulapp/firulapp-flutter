@@ -28,6 +28,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
   ActivityItem _activity = new ActivityItem();
   DateTime _activityDate;
   TimeOfDay _activityTime = TimeOfDay.now();
+  bool isInit = true;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
@@ -58,31 +59,34 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
   @override
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context).settings.arguments as EventItem;
-    _activityDate = event.date;
-    if (event.eventId != null) {
-      _activity = Provider.of<Activity>(
-        context,
-        listen: false,
-      ).getLocalActivityById(event.eventId);
-      if (_activity == null) {
-        _activity = new ActivityItem();
-      }
-      _activityDate = DateTime.parse(_activity.activityDate);
-      if (_activity.activityTime.length <= 5) {
-        var time = _activity.activityTime.split(":");
-        _activityTime = TimeOfDay(
-          hour: int.parse(time.first),
-          minute: int.parse(time.last),
-        );
+    if (isInit) {
+      _activityDate = event.date;
+      if (event.eventId != null) {
+        _activity = Provider.of<Activity>(
+          context,
+          listen: false,
+        ).getLocalActivityById(event.eventId);
+        if (_activity == null) {
+          _activity = new ActivityItem();
+        }
+        _activityDate = DateTime.parse(_activity.activityDate);
+        if (_activity.activityTime.length <= 5) {
+          var time = _activity.activityTime.split(":");
+          _activityTime = TimeOfDay(
+            hour: int.parse(time.first),
+            minute: int.parse(time.last),
+          );
+        } else {
+          _activityTime = TimeOfDay(
+            hour: DateTime.parse(_activity.activityTime).hour,
+            minute: DateTime.parse(_activity.activityTime).minute,
+          );
+        }
       } else {
-        _activityTime = TimeOfDay(
-          hour: DateTime.parse(_activity.activityTime).hour,
-          minute: DateTime.parse(_activity.activityTime).minute,
-        );
+        _activity.activityDate = _activityDate.toIso8601String();
+        _activity.activityTime =
+            "${_activityTime.hour}:${_activityTime.minute}";
       }
-    } else {
-      _activity.activityDate = _activityDate.toIso8601String();
-      _activity.activityTime = "${_activityTime.hour}:${_activityTime.minute}";
     }
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
