@@ -160,7 +160,7 @@ class User with ChangeNotifier {
     }
   }
 
-  Future<UserData> getOtherUserInfo(int userId) async {
+  Future<void> getOtherUserInfo(int userId) async {
     try {
       final response = await this._dio.get('${Endpoints.user}/$userId');
       final userResponse = response.data["dto"];
