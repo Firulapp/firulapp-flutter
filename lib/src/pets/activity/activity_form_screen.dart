@@ -1,17 +1,17 @@
-import 'package:firulapp/components/dtos/event_item.dart';
-import 'package:firulapp/constants/constants.dart';
-import 'package:firulapp/provider/agenda.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../mixins/validator_mixins.dart';
-import '../../provider/activity.dart';
-import '../../components/default_button.dart';
-import '../../components/input_text.dart';
-import '../../components/dialogs.dart';
-import '../../size_config.dart';
+import '../../../components/dtos/event_item.dart';
+import '../../../constants/constants.dart';
+import '../../../provider/agenda.dart';
+import '../../mixins/validator_mixins.dart';
+import '../../../provider/activity.dart';
+import '../../../components/default_button.dart';
+import '../../../components/input_text.dart';
+import '../../../components/dialogs.dart';
+import '../../../size_config.dart';
 
 class ActivityFormScreen extends StatefulWidget {
   static const routeName = "/activity_form";
@@ -28,6 +28,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
   ActivityItem _activity = new ActivityItem();
   DateTime _activityDate;
   TimeOfDay _activityTime = TimeOfDay.now();
+  bool isInit = true;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime pickedDate = await showDatePicker(
@@ -58,28 +59,34 @@ class _ActivityFormScreenState extends State<ActivityFormScreen>
   @override
   Widget build(BuildContext context) {
     final event = ModalRoute.of(context).settings.arguments as EventItem;
-    _activityDate = event.date;
-    if (event.eventId != null) {
-      _activity = Provider.of<Activity>(
-        context,
-        listen: false,
-      ).getLocalActivityById(event.eventId);
-      _activityDate = DateTime.parse(_activity.activityDate);
-      if (_activity.activityTime.length <= 5) {
-        var time = _activity.activityTime.split(":");
-        _activityTime = TimeOfDay(
-          hour: int.parse(time.first),
-          minute: int.parse(time.last),
-        );
+    if (isInit) {
+      _activityDate = event.date;
+      if (event.eventId != null) {
+        _activity = Provider.of<Activity>(
+          context,
+          listen: false,
+        ).getLocalActivityById(event.eventId);
+        if (_activity == null) {
+          _activity = new ActivityItem();
+        }
+        _activityDate = DateTime.parse(_activity.activityDate);
+        if (_activity.activityTime.length <= 5) {
+          var time = _activity.activityTime.split(":");
+          _activityTime = TimeOfDay(
+            hour: int.parse(time.first),
+            minute: int.parse(time.last),
+          );
+        } else {
+          _activityTime = TimeOfDay(
+            hour: DateTime.parse(_activity.activityTime).hour,
+            minute: DateTime.parse(_activity.activityTime).minute,
+          );
+        }
       } else {
-        _activityTime = TimeOfDay(
-          hour: DateTime.parse(_activity.activityTime).hour,
-          minute: DateTime.parse(_activity.activityTime).minute,
-        );
+        _activity.activityDate = _activityDate.toIso8601String();
+        _activity.activityTime =
+            "${_activityTime.hour}:${_activityTime.minute}";
       }
-    } else {
-      _activity.activityDate = _activityDate.toIso8601String();
-      _activity.activityTime = "${_activityTime.hour}:${_activityTime.minute}";
     }
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();

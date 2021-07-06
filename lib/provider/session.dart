@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firulapp/provider/user.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -19,6 +21,8 @@ class UserSession {
 }
 
 class Session extends ChangeNotifier {
+  final _auth = FirebaseAuth.instance;
+  AuthResult authResult;
   final _storage = FlutterSecureStorage();
   final sessionKey = "SESSIONK";
   final userKey = "USERK";
@@ -66,6 +70,17 @@ class Session extends ChangeNotifier {
         deviceId: user["deviceId"].toString(),
         userId: user["userId"].toString(),
       );
+      authResult = await _auth.createUserWithEmailAndPassword(
+        email: userData.mail,
+        password: userData.confirmPassword,
+      );
+      await Firestore.instance
+          .collection('users')
+          .document(authResult.user.uid)
+          .setData({
+        'username': userData.userName,
+        'email': userData.mail,
+      });
       await setSession();
       notifyListeners();
     } catch (error) {

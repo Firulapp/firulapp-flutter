@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "993043207693",
+    "project_id": "firulapp-d89ba",
+    "storage_bucket": "firulapp-d89ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993043207693:android:5eb8c2beb2c2b1431c6744",
+        "android_client_info": {
+          "package_name": "com.sodep.firulapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "993043207693-edbg2t0frlmo9uak1b0no5hptbdpqgu8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmZf-gzTbycwRRO797YxmI2_sEGNY9WUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "993043207693-edbg2t0frlmo9uak1b0no5hptbdpqgu8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "993043207693-e88ifnr18apb34lj8f5hud561072len6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sodep.firulapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

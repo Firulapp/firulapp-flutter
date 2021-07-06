@@ -1,7 +1,8 @@
-import 'package:firulapp/provider/activity.dart';
+import 'package:firulapp/provider/appointment.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import './provider/activity.dart';
 import './provider/agenda.dart';
 import './provider/breeds.dart';
 import './provider/pets.dart';
@@ -15,6 +16,7 @@ import './provider/species.dart';
 import './provider/medical_record.dart';
 import './provider/vaccination_record.dart';
 import './provider/reports.dart';
+import './provider/pet_service.dart';
 
 void main() => runApp(MyApp());
 
@@ -115,6 +117,32 @@ class MyApp extends StatelessWidget {
               UserSession(),
             ),
             [],
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, PetService>(
+          update: (context, user, petService) => PetService(
+            user,
+            petService == null ? {} : petService.user,
+          ),
+          create: (ctx) => PetService(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            [],
+          ),
+        ),
+        ChangeNotifierProxyProvider<User, Appointment>(
+          update: (context, user, app) => Appointment(
+            user,
+            app == null ? {} : app.user,
+          ),
+          create: (ctx) => Appointment(
+            User(
+              UserData(),
+              UserSession(),
+            ),
+            AppointmentItem(),
           ),
         ),
         ChangeNotifierProvider(

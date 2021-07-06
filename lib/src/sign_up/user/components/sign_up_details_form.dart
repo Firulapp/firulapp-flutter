@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -238,13 +239,32 @@ class _BodyState extends State<Body> with ValidatorMixins {
                       );
                       await Provider.of<Session>(context, listen: false)
                           .register(userData: _user.userData);
+
                       Navigator.pushNamedAndRemoveUntil(
                           context, SignInScreen.routeName, (_) => false);
+                    } on PlatformException catch (err) {
+                      var message =
+                          'Ocurrio un error, favor vuelta a intentar!';
+
+                      if (err.message != null) {
+                        message = err.message;
+                      }
+
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(message),
+                          backgroundColor: Theme.of(context).errorColor,
+                        ),
+                      );
+                      setState(() {
+                        _isLoading = false;
+                      });
                     } catch (error) {
+                      String message = error.toString();
                       Dialogs.info(
                         context,
-                        title: "ERROR",
-                        content: error.response.data["message"],
+                        title: 'ERROR',
+                        content: message,
                       );
                     }
                   }

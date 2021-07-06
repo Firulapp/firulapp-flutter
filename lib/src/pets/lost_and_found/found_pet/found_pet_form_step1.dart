@@ -59,7 +59,6 @@ class _FoundPetFormStep1State extends State<FoundPetFormStep1>
 
   @override
   Widget build(BuildContext context) {
-    final providerBreeds = Provider.of<Breeds>(context, listen: false);
     final point = ModalRoute.of(context).settings.arguments as GeographicPoints;
     _report.locationLatitude = double.parse(point.latitude);
     _report.locationLongitude = double.parse(point.longitude);

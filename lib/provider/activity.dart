@@ -54,7 +54,10 @@ class Activity with ChangeNotifier {
   }
 
   ActivityItem getLocalActivityById(int id) {
-    return _items.firstWhere((med) => med.id == id);
+    return _items.firstWhere(
+      (med) => med.id == id,
+      orElse: null,
+    );
   }
 
   Future<void> fetchActivities() async {

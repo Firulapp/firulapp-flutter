@@ -1,15 +1,17 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:firulapp/components/dialogs.dart';
-import 'package:firulapp/provider/species.dart';
-import 'package:firulapp/provider/user.dart';
-import 'package:firulapp/components/input_text.dart';
-import 'package:firulapp/provider/pet_service.dart';
-import 'package:firulapp/src/mixins/validator_mixins.dart';
-import '../../components/default_button.dart';
-import '../../size_config.dart';
-import '../../constants/constants.dart';
+import '../../../components/dialogs.dart';
+import '../../../provider/species.dart';
+import '../../../provider/user.dart';
+import '../../../components/input_text.dart';
+import '../../../provider/pet_service.dart';
+import '../../../provider/service_type.dart';
+import '../../mixins/validator_mixins.dart';
+import '../../../components/default_button.dart';
+import '../../../size_config.dart';
+import '../../../constants/constants.dart';
+import '../../../provider/agenda.dart';
 
 class PetServiceForm extends StatefulWidget {
   static const routeName = "/pet-service-form";
@@ -22,7 +24,6 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
   PetServiceItem _petService = new PetServiceItem();
   bool _isLoading = false;
   Future _initialSpecies;
-  String _category;
   int _speciesId;
 
   Future<void> _getListSpecies() async {
@@ -45,16 +46,22 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
 
   @override
   Widget build(BuildContext context) {
-    final serviceId = ModalRoute.of(context).settings.arguments as String;
+    final serviceId = ModalRoute.of(context).settings.arguments as int;
     if (serviceId != null) {
-      //TODO: fethcServicio para editar
+      _petService = Provider.of<PetService>(
+        context,
+        listen: false,
+      ).getLocalOwnServiceById(serviceId);
+      if (_petService == null) {
+        _petService = new PetServiceItem();
+      }
     }
-    final user = Provider.of<User>(context, listen: true).userData;
+    final user = Provider.of<User>(context, listen: true);
     SizeConfig().init(context);
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Formulario Consulta Médica"),
+        title: const Text("Formulario Servicio"),
       ),
       body: _isLoading
           ? Center(
@@ -76,7 +83,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             buildCategoryDropdown(
-                              CategoryItem.DUMMY_CATEGORIES,
+                              ServiceType.DUMMY_CATEGORIES,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 25.0),
@@ -103,7 +110,9 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                               .toList(),
                                           onChanged: (newValue) =>
                                               _speciesId = newValue,
-                                          value: _speciesId,
+                                          value: _petService.speciesId == null
+                                              ? null
+                                              : _petService.speciesId,
                                           isExpanded: true,
                                         ),
                                       );
@@ -141,8 +150,17 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                               height:
                                   SizeConfig.getProportionateScreenHeight(25),
                             ),
-                            buildContactFormField(
-                                "Contacto", TextInputType.name, user.mail),
+                            buildAddressFormField(
+                              "Dirección",
+                              "Ingrese la dirección donde ofrece el servicio",
+                              TextInputType.name,
+                            ),
+                            SizedBox(
+                              height:
+                                  SizeConfig.getProportionateScreenHeight(25),
+                            ),
+                            buildContactFormField("Contacto",
+                                TextInputType.name, user.userData.mail),
                             SizedBox(
                               height:
                                   SizeConfig.getProportionateScreenHeight(25),
@@ -151,15 +169,27 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                               text: "Guardar",
                               color: Constants.kPrimaryColor,
                               press: () async {
+                                if (_speciesId == null) {
+                                  Dialogs.info(
+                                    context,
+                                    title: "ERROR",
+                                    content: "Debe seleccionar una especie",
+                                  );
+                                  return;
+                                }
                                 final isOK = _formKey.currentState.validate();
                                 if (isOK) {
                                   try {
                                     setState(() {
                                       _isLoading = true;
                                     });
-                                    //TODO: Guardar servicio
+                                    await Provider.of<PetService>(
+                                      context,
+                                      listen: false,
+                                    ).save(_petService, _speciesId);
                                     Navigator.pop(context);
                                   } catch (error) {
+                                    print(error);
                                     Dialogs.info(
                                       context,
                                       title: 'ERROR',
@@ -172,7 +202,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                 }
                               },
                             ),
-                            false //TODO: ver si el servicio tiene un id
+                            _petService.id != null
                                 ? Column(
                                     children: [
                                       SizedBox(
@@ -186,7 +216,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                           final response = await Dialogs.alert(
                                             context,
                                             "¿Estás seguro que desea eliminar?",
-                                            "Se borrará el registro de la consulta médica",
+                                            "Se borrará el registro del servicio",
                                             "Cancelar",
                                             "Aceptar",
                                           );
@@ -195,7 +225,13 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                           });
                                           if (response) {
                                             try {
-                                              //TODO: Borrar servicio
+                                              await Provider.of<PetService>(
+                                                context,
+                                                listen: false,
+                                              ).delete(_petService);
+                                              await Provider.of<Agenda>(context,
+                                                      listen: false)
+                                                  .fetchEvents();
                                             } catch (error) {
                                               Dialogs.info(
                                                 context,
@@ -204,11 +240,11 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                                     .response.data["message"],
                                               );
                                             }
-                                            setState(() {
-                                              _isLoading = false;
-                                            });
                                             Navigator.pop(context);
                                           }
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
                                         },
                                       ),
                                       SizedBox(
@@ -220,7 +256,8 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
                                 : SizedBox(
                                     height:
                                         SizeConfig.getProportionateScreenHeight(
-                                            25),
+                                      25,
+                                    ),
                                   ),
                           ],
                         ),
@@ -243,6 +280,16 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     );
   }
 
+  Widget buildAddressFormField(String label, String hint, TextInputType tipo) {
+    return InputText(
+      label: label,
+      hintText: hint,
+      keyboardType: tipo,
+      value: _petService.address,
+      onChanged: (newValue) => _petService.address = newValue,
+    );
+  }
+
   Widget buildTitleFormField(String label, String hint, TextInputType tipo) {
     return InputText(
       label: label,
@@ -260,6 +307,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
       label: label,
       hintText: hint,
       keyboardType: tipo,
+      validator: validateTextNotNull,
       maxLines: 10,
       value: _petService.description,
       onChanged: (newValue) => _petService.description = newValue,
@@ -277,7 +325,7 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     );
   }
 
-  DropdownButtonFormField buildCategoryDropdown(List<CategoryItem> categories) {
+  DropdownButtonFormField buildCategoryDropdown(List<ServiceType> categories) {
     List<DropdownMenuItem> _typeOptions = [];
     categories.forEach((category) {
       _typeOptions.add(
@@ -289,7 +337,8 @@ class _PetServiceFormState extends State<PetServiceForm> with ValidatorMixins {
     });
     return DropdownButtonFormField(
       items: _typeOptions,
-      onChanged: (newValue) => _category = newValue,
+      value: _petService.category == null ? null : _petService.category,
+      onChanged: (newValue) => _petService.category = newValue,
       hint: const Text("Tipo de servicio"),
     );
   }
