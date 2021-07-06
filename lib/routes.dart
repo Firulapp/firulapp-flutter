@@ -1,3 +1,5 @@
+import 'package:firulapp/src/chat/auth_screen.dart';
+import 'package:firulapp/src/chat/chat_screen.dart';
 import 'package:flutter/widgets.dart';
 
 import './src/sign_in/sign_in_screen.dart';
@@ -70,5 +72,7 @@ class Routes {
     OwnServicesScreen.routeName: (context) => OwnServicesScreen(),
     ServiceScreen.routeName: (context) => ServiceScreen(),
     BookAppointment.routeName: (context) => BookAppointment(),
+    ChatScreen.routeName: (context) => ChatScreen(),
+    AuthScreen.routeName: (context) => AuthScreen()
   };
 }
