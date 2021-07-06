@@ -1,5 +1,8 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../src/home/home.dart';
@@ -13,19 +16,79 @@ import '../../../constants/constants.dart';
 import '../../mixins/validator_mixins.dart';
 import '../../../provider/user.dart';
 
-class SingFrom extends StatefulWidget {
-  SingFrom({Key key}) : super(key: key);
+class SingForm extends StatefulWidget {
+  SingForm({Key key}) : super(key: key);
 
   @override
-  _SingFromState createState() => _SingFromState();
+  _SingFormState createState() => _SingFormState();
 }
 
-class _SingFromState extends State<SingFrom>
+class _SingFormState extends State<SingForm>
     with AfterLayoutMixin, ValidatorMixins {
-  var _isLoading = false;
   final _formKey = GlobalKey<FormState>();
-  String _email;
-  String _password;
+  var _isLogin = true;
+  String _userEmail = '';
+  String _userName = '';
+  String _userPassword = '';
+
+  final _auth = FirebaseAuth.instance;
+  var _isLoading = false;
+
+  // funcion para login con firebase chat
+  void _submitAuthForm(
+    String email,
+    String password,
+    String username,
+    bool isLogin,
+    BuildContext ctx,
+  ) async {
+    AuthResult authResult;
+
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      if (isLogin) {
+        authResult = await _auth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+      } else {
+        authResult = await _auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        await Firestore.instance
+            .collection('users')
+            .document(authResult.user.uid)
+            .setData({
+          'username': username,
+          'email': email,
+        });
+      }
+    } on PlatformException catch (err) {
+      var message = 'An error occurred, pelase check your credentials!';
+
+      if (err.message != null) {
+        message = err.message;
+      }
+
+      Scaffold.of(ctx).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Theme.of(ctx).errorColor,
+        ),
+      );
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (err) {
+      print(err);
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   void afterFirstLayout(BuildContext context) {
@@ -35,30 +98,40 @@ class _SingFromState extends State<SingFrom>
   _check() async {
     setState(() {
       _isLoading = true;
+      _isLogin = true;
     });
     try {
       final session = Provider.of<Session>(context, listen: false);
+      final user = Provider.of<User>(context, listen: false);
       await session.getSession();
       if (session.isAuth) {
-        await Provider.of<User>(context, listen: false).getUser();
+        await user.getUser();
+        _userName = user.userData.userName;
+        _submitAuthForm(_userEmail.trim(), _userPassword.trim(),
+            _userName.trim(), _isLogin, context);
         Navigator.pushReplacementNamed(context, HomeScreen.routeName);
       }
-    } catch (error) {
-      String message;
-      if (error.runtimeType.toString() == "FlutterError") {
-        message = "Ocurrio un error inesperado";
-      } else if (error.error.osError.message != null) {
-        message = error.error.osError.message;
-      } else if (error.response.data["status"] == 401) {
-        message = "Servidor no disponible, vuelva a intentar";
-      } else {
-        message = error.response.data["message"];
+    } on PlatformException catch (err) {
+      var message = 'Ocurrio un error, favor verifique sus credenciales!';
+
+      if (err.message != null) {
+        message = err.message;
       }
-      Dialogs.info(
-        context,
-        title: 'ERROR',
-        content: message,
+
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
       );
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (err) {
+      print(err);
+      setState(() {
+        _isLoading = false;
+      });
     }
     setState(() {
       _isLoading = false;
@@ -68,38 +141,51 @@ class _SingFromState extends State<SingFrom>
   _submit() async {
     setState(() {
       _isLoading = true;
+      _isLogin = false;
     });
     final isOK = _formKey.currentState.validate();
-    _formKey.currentState.save();
     FocusScope.of(context).unfocus(); // Cierra el teclado al ejecutar el check
     if (isOK) {
+      _formKey.currentState.save();
       try {
         await Provider.of<Session>(context, listen: false).login(
-          email: _email,
-          password: _password,
+          email: _userEmail,
+          password: _userPassword,
         );
         await Provider.of<Session>(context, listen: false).logOut();
         await Provider.of<Session>(context, listen: false).login(
-          email: _email,
-          password: _password,
+          email: _userEmail,
+          password: _userPassword,
         );
         final session = Provider.of<Session>(context, listen: false);
         await session.getSession();
         if (session.isAuth) {
           await Provider.of<User>(context, listen: false).getUser();
+          final user = Provider.of<User>(context, listen: false);
+          _userName = user.userData.userName;
+          // Login para firebase chats
+          _submitAuthForm(_userEmail.trim(), _userPassword.trim(),
+              _userName.trim(), _isLogin, context);
           Navigator.pushReplacementNamed(context, HomeScreen.routeName);
         }
-      } catch (error) {
-        String message;
-        if (error.message != null) {
-          message = error.message;
-        } else if (error.response.data["status"] == 500) {
-          message = "Usuario incorrecto o inexistente";
-        } else if (error.response.data != null) {
-          message = error.response.data["message"];
-        } else {
-          message = "servidor no disponible";
+      } on PlatformException catch (err) {
+        var message = 'Ocurrio un error, favor verifique sus credenciales!';
+
+        if (err.message != null) {
+          message = err.message;
         }
+
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: Theme.of(context).errorColor,
+          ),
+        );
+        setState(() {
+          _isLoading = false;
+        });
+      } catch (error) {
+        String message = error.toString();
         Dialogs.info(
           context,
           title: 'ERROR',
@@ -143,9 +229,9 @@ class _SingFromState extends State<SingFrom>
       keyboardType: TextInputType.emailAddress,
       label: 'Correo',
       suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
-      onSaved: (newValue) => _email = newValue,
+      onSaved: (newValue) => _userEmail = newValue,
       onChanged: (value) {
-        _email = value;
+        _userEmail = value;
       },
       validator: validateEmail,
     );
@@ -156,9 +242,9 @@ class _SingFromState extends State<SingFrom>
       obscureText: true,
       label: 'Contraseña',
       suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-      onSaved: (newValue) => _password = newValue,
+      onSaved: (newValue) => _userPassword = newValue,
       onChanged: (value) {
-        _password = value;
+        _userPassword = value;
       },
       validator: validatePassword,
     );
