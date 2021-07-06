@@ -131,44 +131,51 @@ class _BookAppointmentState extends State<BookAppointment>
                               text: "Enviar",
                               color: Constants.kPrimaryColor,
                               press: () async {
-                                final isOK = _formKey.currentState.validate();
-                                if (isOK) {
-                                  try {
-                                    setState(() {
-                                      _isLoading = true;
-                                      _appointment.serviceId = serviceId;
-                                      _appointment.appointmentDate =
-                                          _appointmentDate.toIso8601String();
-                                    });
-                                    Provider.of<Appointment>(
-                                      context,
-                                      listen: false,
-                                    ).setAppointmentItem(_appointment);
-                                    await Provider.of<Appointment>(
-                                      context,
-                                      listen: false,
-                                    ).saveAppointment();
-                                    await Provider.of<Agenda>(context,
-                                            listen: false)
-                                        .fetchEvents();
-                                    await Dialogs.info(
-                                      context,
-                                      title: "Turno reservado",
-                                      content:
-                                          "Comuníquese con el oferente para definir el horario",
-                                    );
-                                    Navigator.pop(context);
-                                  } catch (error) {
-                                    Dialogs.info(
-                                      context,
-                                      title: 'ERROR',
-                                      content: error.response.data["message"],
-                                    );
-                                  }
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
+                                if (_appointment.petId == null) {
+                                  Dialogs.info(
+                                    context,
+                                    title: "ERROR",
+                                    content: "Debe seleccionar a una mascota",
+                                  );
+                                  return;
                                 }
+                                try {
+                                  setState(() {
+                                    _isLoading = true;
+                                    _appointment.serviceId = serviceId;
+                                    _appointment.appointmentDate =
+                                        _appointmentDate.toIso8601String();
+                                  });
+                                  Provider.of<Appointment>(
+                                    context,
+                                    listen: false,
+                                  ).setAppointmentItem(_appointment);
+                                  await Provider.of<Appointment>(
+                                    context,
+                                    listen: false,
+                                  ).saveAppointment();
+                                  /*await Dialogs.info(
+                                    context,
+                                    title: "Turno reservado",
+                                    content:
+                                        "Comuníquese con el oferente para definir el horario",
+                                  );*/
+                                  await Provider.of<Agenda>(context,
+                                          listen: false)
+                                      .fetchEvents();
+                                } catch (error) {
+                                  Dialogs.info(
+                                    context,
+                                    title: 'ERROR',
+                                    content: error.response.data["message"],
+                                  );
+                                }
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                                int count = 0;
+                                Navigator.of(context)
+                                    .popUntil((_) => count++ >= 2);
                               },
                             ),
                           ],

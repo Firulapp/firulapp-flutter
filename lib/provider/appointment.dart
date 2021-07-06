@@ -59,7 +59,9 @@ class Appointment with ChangeNotifier {
 
   Future<void> saveAppointment() async {
     try {
-      final response = await this._dio.post('${Endpoints.appointment}', data: {
+      final response = await this
+          ._dio
+          .post('${Endpoints.service}${Endpoints.appointment}', data: {
         "id": item.id,
         "userId": user.userData.id,
         "serviceId": item.serviceId,
@@ -72,7 +74,7 @@ class Appointment with ChangeNotifier {
         "modifiedBy": user.userData.id,
       });
       final appointment = response.data["dto"];
-      _item = appointment;
+      _item = mapJsonToEntity(appointment);
       notifyListeners();
     } catch (error) {
       throw error;
