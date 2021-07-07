@@ -82,11 +82,14 @@ class _SingFormState extends State<SingForm>
       setState(() {
         _isLoading = false;
       });
-    } catch (err) {
-      print(err);
-      setState(() {
-        _isLoading = false;
-      });
+    } catch (error) {
+      print(error);
+      String message = "Ocurrio un error inesperado";
+      Dialogs.info(
+        context,
+        title: 'ERROR',
+        content: message,
+      );
     }
   }
 
@@ -129,12 +132,8 @@ class _SingFormState extends State<SingForm>
       print(error);
       String message = "Ocurrio un error inesperado, vuelva a intentar";
       if (error.response.data['message'] != null) {
-        setState(() {
-          _isLoading = false;
-        });
         message = error.response.data['message'];
       }
-
       Dialogs.info(
         context,
         title: 'ERROR',

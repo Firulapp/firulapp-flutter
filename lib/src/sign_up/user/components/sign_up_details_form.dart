@@ -260,7 +260,12 @@ class _BodyState extends State<Body> with ValidatorMixins {
                         _isLoading = false;
                       });
                     } catch (error) {
-                      String message = error.toString();
+                      print(error);
+                      String message =
+                          "Ocurrio un error inesperado, vuelva a intentar";
+                      if (error.response.data['message'] != null) {
+                        message = error.response.data['message'];
+                      }
                       Dialogs.info(
                         context,
                         title: 'ERROR',

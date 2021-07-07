@@ -166,7 +166,6 @@ class Session extends ChangeNotifier {
 
   Future<void> logOut() async {
     try {
-      // muestra barra de carga
       await this._dio.post(
         Endpoints.logout,
         data: {

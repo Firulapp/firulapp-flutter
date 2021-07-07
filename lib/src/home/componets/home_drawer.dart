@@ -111,18 +111,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Navigator.pushNamedAndRemoveUntil(
                       context, SignInScreen.routeName, (_) => false);
                 } on PlatformException catch (err) {
-                  var message =
-                      'Ocurrio un error, favor verifique sus credenciales!';
+                  var message = '';
 
                   if (err.message != null) {
                     message = err.message;
                   }
-
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(message),
-                      backgroundColor: Theme.of(context).errorColor,
-                    ),
+                  Dialogs.info(
+                    context,
+                    title: 'ERROR',
+                    content: message,
                   );
                 } catch (error) {
                   print(error);
