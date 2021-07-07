@@ -193,7 +193,7 @@ class Pets with ChangeNotifier {
       final response =
           await this._dio.get('${Endpoints.pet}/user/${userData.userData.id}');
       final List<PetItem> loadedPets = [];
-      if (!response.data['list'].isEmpty) {
+      if (!response.data['list'] == null) {
         response.data['list'].forEach((pet) {
           _allPets.add(PetItem.fromJson(pet));
           if (pet["status"] != "ENCONTRADA") {
