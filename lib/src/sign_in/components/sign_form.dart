@@ -127,7 +127,10 @@ class _SingFormState extends State<SingForm>
       );
     } catch (error) {
       print(error);
-      String message = "Ocurrio un error inesperado";
+      String message = "Ocurrio un error inesperado, vuelva a intentar";
+      if (error.response.data['message'] != null) {
+        message = error.response.data['message'];
+      }
       Dialogs.info(
         context,
         title: 'ERROR',
@@ -184,7 +187,10 @@ class _SingFormState extends State<SingForm>
         );
       } catch (error) {
         print(error);
-        String message = "Ocurrio un error inesperado";
+        String message = "Ocurrio un error inesperado, vuelva a intentar";
+        if (error.response.data['message'] != null) {
+          message = error.response.data['message'];
+        }
         Dialogs.info(
           context,
           title: 'ERROR',

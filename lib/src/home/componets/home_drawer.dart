@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firulapp/provider/user.dart';
 import 'package:firulapp/src/chat/chat_screen.dart';
 import 'package:firulapp/src/chat/chat_lists.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
@@ -109,13 +110,28 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   await FirebaseAuth.instance.signOut(); // log aout del chat
                   Navigator.pushNamedAndRemoveUntil(
                       context, SignInScreen.routeName, (_) => false);
+                } on PlatformException catch (err) {
+                  var message =
+                      'Ocurrio un error, favor verifique sus credenciales!';
+
+                  if (err.message != null) {
+                    message = err.message;
+                  }
+
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(message),
+                      backgroundColor: Theme.of(context).errorColor,
+                    ),
+                  );
                 } catch (error) {
+                  print(error);
+                  String message = "Ocurrio un error inesperado";
                   Dialogs.info(
                     context,
                     title: 'ERROR',
-                    content: error.response.data["message"],
+                    content: message,
                   );
-                  print(error);
                 }
               }),
           Divider(
