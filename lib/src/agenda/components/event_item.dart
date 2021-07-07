@@ -32,6 +32,8 @@ class EventItem extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
+                maxLines: 2,
+                softWrap: false,
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w500,

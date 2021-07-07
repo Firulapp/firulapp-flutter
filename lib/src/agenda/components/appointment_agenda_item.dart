@@ -1,6 +1,9 @@
-import 'package:firulapp/provider/pets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:firulapp/provider/pets.dart';
+import 'package:firulapp/constants/constants.dart';
 
 class AppointmentAgendaItem extends StatefulWidget {
   final dynamic event;
@@ -31,22 +34,31 @@ class _AppointmentAgendaItemState extends State<AppointmentAgendaItem> {
     return FutureBuilder(
       future: _petsFuture,
       builder: (_, dataSnapshot) {
-        return Consumer<Pets>(
-          builder: (context, pet, _) => GestureDetector(
-            onTap: () => widget.onTap(pet.petItem),
-            child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Card(
-                elevation: 3,
-                child: ListTile(
-                  leading: Icon(Icons.shopping_cart_outlined),
-                  title: Text(widget.event["details"]),
-                  subtitle: Text(pet.petItem.name),
+        if (dataSnapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          return Consumer<Pets>(
+            builder: (context, pet, _) => GestureDetector(
+              onTap: () => widget.onTap(pet.petItem),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Card(
+                  elevation: 3,
+                  child: ListTile(
+                    leading: SvgPicture.asset(
+                      "assets/icons/pet-shop.svg",
+                      color: Constants.kPrimaryColor,
+                      width: 35,
+                      fit: BoxFit.cover,
+                    ),
+                    title: Text(widget.event["details"]),
+                    subtitle: Text(pet.petItem.name),
+                  ),
                 ),
               ),
             ),
-          ),
-        );
+          );
+        }
       },
     );
   }

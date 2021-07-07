@@ -81,12 +81,10 @@ class Appointment with ChangeNotifier {
     }
   }
 
-  Future<void> cancelAppointment() async {
+  Future<void> cancelAppointment(int appointmentId) async {
     try {
-      final response = await this._dio.post(
-          '${Endpoints.appointment}/${item.id}/${item.status}/${user.userData.id}');
-      final appointment = response.data["dto"];
-      _item = appointment;
+      await this._dio.post(
+          '${Endpoints.service}${Endpoints.appointment}/$appointmentId/CANCELADO/by/${user.userData.id}');
       notifyListeners();
     } catch (error) {
       throw error;

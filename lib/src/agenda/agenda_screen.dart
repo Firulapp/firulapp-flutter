@@ -8,6 +8,7 @@ import '../../provider/user.dart';
 import '../../provider/agenda.dart';
 import '../../provider/medical_record.dart';
 import '../../provider/pets.dart';
+import '../../provider/appointment.dart';
 import '../../provider/vaccination_record.dart';
 import '../pets/vaccionation_records/vaccination_records_form_screen.dart';
 import '../../constants/constants.dart';
@@ -18,6 +19,7 @@ import './components/agenda_event_item.dart';
 import './components/appointment_agenda_item.dart';
 import '../pets/utils/pet_option.dart';
 import '../../components/dtos/event_item.dart' as eventDTO;
+import '../chat/chat_screen.dart';
 
 class AgendaScreen extends StatefulWidget {
   static const routeName = "/agenda";
@@ -111,17 +113,20 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   return AppointmentAgendaItem(
                       event: _selectedEvents[index],
                       onTap: (pet) async {
-                        await Provider.of<User>(context, listen: false)
-                            .getOtherUserInfo(
-                                _selectedEvents[index]["clientId"]);
+                        if (_selectedEvents[index]["clientId"] != null) {
+                          await Provider.of<User>(context, listen: false)
+                              .getOtherUserInfo(int.parse(
+                                  _selectedEvents[index]["clientId"]));
+                        }
                         final client = Provider.of<User>(context, listen: false)
                             .otherUserInfo;
                         await _showAppointmentDialog(
                           client,
-                          _selectedEvents[index]["serviceId"],
+                          _selectedEvents[index]["appointmentId"],
                           pet,
-                          _selectedEvents[index]["activityDate"],
                         );
+                        await Provider.of<Agenda>(context, listen: false)
+                            .fetchEvents();
                       });
                 } else {
                   return AgendaEventItem(
@@ -333,9 +338,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
 
   _showAppointmentDialog(
     UserData client,
-    int serviceId,
+    int appointmentId,
     PetItem pet,
-    String activityDate,
   ) async {
     await showDialog(
       context: context,
@@ -351,24 +355,38 @@ class _AgendaScreenState extends State<AgendaScreen> {
           textAlign: TextAlign.center,
         ),
         content: Container(
-          height: 200,
+          height: 250,
           child: SingleChildScrollView(
-            child: Column(children: [
-              EventItem(
-                title: "Cancelar Turno",
-                icon: Icon(Icons.cancel_outlined),
-                onTap: (petSelected) {
-                  //TODO: Cancelar Turno
-                },
-              ),
-              EventItem(
-                title: "Comunicarse con el Cliente",
-                icon: Icon(Icons.chat_outlined),
-                onTap: (petSelected) {
-                  //TODO: mailto:
-                },
-              ),
-            ]),
+            child: Column(
+              children: [
+                EventItem(
+                  title: "Cancelar Turno",
+                  icon: Icon(
+                    Icons.cancel_outlined,
+                    size: 45,
+                    color: Constants.kPrimaryColor,
+                  ),
+                  onTap: (petSelected) {
+                    Provider.of<Appointment>(context, listen: false)
+                        .cancelAppointment(appointmentId);
+                  },
+                ),
+                EventItem(
+                  title: client != null
+                      ? "Comunicarse con el Cliente"
+                      : "Comunicarse con el Proveedor",
+                  icon: Icon(
+                    Icons.chat_outlined,
+                    size: 40,
+                    color: Constants.kPrimaryColor,
+                  ),
+                  onTap: (petSelected) {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, ChatScreen.routeName);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
