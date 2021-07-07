@@ -102,11 +102,12 @@ class _SingFormState extends State<SingForm>
     });
     try {
       final session = Provider.of<Session>(context, listen: false);
-      final user = Provider.of<User>(context, listen: false);
       await session.getSession();
       if (session.isAuth) {
-        await user.getUser();
+        await Provider.of<User>(context, listen: false).getUser();
+        final user = Provider.of<User>(context, listen: false);
         _userName = user.userData.userName;
+        // Login para firebase chats
         _submitAuthForm(_userEmail.trim(), _userPassword.trim(),
             _userName.trim(), _isLogin, context);
         Navigator.pushReplacementNamed(context, HomeScreen.routeName);
@@ -124,19 +125,14 @@ class _SingFormState extends State<SingForm>
           backgroundColor: Theme.of(context).errorColor,
         ),
       );
-      setState(() {
-        _isLoading = false;
-      });
     } catch (error) {
-      String message = error.toString();
+      print(error);
+      String message = "Ocurrio un error inesperado";
       Dialogs.info(
         context,
         title: 'ERROR',
         content: message,
       );
-      setState(() {
-        _isLoading = false;
-      });
     }
     setState(() {
       _isLoading = false;
@@ -186,19 +182,14 @@ class _SingFormState extends State<SingForm>
             backgroundColor: Theme.of(context).errorColor,
           ),
         );
-        setState(() {
-          _isLoading = false;
-        });
       } catch (error) {
-        String message = error.toString();
+        print(error);
+        String message = "Ocurrio un error inesperado";
         Dialogs.info(
           context,
           title: 'ERROR',
           content: message,
         );
-        setState(() {
-          _isLoading = false;
-        });
       }
     }
     setState(() {
