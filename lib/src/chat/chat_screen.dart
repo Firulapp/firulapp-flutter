@@ -1,6 +1,6 @@
 import 'package:firulapp/constants/constants.dart';
-import 'package:firulapp/src/chat/widgets/chat/messages.dart';
-import 'package:firulapp/src/chat/widgets/chat/new_message.dart';
+import 'package:firulapp/src/chat/widgets/messages.dart';
+import 'package:firulapp/src/chat/widgets/new_message.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatelessWidget {
