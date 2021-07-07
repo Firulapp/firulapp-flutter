@@ -12,13 +12,14 @@ import '../pet_pic.dart';
 String amount;
 
 class PetForFostering extends StatelessWidget {
-  static const routeName = "/for-forFostering";
+  static const routeName = "/for-fostering";
   const PetForFostering({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final id = ModalRoute.of(context).settings.arguments as int;
-    final pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
+    final pet =
+        Provider.of<Pets>(context, listen: false).getLocalPetInAdoptionById(id);
     final userData = Provider.of<User>(context, listen: false).userData;
     return Scaffold(
       appBar: AppBar(
@@ -46,14 +47,15 @@ class PetForFostering extends StatelessWidget {
                 "Cancelar",
                 "Aceptar",
               );
-              if (userData.id != pet.userId && response) {
+              if (response) {
                 Provider.of<Pets>(context, listen: false)
                     .requestFostering(id, amount);
-                // Navigator.pop(context);
-              } else {
-                Dialogs.info(context,
-                    title: "ERROR",
-                    content: "No puede apadrinar su propia mascota");
+                Dialogs.info(
+                  context,
+                  title: "ÉXITO",
+                  content:
+                      "Un correo fue enviado al dueño de la mascota para que se comunique con usted",
+                );
               }
             },
           )

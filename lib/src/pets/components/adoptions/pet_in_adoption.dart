@@ -8,6 +8,7 @@ import 'package:firulapp/src/pets/components/adoptions/pet_for_fostering.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:firulapp/provider/user.dart';
 
 import '../../../../components/input_text.dart';
 import '../../../../provider/breeds.dart';
@@ -80,6 +81,7 @@ class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
 
   @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<User>(context, listen: false).userData;
     return new Scaffold(
         appBar: AppBar(
           title: Text("Mascota En Adopción"),
@@ -98,32 +100,38 @@ class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
                           _status,
                         ),
                       ),
-                      DefaultButton(
-                          text: "Solicitar adopción",
-                          color: Constants.kPrimaryColor,
-                          press: () async {
-                            final response = await Dialogs.alert(
-                              context,
-                              "¿Desea solicitar adopcion de ${_pet.name}?",
-                              "",
-                              "Cancelar",
-                              "Aceptar",
-                            );
-                            if (response) {
-                              Provider.of<Pets>(context, listen: false)
-                                  .requestAdoption(_pet.id);
-                            }
-                          }),
+                      userData.id != _pet.userId
+                          ? DefaultButton(
+                              text: "Solicitar adopción",
+                              color: Constants.kPrimaryColor,
+                              press: () async {
+                                final response = await Dialogs.alert(
+                                  context,
+                                  "¿Desea solicitar adopcion de ${_pet.name}?",
+                                  "",
+                                  "Cancelar",
+                                  "Aceptar",
+                                );
+                                if (response) {
+                                  Provider.of<Pets>(context, listen: false)
+                                      .requestAdoption(_pet.id);
+                                }
+                              },
+                            )
+                          : Container(),
                       SizedBox(
                           height: SizeConfig.getProportionateScreenHeight(10)),
-                      DefaultButton(
-                          text: "Apadrinar",
-                          color: Colors.white,
-                          press: () {
-                            Navigator.of(context).pushNamed(
-                                PetForFostering.routeName,
-                                arguments: _pet.id);
-                          }),
+                      userData.id != _pet.userId
+                          ? DefaultButton(
+                              text: "Apadrinar",
+                              color: Colors.white,
+                              press: () {
+                                Navigator.of(context).pushNamed(
+                                    PetForFostering.routeName,
+                                    arguments: _pet.id);
+                              },
+                            )
+                          : Container(),
                       SizedBox(
                           height: SizeConfig.getProportionateScreenHeight(25)),
                       Container(
