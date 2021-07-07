@@ -49,6 +49,7 @@ class PetItem with ChangeNotifier {
   factory PetItem.fromJson(Map<String, dynamic> parsedJson) {
     return PetItem(
       id: parsedJson["id"],
+      userId: parsedJson["userId"],
       speciesId: parsedJson["speciesId"],
       breedId: parsedJson["breedId"],
       name: parsedJson["name"],
@@ -174,6 +175,7 @@ class Pets with ChangeNotifier {
       final petResponse = response.data["dto"];
       var pet = PetItem(
         id: petResponse["id"],
+        userId: petResponse["userId"],
         breedId: petResponse["breedId"],
         name: petResponse["name"],
         birthDate: petResponse["birthDate"],

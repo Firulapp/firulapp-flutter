@@ -2,6 +2,7 @@ import 'package:firulapp/components/default_button.dart';
 import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/components/input_text.dart';
 import 'package:firulapp/constants/constants.dart';
+import 'package:firulapp/provider/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class PetForFostering extends StatelessWidget {
   Widget build(BuildContext context) {
     final id = ModalRoute.of(context).settings.arguments as int;
     final pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
+    final userData = Provider.of<User>(context, listen: false).userData;
     return Scaffold(
       appBar: AppBar(
         title: Text(pet.name),
@@ -40,14 +42,18 @@ class PetForFostering extends StatelessWidget {
               final response = await Dialogs.alert(
                 context,
                 "¿Estás seguro que desea apadrinar a ${pet.name}?",
-                "",
+                "monto donacion $amount",
                 "Cancelar",
                 "Aceptar",
               );
-              if (response) {
+              if (userData.id != pet.userId && response) {
                 Provider.of<Pets>(context, listen: false)
                     .requestFostering(id, amount);
-                Navigator.pop(context);
+                // Navigator.pop(context);
+              } else {
+                Dialogs.info(context,
+                    title: "ERROR",
+                    content: "No puede apadrinar su propia mascota");
               }
             },
           )
