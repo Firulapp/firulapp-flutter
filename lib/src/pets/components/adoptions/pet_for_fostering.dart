@@ -18,14 +18,14 @@ import '../../../../provider/species.dart';
 import '../../../../provider/pets.dart';
 import '../pets_image.dart';
 
-class PetInAdoption extends StatefulWidget {
-  static const routeName = "/pets/adoption";
-  PetInAdoption({Key key}) : super(key: key);
+class PetForFostering extends StatefulWidget {
+  static const routeName = "/pets/fostering";
+  PetForFostering({Key key}) : super(key: key);
 
   MapScreenState createState() => MapScreenState();
 }
 
-class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
+class MapScreenState extends State<PetForFostering> with ValidatorMixins {
   bool _status = true;
   Future _initialSpecies;
   Future _initialBreeds;
@@ -115,10 +115,20 @@ class MapScreenState extends State<PetInAdoption> with ValidatorMixins {
                           }),
                       DefaultButton(
                           text: "Solicitar adopción",
-                          color: Colors.white,
+                          color: Constants.kPrimaryColor,
                           press: () async {
-                            Provider.of<Pets>(context, listen: false)
-                                .requestAdoption(_pet.id);
+                            final response = await Dialogs.alert(
+                              context,
+                              "¿Desea apadrianar a ${_pet.name}?",
+                              "",
+                              "Cancelar",
+                              "Aceptar",
+                            );
+                            if (response) {
+                              Navigator.of(context).pushNamed(
+                                  PetForFostering.routeName,
+                                  arguments: _pet.id);
+                            }
                           }),
                       SizedBox(
                           height: SizeConfig.getProportionateScreenHeight(25)),

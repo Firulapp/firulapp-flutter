@@ -310,6 +310,21 @@ class Pets with ChangeNotifier {
       throw e;
     }
   }
+
+  Future<void> requestFostering(int petId, int amount) async {
+    print(userData.userData.id);
+    print(petId);
+    try {
+      await this._dio.post(
+        '${Endpoints.pet}/$petId/foster/${userData.userData.id}',
+        data: {
+          "amount": amount,
+        },
+      );
+    } catch (e) {
+      throw e;
+    }
+  }
 }
 
 extension PetsExtension on PetStatus {
