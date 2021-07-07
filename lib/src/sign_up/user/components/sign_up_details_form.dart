@@ -23,7 +23,7 @@ class SignUpDetailsForm extends StatelessWidget {
     final SizeConfig sizeConfig = SizeConfig();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign Up"),
+        title: Text("Registro"),
       ),
       body: SafeArea(
         child: SizedBox(
