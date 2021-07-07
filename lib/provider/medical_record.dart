@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 
 import './pets.dart';
 import '../constants/endpoints.dart';
-import 'user.dart';
+import './user.dart';
 
 class MedicalRecordItem {
   int id;

@@ -5,6 +5,10 @@ import '../constants/constants.dart';
 class CustomTheme {
   static ThemeData theme() {
     return ThemeData(
+      // primarySwatch: Colors.pink, //
+      // backgroundColor: Colors.pink, //
+      // accentColor: Colors.deepPurple, //
+      // accentColorBrightness: Brightness.dark, //
       scaffoldBackgroundColor: Colors.white,
       fontFamily: "Muli",
       appBarTheme: appBarTheme(),

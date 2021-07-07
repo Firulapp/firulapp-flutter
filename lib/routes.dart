@@ -1,3 +1,5 @@
+import 'package:firulapp/src/chat/chat_screen.dart';
+import 'package:firulapp/src/chat/chat_lists.dart';
 import 'package:flutter/widgets.dart';
 
 import './src/sign_in/sign_in_screen.dart';
@@ -9,12 +11,12 @@ import './src/pets/selected_pet_screen.dart';
 import './src/sign_up/user/components/sign_up_details_form.dart';
 import './src/sign_up/user/sign_up_screen.dart';
 import './src/pets/components/add_pets.dart';
-import './src/medical_records/medical_records_screen.dart';
+import './src/pets/medical_records/medical_records_screen.dart';
 import './src/agenda/agenda_screen.dart';
-import './src/medical_records/medical_record_form_screen.dart';
-import './src/vaccionation_records/vaccination_records_form_screen.dart';
-import './src/vaccionation_records/vaccination_records_screen.dart';
-import './src/agenda/activity_form_screen.dart';
+import './src/pets/medical_records/medical_record_form_screen.dart';
+import './src/pets/vaccionation_records/vaccination_records_form_screen.dart';
+import './src/pets/vaccionation_records/vaccination_records_screen.dart';
+import './src/pets/activity/activity_form_screen.dart';
 import './src/pets/lost_and_found/lost_and_found_map.dart';
 import './src/pets/lost_and_found/found_pet/found_pet_form_step1.dart';
 import './src/pets/lost_and_found/found_pet/found_pet_form_step2.dart';
@@ -26,7 +28,10 @@ import './src/pets/components/adoptions/transfer_pet.dart';
 import './src/pet_services/service_categories_screen.dart';
 import './src/pet_services/selected_category_screen.dart';
 import './src/pets/components/adoptions/pet_in_adoption.dart';
-import './src/pet_services/pet_service_form.dart';
+import './src/pet_services/own_services/pet_service_form.dart';
+import './src/pet_services/own_services/own_services_screen.dart';
+import './src/pet_services/service_screen.dart';
+import './src/pet_services/book_appointment.dart';
 import './src/pets/components/adoptions/pet_for_adoption.dart';
 import './src/sign_up/organization/organization_sign_up_screen.dart';
 import './src/profile_detail/profile_details_organization.dart';
@@ -63,6 +68,11 @@ class Routes {
     PetInAdoption.routeName: (context) => PetInAdoption(),
     PetServiceForm.routeName: (context) => PetServiceForm(),
     OrganizationSignUpScreen.routeName: (context) => OrganizationSignUpScreen(),
-    ProfilePageOrganization.routeName: (context) => ProfilePageOrganization()
+    ProfilePageOrganization.routeName: (context) => ProfilePageOrganization(),
+    OwnServicesScreen.routeName: (context) => OwnServicesScreen(),
+    ServiceScreen.routeName: (context) => ServiceScreen(),
+    BookAppointment.routeName: (context) => BookAppointment(),
+    ChatScreen.routeName: (context) => ChatScreen(),
+    ChatList.routeName: (context) => ChatList()
   };
 }

@@ -1,7 +1,7 @@
-import 'package:firulapp/components/dtos/event_item.dart';
 import 'package:flutter/material.dart';
 
-import '../../../provider/vaccination_record.dart' as vaxProvider;
+import '../../../../components/dtos/event_item.dart';
+import '../../../../provider/vaccination_record.dart' as vaxProvider;
 import '../vaccination_records_form_screen.dart';
 
 class VaccinationRecordItem extends StatelessWidget {

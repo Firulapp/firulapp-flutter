@@ -1,13 +1,12 @@
 import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/provider/vaccination_record.dart';
 import 'package:firulapp/src/pets/components/adoptions/transfer_pet.dart';
-import 'package:firulapp/src/pets/pets_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/medical_record.dart';
-import '../medical_records/medical_records_screen.dart';
-import '../vaccionation_records/vaccination_records_screen.dart';
+import './medical_records/medical_records_screen.dart';
+import './vaccionation_records/vaccination_records_screen.dart';
 import '../../provider/pets.dart';
 import '../profile/components/profile_menu.dart';
 import './components/pet_pic.dart';

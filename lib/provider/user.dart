@@ -87,6 +87,7 @@ class OrganizationData {
 
 class User with ChangeNotifier {
   UserData _userData;
+  UserData _otherUserInfo;
   OrganizationData _organizationData;
   final UserSession session;
 
@@ -96,6 +97,10 @@ class User with ChangeNotifier {
 
   UserData get userData {
     return _userData;
+  }
+
+  UserData get otherUserInfo {
+    return _otherUserInfo;
   }
 
   OrganizationData get organizationData {
@@ -148,7 +153,35 @@ class User with ChangeNotifier {
         mail: userResponse["email"],
         enabled: userResponse["enabled"],
       );
-      addUser(userData);
+      _userData = userData;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<UserData> getOtherUserInfo(int userId) async {
+    try {
+      final response = await this._dio.get('${Endpoints.user}/$userId');
+      final userResponse = response.data["dto"];
+      var userData = UserData(
+        id: userResponse["id"],
+        userId: userResponse["userId"],
+        name: userResponse["name"],
+        surname: userResponse["surname"],
+        city: userResponse["city"],
+        document: userResponse["document"],
+        documentType: userResponse["documentType"],
+        profilePicture: userResponse["profilePicture"],
+        userType: userResponse["userType"],
+        birthDate: userResponse["birthDate"],
+        notifications: userResponse["notifications"],
+        userName: userResponse["username"],
+        mail: userResponse["email"],
+        enabled: userResponse["enabled"],
+      );
+      _otherUserInfo = userData;
+      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -177,7 +210,8 @@ class User with ChangeNotifier {
           "enabled": true
         },
       );
-      addUser(userData);
+      _userData = userData;
+      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -206,7 +240,8 @@ class User with ChangeNotifier {
           "enabled": true
         },
       );
-      addUser(userData);
+      _userData = userData;
+      notifyListeners();
     } catch (error) {
       throw error;
     }

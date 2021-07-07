@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firulapp/provider/user.dart';
+import 'package:firulapp/src/chat/chat_screen.dart';
+import 'package:firulapp/src/chat/chat_lists.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
@@ -40,7 +43,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context, listen: true).userData;
+    final user = Provider.of<User>(context).userData;
     var _name = user == null ? "" : user.name;
     var _surname = user == null ? "" : user.surname;
     var _mail = user == null ? "" : user.mail;
@@ -84,11 +87,26 @@ class _HomeDrawerState extends State<HomeDrawer> {
             height: 2.0,
           ),
           ListTile(
+            leading: Icon(Icons.chat),
+            title: Text('Chat'),
+            onTap: () {
+              // This line code will close drawer programatically....
+              Navigator.pop(context);
+              // Navigator.pushNamed(context, ChatScreen.routeName);
+              Navigator.pushNamed(context, ChatList.routeName,
+                  arguments: user.name);
+            },
+          ),
+          Divider(
+            height: 2.0,
+          ),
+          ListTile(
               leading: Icon(Icons.exit_to_app),
               title: const Text('Cerrar Sesion'),
               onTap: () async {
                 try {
                   await Provider.of<Session>(context, listen: false).logOut();
+                  await FirebaseAuth.instance.signOut(); // log aout del chat
                   Navigator.pushNamedAndRemoveUntil(
                       context, SignInScreen.routeName, (_) => false);
                 } catch (error) {

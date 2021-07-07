@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../size_config.dart';
 import './components/category_item.dart' as widget;
-import '../../provider/pet_service.dart';
-import './pet_service_form.dart';
-import 'components/filter_selector.dart';
+import '../../provider/service_type.dart';
+import './own_services/pet_service_form.dart';
+import './components/filter_selector.dart';
 
 class ServiceCategoriesScreen extends StatelessWidget {
   static const routeName = "/services-screen1";
@@ -40,7 +40,7 @@ class ServiceCategoriesScreen extends StatelessWidget {
             shrinkWrap: true,
             childAspectRatio: (sizeConfig.dp(3) / sizeConfig.hp(4.5)),
             padding: const EdgeInsets.all(15),
-            children: CategoryItem.DUMMY_CATEGORIES
+            children: ServiceType.DUMMY_CATEGORIES
                 .map((cat) => widget.CategoryItem(cat.id, cat.title, cat.icon))
                 .toList(),
           ),

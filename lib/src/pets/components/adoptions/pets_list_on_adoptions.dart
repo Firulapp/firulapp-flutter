@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:firulapp/components/dialogs.dart';
-import 'package:firulapp/provider/user.dart';
 import 'package:firulapp/src/pets/components/adoptions/pet_in_adoption.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
