@@ -68,7 +68,15 @@ class PetItem with ChangeNotifier {
   }
 }
 
-enum PetStatus { ADOPTAR, APADRINAR, APADRINADA, ADOPTADA, PERDIDA, ENCONTRADA }
+enum PetStatus {
+  ADOPTAR,
+  APADRINAR,
+  APADRINADA,
+  ADOPTADA,
+  PERDIDA,
+  ENCONTRADA,
+  NORMAL
+}
 
 class Pets with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
@@ -134,7 +142,7 @@ class Pets with ChangeNotifier {
           "age": _petItem.age,
           "petSize": _petItem.petSize,
           "city": userData.userData.city,
-          "address": null, //TODO: direccion del usuario
+          "address": null,
           "primaryColor": _petItem.primaryColor,
           "secondaryColor": _petItem.secondaryColor,
           "status": _petItem.status,

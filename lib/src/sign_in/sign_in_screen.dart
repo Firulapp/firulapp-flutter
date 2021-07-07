@@ -11,7 +11,7 @@ class SignInScreen extends StatelessWidget {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Sign In"),
+        title: const Text("Iniciar Sesión"),
       ),
       body: GestureDetector(
         onTap: () {

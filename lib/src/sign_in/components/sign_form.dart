@@ -125,19 +125,14 @@ class _SingFormState extends State<SingForm>
           backgroundColor: Theme.of(context).errorColor,
         ),
       );
-      setState(() {
-        _isLoading = false;
-      });
     } catch (error) {
-      String message = error.toString();
+      print(error);
+      String message = "Ocurrio un error inesperado";
       Dialogs.info(
         context,
         title: 'ERROR',
         content: message,
       );
-      setState(() {
-        _isLoading = false;
-      });
     }
     setState(() {
       _isLoading = false;
@@ -187,19 +182,14 @@ class _SingFormState extends State<SingForm>
             backgroundColor: Theme.of(context).errorColor,
           ),
         );
-        setState(() {
-          _isLoading = false;
-        });
       } catch (error) {
-        String message = error.toString();
+        print(error);
+        String message = "Ocurrio un error inesperado";
         Dialogs.info(
           context,
           title: 'ERROR',
           content: message,
         );
-        setState(() {
-          _isLoading = false;
-        });
       }
     }
     setState(() {

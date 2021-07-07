@@ -39,7 +39,7 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
   BreedsItem _breedsItem;
   DateTime _birthDate = DateTime.now();
   int _age;
-  String _petStatus = PetStatus.ADOPTADA.value;
+  String _petStatus = PetStatus.NORMAL.value;
 
   final FocusNode myFocusNode = FocusNode();
   Future<void> _getListSpecies() async {
@@ -68,7 +68,10 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
       _pet = Provider.of<Pets>(context, listen: false).getLocalPetById(id);
       _birthDate = DateTime.parse(_pet.birthDate);
       _initialBreeds = providerBreeds.getBreeds(_pet.speciesId);
+      _petStatus = _pet.status;
       isInit = false;
+    } else {
+      _status = false;
     }
     _isLoading = false;
     super.didChangeDependencies();
@@ -123,13 +126,18 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                       ),
                                     ],
                                   ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      _status ? _getEditIcon() : Container(),
-                                    ],
-                                  )
+                                  _pet.id == null
+                                      ? Container()
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            _status
+                                                ? _getEditIcon()
+                                                : Container(),
+                                          ],
+                                        )
                                 ],
                               )),
                           SizedBox(
@@ -374,19 +382,22 @@ class MapScreenState extends State<AddPets> with ValidatorMixins {
                                       height: SizeConfig
                                           .getProportionateScreenHeight(25),
                                     ),
-                                    DefaultButton(
-                                      text: "Cancelar",
-                                      color: Colors.white,
-                                      press: () async {
-                                        setState(
-                                          () {
-                                            _status = true;
-                                            FocusScope.of(context)
-                                                .requestFocus(FocusNode());
-                                          },
-                                        );
-                                      },
-                                    ),
+                                    _pet.id == null
+                                        ? Container()
+                                        : DefaultButton(
+                                            text: "Cancelar",
+                                            color: Colors.white,
+                                            press: () async {
+                                              setState(
+                                                () {
+                                                  _status = true;
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          FocusNode());
+                                                },
+                                              );
+                                            },
+                                          ),
                                     SizedBox(
                                       height: SizeConfig
                                           .getProportionateScreenHeight(25),
