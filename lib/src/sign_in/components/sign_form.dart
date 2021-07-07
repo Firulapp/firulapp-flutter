@@ -102,11 +102,12 @@ class _SingFormState extends State<SingForm>
     });
     try {
       final session = Provider.of<Session>(context, listen: false);
-      final user = Provider.of<User>(context, listen: false);
       await session.getSession();
       if (session.isAuth) {
-        await user.getUser();
+        await Provider.of<User>(context, listen: false).getUser();
+        final user = Provider.of<User>(context, listen: false);
         _userName = user.userData.userName;
+        // Login para firebase chats
         _submitAuthForm(_userEmail.trim(), _userPassword.trim(),
             _userName.trim(), _isLogin, context);
         Navigator.pushReplacementNamed(context, HomeScreen.routeName);
