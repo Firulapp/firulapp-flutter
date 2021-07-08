@@ -38,7 +38,7 @@ class ChatList extends StatelessWidget {
                   }
                 });
                 return ListView.builder(
-                  itemCount: list.length,
+                  itemCount: 1,
                   itemBuilder: (ctx, index) => ConversationBubble(
                     list[index]['username'],
                     key: ValueKey(list[index].documentID),
