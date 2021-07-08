@@ -95,7 +95,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               Navigator.pop(context);
               // Navigator.pushNamed(context, ChatScreen.routeName);
               Navigator.pushNamed(context, ChatList.routeName,
-                  arguments: user.name);
+                  arguments: user.userName);
             },
           ),
           Divider(
