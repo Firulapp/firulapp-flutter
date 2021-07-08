@@ -107,7 +107,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
               onTap: () async {
                 try {
                   await Provider.of<Session>(context, listen: false).logOut();
-                  await FirebaseAuth.instance.signOut(); // log aout del chat
                   Navigator.pushNamedAndRemoveUntil(
                       context, SignInScreen.routeName, (_) => false);
                 } on PlatformException catch (err) {
