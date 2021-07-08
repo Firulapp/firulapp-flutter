@@ -33,12 +33,16 @@ class ChatList extends StatelessWidget {
               final usersDocs = chatSnapshot.data.documents;
               var list = [];
               usersDocs.forEach((element) {
-                if (element.data["username"] != username) {
+                if (username == "javierheisecke" &&
+                    element.data["username"] == "matiasfare") {
+                  list.add(element);
+                } else if (username == "matiasfare" &&
+                    element.data["username"] == "javierheisecke") {
                   list.add(element);
                 }
               });
               return ListView.builder(
-                itemCount: 1,
+                itemCount: list.length,
                 itemBuilder: (ctx, index) => ConversationBubble(
                   list[index]['username'],
                   key: ValueKey(list[index].documentID),
