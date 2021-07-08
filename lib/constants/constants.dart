@@ -34,7 +34,7 @@ class Constants {
   static const String kAddressNullError = "Por favor, Ingrese su dirección";
   static const String kTextNotNull = "Este campo es obligatorio";
   static const String kDisableUser =
-      "El usuario esta en revisio, espere aprobación del administrador";
+      "El usuario esta en revision, espere aprobación del administrador";
 
   static final otpInputDecoration = InputDecoration(
     contentPadding: EdgeInsets.symmetric(
