@@ -99,7 +99,6 @@ class _SingFormState extends State<SingForm>
   }
 
   _check() async {
-    bool userEnable = Provider.of<Session>(context, listen: false).userEnable;
     setState(() {
       _isLoading = true;
       _isLogin = true;
@@ -108,15 +107,15 @@ class _SingFormState extends State<SingForm>
       final session = Provider.of<Session>(context, listen: false);
       await session.getSession();
       if (session.isAuth) {
-        if (!userEnable) {
+        await Provider.of<User>(context, listen: false).getUser();
+        final user = Provider.of<User>(context, listen: false);
+        if (!user.userData.enabled) {
           Dialogs.info(
             context,
             title: 'INFO',
             content: Constants.kDisableUser,
           );
         } else {
-          await Provider.of<User>(context, listen: false).getUser();
-          final user = Provider.of<User>(context, listen: false);
           _userName = user.userData.userName;
           // Login para firebase chats
           _submitAuthForm(_userEmail.trim(), _userPassword.trim(),
