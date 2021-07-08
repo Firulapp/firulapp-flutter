@@ -1,6 +1,6 @@
 import 'package:firulapp/components/dialogs.dart';
 import 'package:firulapp/provider/session.dart';
-import 'package:firulapp/src/home/home.dart';
+import 'package:firulapp/src/sign_in/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firulapp/components/custom_surfix_icon.dart';
@@ -190,13 +190,15 @@ class _BodyState extends State<Body> with ValidatorMixins {
                           status: null,
                         ),
                       );
+                      Provider.of<Session>(context, listen: false).userEnable =
+                          false;
                       await Provider.of<Session>(context, listen: false)
                           .registerOrganizacion(
                         userData: _user.userData,
                         organizationData: _user.organizationData,
                       );
                       Navigator.pushNamedAndRemoveUntil(
-                          context, HomeScreen.routeName, (_) => false);
+                          context, SignInScreen.routeName, (_) => false);
                     } catch (error) {
                       Dialogs.info(
                         context,

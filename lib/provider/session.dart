@@ -22,6 +22,7 @@ class UserSession {
 
 class Session extends ChangeNotifier {
   final _auth = FirebaseAuth.instance;
+  bool _userEnable = true;
   AuthResult authResult;
   final _storage = FlutterSecureStorage();
   final sessionKey = "SESSIONK";
@@ -31,6 +32,15 @@ class Session extends ChangeNotifier {
 
   UserSession get userSession {
     return _userSession;
+  }
+
+  bool get userEnable {
+    return _userEnable;
+  }
+
+  set userEnable(bool userEnable) {
+    _userEnable = userEnable;
+    notifyListeners();
   }
 
   bool get isAuth {
