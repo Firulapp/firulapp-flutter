@@ -46,7 +46,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context).userData;
     var _name = user == null ? "" : user.name;
-    var _surname = user == null ? "" : user.surname;
+    var _surname = user == null
+        ? ""
+        : user.surname == null
+            ? ""
+            : user.surname;
     var _mail = user == null ? "" : user.mail;
     return Drawer(
       elevation: 10.0,
