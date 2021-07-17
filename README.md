@@ -19,3 +19,9 @@ samples, guidance on mobile development, and a full API reference.
 ## Deployment
 - [Build and release an Android App](https://flutter.dev/docs/deployment/android)
 - [Build and release an iOS App](https://flutter.dev/docs/deployment/ios)
+
+## License
+
+![imagen](https://user-images.githubusercontent.com/34453933/126021034-d26c8890-2c08-45a8-b4fe-2767e6d45488.png)
+
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
