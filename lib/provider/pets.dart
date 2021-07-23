@@ -49,6 +49,7 @@ class PetItem with ChangeNotifier {
   factory PetItem.fromJson(Map<String, dynamic> parsedJson) {
     return PetItem(
       id: parsedJson["id"],
+      userId: parsedJson["userId"],
       speciesId: parsedJson["speciesId"],
       breedId: parsedJson["breedId"],
       name: parsedJson["name"],
@@ -68,7 +69,15 @@ class PetItem with ChangeNotifier {
   }
 }
 
-enum PetStatus { ADOPTAR, APADRINAR, APADRINADA, ADOPTADA, PERDIDA, ENCONTRADA }
+enum PetStatus {
+  ADOPTAR,
+  APADRINAR,
+  APADRINADA,
+  ADOPTADA,
+  PERDIDA,
+  ENCONTRADA,
+  NORMAL
+}
 
 class Pets with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: Endpoints.baseUrl));
@@ -134,7 +143,7 @@ class Pets with ChangeNotifier {
           "age": _petItem.age,
           "petSize": _petItem.petSize,
           "city": userData.userData.city,
-          "address": null, //TODO: direccion del usuario
+          "address": null,
           "primaryColor": _petItem.primaryColor,
           "secondaryColor": _petItem.secondaryColor,
           "status": _petItem.status,
@@ -166,6 +175,7 @@ class Pets with ChangeNotifier {
       final petResponse = response.data["dto"];
       var pet = PetItem(
         id: petResponse["id"],
+        userId: petResponse["userId"],
         breedId: petResponse["breedId"],
         name: petResponse["name"],
         birthDate: petResponse["birthDate"],
@@ -306,6 +316,17 @@ class Pets with ChangeNotifier {
       await this
           ._dio
           .post('${Endpoints.pet}/$petId/adopt/${userData.userData.id}');
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> requestFostering(int petId, String amount) async {
+    print(userData.userData.id);
+    print(petId);
+    try {
+      await this._dio.post(
+          '${Endpoints.pet}/$petId/foster/${userData.userData.id}/amount/$amount');
     } catch (e) {
       throw e;
     }

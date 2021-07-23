@@ -82,11 +82,14 @@ class _SingFormState extends State<SingForm>
       setState(() {
         _isLoading = false;
       });
-    } catch (err) {
-      print(err);
-      setState(() {
-        _isLoading = false;
-      });
+    } catch (error) {
+      print(error);
+      String message = "Ocurrio un error inesperado";
+      Dialogs.info(
+        context,
+        title: 'ERROR',
+        content: message,
+      );
     }
   }
 
@@ -106,11 +109,19 @@ class _SingFormState extends State<SingForm>
       if (session.isAuth) {
         await Provider.of<User>(context, listen: false).getUser();
         final user = Provider.of<User>(context, listen: false);
-        _userName = user.userData.userName;
-        // Login para firebase chats
-        _submitAuthForm(_userEmail.trim(), _userPassword.trim(),
-            _userName.trim(), _isLogin, context);
-        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        if (!user.userData.enabled) {
+          Dialogs.info(
+            context,
+            title: 'INFO',
+            content: Constants.kDisableUser,
+          );
+        } else {
+          _userName = user.userData.userName;
+          // Login para firebase chats
+          _submitAuthForm(_userEmail.trim(), _userPassword.trim(),
+              _userName.trim(), _isLogin, context);
+          Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        }
       }
     } on PlatformException catch (err) {
       var message = 'Ocurrio un error, favor verifique sus credenciales!';
@@ -125,19 +136,17 @@ class _SingFormState extends State<SingForm>
           backgroundColor: Theme.of(context).errorColor,
         ),
       );
-      setState(() {
-        _isLoading = false;
-      });
     } catch (error) {
-      String message = error.toString();
+      print(error);
+      String message = "Ocurrio un error inesperado, vuelva a intentar";
+      if (error.response.data['message'] != null) {
+        message = error.response.data['message'];
+      }
       Dialogs.info(
         context,
         title: 'ERROR',
         content: message,
       );
-      setState(() {
-        _isLoading = false;
-      });
     }
     setState(() {
       _isLoading = false;
@@ -187,19 +196,17 @@ class _SingFormState extends State<SingForm>
             backgroundColor: Theme.of(context).errorColor,
           ),
         );
-        setState(() {
-          _isLoading = false;
-        });
       } catch (error) {
-        String message = error.toString();
+        print(error);
+        String message = "Ocurrio un error inesperado, vuelva a intentar";
+        if (error.response.data['message'] != null) {
+          message = error.response.data['message'];
+        }
         Dialogs.info(
           context,
           title: 'ERROR',
           content: message,
         );
-        setState(() {
-          _isLoading = false;
-        });
       }
     }
     setState(() {

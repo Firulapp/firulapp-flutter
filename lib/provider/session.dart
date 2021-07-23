@@ -22,6 +22,7 @@ class UserSession {
 
 class Session extends ChangeNotifier {
   final _auth = FirebaseAuth.instance;
+  bool _userEnable = true;
   AuthResult authResult;
   final _storage = FlutterSecureStorage();
   final sessionKey = "SESSIONK";
@@ -31,6 +32,15 @@ class Session extends ChangeNotifier {
 
   UserSession get userSession {
     return _userSession;
+  }
+
+  bool get userEnable {
+    return _userEnable;
+  }
+
+  set userEnable(bool userEnable) {
+    _userEnable = userEnable;
+    notifyListeners();
   }
 
   bool get isAuth {
@@ -129,6 +139,17 @@ class Session extends ChangeNotifier {
         deviceId: user["deviceId"].toString(),
         userId: user["userId"].toString(),
       );
+      authResult = await _auth.createUserWithEmailAndPassword(
+        email: userData.mail,
+        password: userData.confirmPassword,
+      );
+      await Firestore.instance
+          .collection('users')
+          .document(authResult.user.uid)
+          .setData({
+        'username': userData.userName,
+        'email': userData.mail,
+      });
       await setSession();
       notifyListeners();
     } catch (error) {
@@ -166,7 +187,6 @@ class Session extends ChangeNotifier {
 
   Future<void> logOut() async {
     try {
-      // muestra barra de carga
       await this._dio.post(
         Endpoints.logout,
         data: {
@@ -175,6 +195,7 @@ class Session extends ChangeNotifier {
           "userId": _userSession.userId,
         },
       );
+      await FirebaseAuth.instance.signOut(); // log aout del chat
       //Elimina los datos del dispositivo y redirecciona a la pagina del login
       _userSession = null;
       await this._storage.deleteAll();

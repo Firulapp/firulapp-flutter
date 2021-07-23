@@ -33,7 +33,7 @@ class NoAccountText extends StatelessWidget {
           onTap: () =>
               Navigator.pushNamed(context, OrganizationSignUpScreen.routeName),
           child: Text(
-            "Registrar Organización",
+            "Enviar solicitud Organizacion",
             style: TextStyle(
                 fontSize: SizeConfig.getProportionateScreenWidth(16),
                 color: Constants.kPrimaryColor),

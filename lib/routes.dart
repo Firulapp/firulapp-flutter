@@ -1,5 +1,6 @@
 import 'package:firulapp/src/chat/chat_screen.dart';
 import 'package:firulapp/src/chat/chat_lists.dart';
+import 'package:firulapp/src/pets/components/adoptions/pet_for_fostering.dart';
 import 'package:flutter/widgets.dart';
 
 import './src/sign_in/sign_in_screen.dart';
@@ -73,6 +74,7 @@ class Routes {
     ServiceScreen.routeName: (context) => ServiceScreen(),
     BookAppointment.routeName: (context) => BookAppointment(),
     ChatScreen.routeName: (context) => ChatScreen(),
-    ChatList.routeName: (context) => ChatList()
+    ChatList.routeName: (context) => ChatList(),
+    PetForFostering.routeName: (context) => PetForFostering(),
   };
 }

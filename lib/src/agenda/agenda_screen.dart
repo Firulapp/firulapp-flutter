@@ -366,9 +366,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
                     size: 45,
                     color: Constants.kPrimaryColor,
                   ),
-                  onTap: (petSelected) {
+                  onTap: (petSelected) async {
                     Provider.of<Appointment>(context, listen: false)
                         .cancelAppointment(appointmentId);
+                    await Provider.of<Agenda>(context, listen: false)
+                        .fetchEvents();
+                    Navigator.pop(context);
                   },
                 ),
                 EventItem(

@@ -23,28 +23,29 @@ class ChatList extends StatelessWidget {
             );
           }
           return StreamBuilder(
-              stream: Firestore.instance.collection('users').snapshots(),
-              builder: (ctx, chatSnapshot) {
-                if (chatSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                final usersDocs = chatSnapshot.data.documents;
-                var list = [];
-                usersDocs.forEach((element) {
-                  if (element.data["username"] != username) {
-                    list.add(element);
-                  }
-                });
-                return ListView.builder(
-                  itemCount: list.length,
-                  itemBuilder: (ctx, index) => ConversationBubble(
-                    list[index]['username'],
-                    key: ValueKey(list[index].documentID),
-                  ),
+            stream: Firestore.instance.collection('users').snapshots(),
+            builder: (ctx, chatSnapshot) {
+              if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
+              }
+              final usersDocs = chatSnapshot.data.documents;
+              var list = [];
+              usersDocs.forEach((element) {
+                if (element.data["username"] != username) {
+                  list.add(element);
+                }
               });
+              return ListView.builder(
+                itemCount: 1,
+                itemBuilder: (ctx, index) => ConversationBubble(
+                  list[index]['username'],
+                  key: ValueKey(list[index].documentID),
+                ),
+              );
+            },
+          );
         },
       ),
     );

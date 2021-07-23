@@ -21,41 +21,17 @@ class Body extends StatelessWidget {
             },
           ),
           SizedBox(height: 20),
-          Consumer<User>(builder: (ctx, user, child) {
-            return ProfileMenu(
-              text: "Mi Cuenta",
-              icon: "assets/icons/User Icon.svg",
-              press: () => {
-                user.userData.userType == "ORGANIZACION"
-                    ? Navigator.pushNamed(
-                        context, ProfilePageOrganization.routeName)
-                    : Navigator.pushNamed(context, ProfilePage.routeName),
-              },
-            );
-          }),
-          ProfileMenu(
-            text: "Notificaciones",
-            icon: "assets/icons/Bell.svg",
-            press: () {},
-          ),
-          ProfileMenu(
-            text: "Ajustes",
-            icon: "assets/icons/Settings.svg",
-            press: () {},
-          ),
-          ProfileMenu(
-            text: "Ayuda",
-            icon: "assets/icons/Question mark.svg",
-            press: () {},
-          ),
-          ProfileMenu(
-            text: "Desactivar cuenta",
-            icon: "assets/icons/Log out.svg",
-            press: () {
-              Dialogs.info(
-                context,
-                title: 'Desactivar Perfil',
-                content: 'Estas seguro que quiere desactivar la cuenta?',
+          Consumer<User>(
+            builder: (ctx, user, child) {
+              return ProfileMenu(
+                text: "Mi Cuenta",
+                icon: "assets/icons/User Icon.svg",
+                press: () => {
+                  user.userData.userType == "ORGANIZACION"
+                      ? Navigator.pushNamed(
+                          context, ProfilePageOrganization.routeName)
+                      : Navigator.pushNamed(context, ProfilePage.routeName),
+                },
               );
             },
           ),
