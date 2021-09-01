@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firulapp/provider/user.dart';
+import 'package:firulapp/provider/user.dart' as u;
 import 'package:firulapp/src/chat/chat_screen.dart';
 import 'package:firulapp/src/chat/chat_lists.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +34,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   Future _initiateStoredImage() async {
     Uint8List bytes = base64Decode(
-        Provider.of<User>(context, listen: false).userData.profilePicture);
+        Provider.of<u.User>(context, listen: false).userData.profilePicture);
     final tempPath = await syspaths.getTemporaryDirectory();
     _storedImage = File('${tempPath.path}/profile.png');
     await _storedImage.writeAsBytes(
@@ -44,7 +44,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context).userData;
+    final user = Provider.of<u.User>(context).userData;
     var _name = user == null ? "" : user.name;
     var _surname = user == null
         ? ""

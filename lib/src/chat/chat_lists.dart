@@ -9,13 +9,14 @@ class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final username = ModalRoute.of(context).settings.arguments as String;
+    getCurretUser();
     return Scaffold(
       backgroundColor: Constants.lightBackgroundColor,
       appBar: AppBar(
         title: const Text("Chats"),
       ),
       body: FutureBuilder(
-        future: FirebaseAuth.instance.currentUser(),
+        // future: getCurretUser,
         builder: (ctx, futureSnapshot) {
           if (futureSnapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -23,7 +24,7 @@ class ChatList extends StatelessWidget {
             );
           }
           return StreamBuilder(
-            stream: Firestore.instance.collection('users').snapshots(),
+            stream: FirebaseFirestore.instance.collection('users').snapshots(),
             builder: (ctx, chatSnapshot) {
               if (chatSnapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -53,5 +54,9 @@ class ChatList extends StatelessWidget {
         },
       ),
     );
+  }
+
+  User getCurretUser() {
+    return FirebaseAuth.instance.currentUser;
   }
 }

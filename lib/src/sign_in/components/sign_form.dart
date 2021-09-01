@@ -14,7 +14,7 @@ import '../../../components/custom_surfix_icon.dart';
 import '../../../size_config.dart';
 import '../../../constants/constants.dart';
 import '../../mixins/validator_mixins.dart';
-import '../../../provider/user.dart';
+import '../../../provider/user.dart' as u;
 
 class SingForm extends StatefulWidget {
   SingForm({Key key}) : super(key: key);
@@ -42,26 +42,26 @@ class _SingFormState extends State<SingForm>
     bool isLogin,
     BuildContext ctx,
   ) async {
-    AuthResult authResult;
+    UserCredential userCredential;
 
     try {
       setState(() {
         _isLoading = true;
       });
       if (isLogin) {
-        authResult = await _auth.signInWithEmailAndPassword(
+        userCredential = await _auth.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
       } else {
-        authResult = await _auth.createUserWithEmailAndPassword(
+        userCredential = await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
-        await Firestore.instance
+        await FirebaseFirestore.instance
             .collection('users')
-            .document(authResult.user.uid)
-            .setData({
+            .doc(userCredential.user.uid)
+            .set({
           'username': username,
           'email': email,
         });
@@ -107,8 +107,8 @@ class _SingFormState extends State<SingForm>
       final session = Provider.of<Session>(context, listen: false);
       await session.getSession();
       if (session.isAuth) {
-        await Provider.of<User>(context, listen: false).getUser();
-        final user = Provider.of<User>(context, listen: false);
+        await Provider.of<u.User>(context, listen: false).getUser();
+        final user = Provider.of<u.User>(context, listen: false);
         if (!user.userData.enabled) {
           Dialogs.info(
             context,
@@ -175,8 +175,8 @@ class _SingFormState extends State<SingForm>
         final session = Provider.of<Session>(context, listen: false);
         await session.getSession();
         if (session.isAuth) {
-          await Provider.of<User>(context, listen: false).getUser();
-          final user = Provider.of<User>(context, listen: false);
+          await Provider.of<u.User>(context, listen: false).getUser();
+          final user = Provider.of<u.User>(context, listen: false);
           _userName = user.userData.userName;
           // Login para firebase chats
           _submitAuthForm(_userEmail.trim(), _userPassword.trim(),

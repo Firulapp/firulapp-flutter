@@ -23,7 +23,7 @@ class UserSession {
 class Session extends ChangeNotifier {
   final _auth = FirebaseAuth.instance;
   bool _userEnable = true;
-  AuthResult authResult;
+  UserCredential userCredential;
   final _storage = FlutterSecureStorage();
   final sessionKey = "SESSIONK";
   final userKey = "USERK";
@@ -80,14 +80,14 @@ class Session extends ChangeNotifier {
         deviceId: user["deviceId"].toString(),
         userId: user["userId"].toString(),
       );
-      authResult = await _auth.createUserWithEmailAndPassword(
+      userCredential = await _auth.createUserWithEmailAndPassword(
         email: userData.mail,
         password: userData.confirmPassword,
       );
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(authResult.user.uid)
-          .setData({
+          .doc(userCredential.user.uid)
+          .set({
         'username': userData.userName,
         'email': userData.mail,
       });
@@ -139,14 +139,14 @@ class Session extends ChangeNotifier {
         deviceId: user["deviceId"].toString(),
         userId: user["userId"].toString(),
       );
-      authResult = await _auth.createUserWithEmailAndPassword(
+      userCredential = await _auth.createUserWithEmailAndPassword(
         email: userData.mail,
         password: userData.confirmPassword,
       );
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
-          .document(authResult.user.uid)
-          .setData({
+          .doc(userCredential.user.uid)
+          .set({
         'username': userData.userName,
         'email': userData.mail,
       });

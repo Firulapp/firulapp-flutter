@@ -25,20 +25,20 @@ dependencies:
     sdk: flutter
 
   # Add the dependency for the Firebase Core Flutter SDK
-  firebase_core: ^0.4.0+9
+  # firebase_core: ^0.7.0
   # Add the dependency for the FlutterFire plugin for Google Analytsics
-  firebase_analytics: ^5.0.2
+  # firebase_analytics: ^5.0.2
 
   # Add the dependencies for any other Firebase products you want to use in your app
   # For example, to use Firebase Authentication and Cloud Firestore
-  cloud_firestore: ^0.13.5
-  firebase_auth: ^0.16.1
+  cloud_firestore: ^0.16.0+1
+  firebase_auth: ^0.20.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   flutter_svg: ^0.18.0 # help us to use SVG in our apps
   provider: ^4.3.3
-  dio: ^3.0.10
+  dio: ^3.0.9
   flutter_secure_storage: ^3.3.5
   after_layout: ^1.0.7+2
   image_picker: ^0.6.7+22

@@ -6,8 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    getCurretUser();
     return FutureBuilder(
-      future: FirebaseAuth.instance.currentUser(),
+      // future: FirebaseAuth.instance.currentUser(),
       builder: (ctx, futureSnapshot) {
         if (futureSnapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -15,7 +16,7 @@ class Messages extends StatelessWidget {
           );
         }
         return StreamBuilder(
-            stream: Firestore.instance
+            stream: FirebaseFirestore.instance
                 .collection('chat')
                 .orderBy(
                   'createdAt',
@@ -42,5 +43,9 @@ class Messages extends StatelessWidget {
             });
       },
     );
+  }
+
+  User getCurretUser() {
+    return FirebaseAuth.instance.currentUser;
   }
 }
